@@ -1,5 +1,5 @@
 ---
-import { loadAllIssues } from "../../lib/load.ts";
+import { loadAllIssues, loadPaper } from "../../lib/load.ts";
 import { formatDate } from "../../lib/format.ts";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
 const issues = loadAllIssues(REPO_ROOT).sort((a, b) =>
   b.meta.published_at.localeCompare(a.meta.published_at),
+);
+const visibleCounts = new Map<string, number>(
+  issues.map((i) => [
+    i.meta.issue_id,
+    i.meta.paper_ids.filter((pid) => loadPaper(REPO_ROOT, pid) !== null).length,
+  ]),
 );
 ---
 <BaseLayout title="Issues" activeNav="issues">
@@ -31,7 +37,7 @@ const issues = loadAllIssues(REPO_ROOT).sort((a, b) =>
           <tr>
             <td><a class="mono" href={`${import.meta.env.BASE_URL}issues/${i.meta.issue_id}/`}>{i.meta.issue_id}</a></td>
             <td><code class="mono">{formatDate(i.meta.published_at)}</code></td>
-            <td class="mono">{i.meta.paper_ids.length}</td>
+            <td class="mono">{visibleCounts.get(i.meta.issue_id) ?? 0}</td>
           </tr>
         ))}
       </tbody>

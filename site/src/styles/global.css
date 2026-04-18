@@ -30,6 +30,11 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+button:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 2px;
+}
+
 code, kbd, .mono {
   font-family: var(--font-mono);
 }
