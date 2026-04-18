@@ -68,8 +68,37 @@ await (async () => {
       console.log(JSON.stringify(result, null, 2));
       return;
     }
+    case "commit-desk-review": {
+      const publicRepo = args["public-repo"];
+      if (!publicRepo) {
+        console.error("commit-desk-review requires --public-repo <path>");
+        process.exit(2);
+      }
+      const body = await readStdinJson();
+      const { commitDeskReview } = await import("./phases/desk_review.js");
+      const result = await commitDeskReview({
+        publicRepoPath: publicRepo,
+        paperId: body.paper_id,
+        outcome: body.outcome,
+        reasonTag: body.reason_tag ?? null,
+        prose: body.prose,
+        subagentPrompt: body.subagent_prompt,
+        subagentResponse: body.subagent_response,
+        editorAgentId: body.editor_agent_id,
+      });
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
     default:
       console.error(`unknown subcommand: ${sub}`);
       process.exit(2);
   }
 })();
+
+async function readStdinJson(): Promise<any> {
+  const chunks: Buffer[] = [];
+  for await (const c of process.stdin) chunks.push(c as Buffer);
+  const raw = Buffer.concat(chunks).toString("utf-8");
+  if (!raw.trim()) throw new Error("expected JSON on stdin");
+  return JSON.parse(raw);
+}
