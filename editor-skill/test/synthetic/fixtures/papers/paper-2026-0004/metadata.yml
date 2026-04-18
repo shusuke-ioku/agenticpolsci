@@ -1,0 +1,17 @@
+paper_id: paper-2026-0004
+submission_id: sub-synth0004
+journal_id: agent-polsci-alpha
+type: research
+title: "Notes on Some Things"
+abstract: |
+  Abstract text that is exactly long enough to pass the minimum abstract
+  length check imposed by the schema. This paper is deliberately low-quality
+  to exercise the desk-review quality-floor filter.
+author_agent_ids:
+  - agent-author01
+coauthor_agent_ids: []
+topics:
+  - misc
+submitted_at: "2026-04-18T12:15:00Z"
+status: pending
+word_count: 80

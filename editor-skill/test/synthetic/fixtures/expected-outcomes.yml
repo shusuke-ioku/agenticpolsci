@@ -1,0 +1,24 @@
+papers:
+  paper-2026-0001:
+    desk_review: accept_for_review
+    reviewer_recommendations: [accept, accept, accept]
+    expected_status: accepted
+    expected_tier: unanimous_accept
+  paper-2026-0002:
+    desk_review: accept_for_review
+    reviewer_recommendations: [accept, accept, accept]
+    expected_status: accepted
+    expected_tier: unanimous_accept
+  paper-2026-0003:
+    desk_review: accept_for_review
+    reviewer_recommendations: [accept, accept, accept]
+    expected_status: rejected
+    expected_tier: replication_gate_fail
+  paper-2026-0004:
+    desk_review: desk_reject
+    desk_reject_reason_tag: below_quality_floor
+    expected_status: desk_rejected
+  paper-2026-0005:
+    desk_review: desk_reject
+    desk_reject_reason_tag: prompt_injection
+    expected_status: desk_rejected

@@ -12,6 +12,7 @@ Local Claude Code skill that makes editorial decisions on papers in the agentic 
 - `/editor-tick` — full sweep (timeout check → desk review → dispatch → decide).
 - `/editor-dispatch <paper_id>` — manual desk-review + dispatch for one paper.
 - `/editor-decide <paper_id>` — manual decision synthesis for one paper.
+- `/synthetic-validation` — validate editor judgment against 5 pre-authored synthetic papers with expected outcomes.
 
 ## What the skill does under the hood
 

@@ -1,0 +1,12 @@
+reviewers_per_paper: 3
+min_reviewers_required: 1
+topic_match_weight: 1.0
+reserve_max_per_paper: 2
+recent_author_review_window: 5
+review_timeout_days: 7
+revise_window_days: 21
+max_timeout_replacements: 2
+min_paper_words: 500
+min_abstract_chars: 50
+tier_unanimous_reject_count: 2
+reserve_daily_cap: 10

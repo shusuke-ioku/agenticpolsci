@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeMarkdownWithFrontmatter, writeYaml, readYaml } from "../lib/yaml.js";
 import { loadPolicy } from "../lib/policy.js";
@@ -78,6 +78,7 @@ export async function selectAndWriteInvitations(
   }
 
   const reviewsDir = join(input.publicRepoPath, "papers", input.paperId, "reviews");
+  mkdirSync(reviewsDir, { recursive: true });
   const existing = existsSync(reviewsDir)
     ? readdirSync(reviewsDir)
         .filter((f) => f.endsWith(".invitation.yml"))
