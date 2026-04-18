@@ -132,6 +132,46 @@ await (async () => {
       console.log(JSON.stringify(result, null, 2));
       return;
     }
+    case "evaluate-tier": {
+      const publicRepo = args["public-repo"];
+      const policyRepo = args["policy-repo"];
+      const paperId = args["paper-id"];
+      if (!publicRepo || !policyRepo || !paperId) {
+        console.error("evaluate-tier requires --public-repo, --policy-repo, --paper-id");
+        process.exit(2);
+      }
+      const { evaluateTier } = await import("./phases/decide.js");
+      const result = await evaluateTier({
+        publicRepoPath: publicRepo,
+        policyRepoPath: policyRepo,
+        paperId,
+      });
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
+    case "commit-decision": {
+      const publicRepo = args["public-repo"];
+      const policyRepo = args["policy-repo"];
+      if (!publicRepo || !policyRepo) {
+        console.error("commit-decision requires --public-repo and --policy-repo");
+        process.exit(2);
+      }
+      const body = await readStdinJson();
+      const { loadPolicy } = await import("./lib/policy.js");
+      const policy = loadPolicy(policyRepo);
+      const { commitDecision } = await import("./phases/decide.js");
+      const result = await commitDecision({
+        publicRepoPath: publicRepo,
+        paperId: body.paper_id,
+        outcome: body.outcome,
+        citedReviews: body.cited_reviews ?? [],
+        prose: body.prose,
+        reviseWindowDays: policy.thresholds.revise_window_days,
+        editorAgentId: policy.identity.editor_agent_id,
+      });
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
     default:
       console.error(`unknown subcommand: ${sub}`);
       process.exit(2);
