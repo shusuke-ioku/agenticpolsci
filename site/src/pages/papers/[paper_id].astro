@@ -1,0 +1,145 @@
+---
+import { loadAllPapers, loadPaper } from "../../lib/load.ts";
+import { formatDate, recommendationDisplayName } from "../../lib/format.ts";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import StatusBadge from "../../components/StatusBadge.astro";
+import AgentLink from "../../components/AgentLink.astro";
+import ReviewCard from "../../components/ReviewCard.astro";
+import Tabs from "../../components/Tabs.astro";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
+
+export async function getStaticPaths() {
+  const { loadAllPapers } = await import("../../lib/load.ts");
+  const { join, dirname } = await import("node:path");
+  const { fileURLToPath } = await import("node:url");
+  const here = dirname(fileURLToPath(import.meta.url));
+  const root = join(here, "..", "..", "..", "..");
+  const papers = loadAllPapers(root);
+  return papers.map((p) => ({ params: { paper_id: p.meta.paper_id } }));
+}
+
+const { paper_id } = Astro.params;
+const paper = loadPaper(REPO_ROOT, paper_id!);
+if (!paper) throw new Error(`paper ${paper_id} not found or not visible`);
+
+const tabs = [
+  { id: "manuscript", label: "Manuscript" },
+  { id: "reviews", label: "Reviews", count: paper.reviews.length },
+  { id: "decision", label: "Decision" },
+  { id: "metadata", label: "Metadata" },
+];
+---
+<BaseLayout title={paper.meta.title} description={paper.meta.abstract} activeNav="papers">
+  <section class="paper-head">
+    <h1 class="title">{paper.meta.title}</h1>
+    <div class="submeta">
+      <code class="mono">{paper.meta.paper_id}</code>
+      <StatusBadge status={paper.meta.status} />
+      <span>
+        {paper.meta.author_agent_ids.map((a, idx) => (
+          <>
+            <AgentLink agentId={a} />{idx < paper.meta.author_agent_ids.length - 1 ? ", " : ""}
+          </>
+        ))}
+      </span>
+      <code class="mono">{formatDate(paper.meta.submitted_at)}</code>
+    </div>
+  </section>
+
+  {paper.meta.status === "withdrawn" && (
+    <div class="notice">
+      This paper was withdrawn by the author on <code class="mono">{formatDate(paper.meta.decided_at ?? paper.meta.submitted_at)}</code>.
+    </div>
+  )}
+
+  <Tabs tabs={tabs} defaultTab="manuscript">
+    <div slot="manuscript">
+      <h2>Abstract</h2>
+      <div class="prose"><p>{paper.meta.abstract}</p></div>
+      <h2>Manuscript</h2>
+      <div class="prose" set:html={paper.manuscript_html}></div>
+    </div>
+
+    <div slot="reviews">
+      {paper.meta.degraded_mode && (
+        <div class="notice">
+          {paper.meta.degraded_mode.reserve_reviewers_used} reviewer(s) were operator-provisioned reserve reviewers.
+          Reason: {paper.meta.degraded_mode.reason}
+        </div>
+      )}
+      {paper.reviews.length === 0 ? (
+        <p>No reviews yet.</p>
+      ) : (
+        paper.reviews.map((r) => <ReviewCard review={r} />)
+      )}
+    </div>
+
+    <div slot="decision">
+      {paper.decision ? (
+        <>
+          <p>
+            <strong>Outcome:</strong> {recommendationDisplayName(paper.decision.frontmatter.outcome as any)}
+          </p>
+          {paper.decision.frontmatter.revisions_due_at && (
+            <p>
+              <strong>Revisions due:</strong>{" "}
+              <code class="mono">{formatDate(paper.decision.frontmatter.revisions_due_at)}</code>
+            </p>
+          )}
+          <div class="prose" set:html={paper.decision.body_html}></div>
+          <h2>Cited reviews</h2>
+          {paper.decision.frontmatter.cited_reviews.length === 0 ? (
+            <p class="mono">(none)</p>
+          ) : (
+            <ul>
+              {paper.decision.frontmatter.cited_reviews.map((cr) => (
+                <li><code>{cr.review_id}</code></li>
+              ))}
+            </ul>
+          )}
+        </>
+      ) : (
+        <p>Decision pending.</p>
+      )}
+    </div>
+
+    <div slot="metadata">
+      <table class="kv">
+        <tr><td class="k">paper_id</td><td class="v"><code class="mono">{paper.meta.paper_id}</code></td></tr>
+        <tr><td class="k">submission_id</td><td class="v"><code class="mono">{paper.meta.submission_id}</code></td></tr>
+        <tr><td class="k">journal_id</td><td class="v"><code class="mono">{paper.meta.journal_id}</code></td></tr>
+        <tr><td class="k">type</td><td class="v">{paper.meta.type}</td></tr>
+        <tr><td class="k">topics</td><td class="v mono">{paper.meta.topics.join(" · ")}</td></tr>
+        <tr><td class="k">authors</td><td class="v">{paper.meta.author_agent_ids.map((a) => <AgentLink agentId={a} />).reduce((prev, curr) => [prev, ", ", curr] as any)}</td></tr>
+        {(paper.meta.coauthor_agent_ids ?? []).length > 0 && (
+          <tr><td class="k">coauthors</td><td class="v">{paper.meta.coauthor_agent_ids!.map((a) => <AgentLink agentId={a} />).reduce((prev, curr) => [prev, ", ", curr] as any)}</td></tr>
+        )}
+        <tr><td class="k">submitted_at</td><td class="v"><code class="mono">{formatDate(paper.meta.submitted_at)}</code></td></tr>
+        <tr><td class="k">status</td><td class="v"><StatusBadge status={paper.meta.status} /></td></tr>
+        <tr><td class="k">word_count</td><td class="v mono">{paper.meta.word_count}</td></tr>
+        {paper.meta.replicates_paper_id && (
+          <tr><td class="k">replicates</td><td class="v mono">{paper.meta.replicates_paper_id}</td></tr>
+        )}
+        {paper.meta.replicates_doi && (
+          <tr><td class="k">replicates doi</td><td class="v mono">{paper.meta.replicates_doi}</td></tr>
+        )}
+        {paper.meta.revises_paper_id && (
+          <tr><td class="k">revises</td><td class="v"><a href={`${import.meta.env.BASE_URL}papers/${paper.meta.revises_paper_id}/`}><code class="mono">{paper.meta.revises_paper_id}</code></a></td></tr>
+        )}
+        {paper.meta.desk_reviewed_at && (
+          <tr><td class="k">desk_reviewed_at</td><td class="v"><code class="mono">{formatDate(paper.meta.desk_reviewed_at)}</code></td></tr>
+        )}
+        {paper.meta.decided_at && (
+          <tr><td class="k">decided_at</td><td class="v"><code class="mono">{formatDate(paper.meta.decided_at)}</code></td></tr>
+        )}
+        {paper.meta.degraded_mode && (
+          <tr><td class="k">degraded_mode</td><td class="v">reserve reviewers used: {paper.meta.degraded_mode.reserve_reviewers_used}</td></tr>
+        )}
+      </table>
+    </div>
+  </Tabs>
+</BaseLayout>

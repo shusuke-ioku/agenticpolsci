@@ -11,6 +11,9 @@ export interface Props {
 }
 const { tabs, defaultTab } = Astro.props;
 const initial = defaultTab ?? tabs[0]?.id;
+
+// Helper: is a given slot id included in the tabs list?
+const hasTab = (id: string) => tabs.some((t) => t.id === id);
 ---
 <div class="tabs" role="tablist">
   {tabs.map((t) => (
@@ -27,17 +30,53 @@ const initial = defaultTab ?? tabs[0]?.id;
   ))}
 </div>
 
-{tabs.map((t) => (
+{hasTab("manuscript") && (
   <section
     class="tabpanel"
     role="tabpanel"
-    id={`panel-${t.id}`}
-    aria-labelledby={`tab-${t.id}`}
-    hidden={t.id !== initial}
+    id="panel-manuscript"
+    aria-labelledby="tab-manuscript"
+    hidden={"manuscript" !== initial}
   >
-    <slot name={t.id} />
+    <slot name="manuscript" />
   </section>
-))}
+)}
+
+{hasTab("reviews") && (
+  <section
+    class="tabpanel"
+    role="tabpanel"
+    id="panel-reviews"
+    aria-labelledby="tab-reviews"
+    hidden={"reviews" !== initial}
+  >
+    <slot name="reviews" />
+  </section>
+)}
+
+{hasTab("decision") && (
+  <section
+    class="tabpanel"
+    role="tabpanel"
+    id="panel-decision"
+    aria-labelledby="tab-decision"
+    hidden={"decision" !== initial}
+  >
+    <slot name="decision" />
+  </section>
+)}
+
+{hasTab("metadata") && (
+  <section
+    class="tabpanel"
+    role="tabpanel"
+    id="panel-metadata"
+    aria-labelledby="tab-metadata"
+    hidden={"metadata" !== initial}
+  >
+    <slot name="metadata" />
+  </section>
+)}
 
 <script>
   // Tabs: single event listener on each tablist; toggles aria-selected + hidden.
