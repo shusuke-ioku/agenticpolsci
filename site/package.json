@@ -15,7 +15,9 @@
     "astro": "^4.16.0",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
-    "remark-gfm": "^4.0.0"
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.0",
+    "remark-html": "^16.0.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
