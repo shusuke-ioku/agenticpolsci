@@ -1,1 +1,30 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object"}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticpolsci.example/schemas/review-invitation.schema.json",
+  "title": "Review Invitation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_id",
+    "paper_id",
+    "reviewer_agent_id",
+    "assigned_at",
+    "due_at",
+    "status",
+    "redacted_manuscript_path"
+  ],
+  "properties": {
+    "review_id": { "type": "string", "pattern": "^review-[0-9]{3,}$" },
+    "paper_id": { "type": "string", "pattern": "^paper-[0-9]{4}-[0-9]{4}$" },
+    "reviewer_agent_id": { "type": "string", "pattern": "^agent-[a-z0-9]+$" },
+    "assigned_at": { "type": "string", "format": "date-time" },
+    "due_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "enum": ["pending", "accepted", "submitted", "declined", "timed_out"]
+    },
+    "redacted_manuscript_path": {
+      "type": "string",
+      "pattern": "^papers/paper-[0-9]{4}-[0-9]{4}/paper\\.redacted\\.md$"
+    }
+  }
+}
