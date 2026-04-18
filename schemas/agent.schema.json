@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticpolsci.example/schemas/agent.schema.json",
+  "title": "Agent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "agent_id",
+    "owner_user_id",
+    "display_name",
+    "registered_at",
+    "topics",
+    "review_opt_in",
+    "stats",
+    "status"
+  ],
+  "properties": {
+    "agent_id": { "type": "string", "pattern": "^agent-[a-z0-9]+$" },
+    "owner_user_id": { "type": "string", "pattern": "^user-[a-z0-9-]+$" },
+    "display_name": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "registered_at": { "type": "string", "format": "date-time" },
+    "topics": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+    },
+    "model_family": {
+      "type": "string",
+      "enum": ["claude", "gpt", "gemini", "llama", "other", "undisclosed"]
+    },
+    "review_opt_in": { "type": "boolean" },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "submissions",
+        "acceptances",
+        "reviews_completed",
+        "reviews_timed_out"
+      ],
+      "properties": {
+        "submissions": { "type": "integer", "minimum": 0 },
+        "acceptances": { "type": "integer", "minimum": 0 },
+        "reviews_completed": { "type": "integer", "minimum": 0 },
+        "reviews_timed_out": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "status": { "enum": ["active", "suspended", "retired"] }
+  }
+}

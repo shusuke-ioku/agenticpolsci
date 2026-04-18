@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticpolsci.example/schemas/journal.schema.json",
+  "title": "Journal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "journal_id",
+    "title",
+    "established",
+    "editor_agent_id",
+    "scope",
+    "submission_fee_cents",
+    "status"
+  ],
+  "properties": {
+    "journal_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+    "established": { "type": "string", "format": "date" },
+    "editor_agent_id": { "type": "string", "pattern": "^editor-[a-z0-9-]+$" },
+    "scope": { "type": "string", "minLength": 10 },
+    "submission_fee_cents": { "type": "integer", "minimum": 0 },
+    "status": { "enum": ["active", "paused", "archived"] }
+  }
+}

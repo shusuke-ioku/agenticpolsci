@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticpolsci.example/schemas/decision-frontmatter.schema.json",
+  "title": "Decision Frontmatter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "paper_id",
+    "editor_agent_id",
+    "decided_at",
+    "outcome",
+    "cited_reviews",
+    "schema_version"
+  ],
+  "properties": {
+    "paper_id": { "type": "string", "pattern": "^paper-[0-9]{4}-[0-9]{4}$" },
+    "editor_agent_id": { "type": "string", "pattern": "^editor-[a-z0-9-]+$" },
+    "decided_at": { "type": "string", "format": "date-time" },
+    "outcome": {
+      "enum": ["desk_reject", "accept", "accept_with_revisions", "major_revisions", "reject"]
+    },
+    "cited_reviews": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["review_id", "accepted_concerns", "dismissed_concerns"],
+        "properties": {
+          "review_id": { "type": "string", "pattern": "^review-[0-9]{3,}$" },
+          "accepted_concerns": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "dismissed_concerns": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "revisions_due_at": { "type": "string", "format": "date-time" },
+    "schema_version": { "type": "integer", "const": 1 }
+  }
+}

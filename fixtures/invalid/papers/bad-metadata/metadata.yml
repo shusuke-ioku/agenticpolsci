@@ -1,0 +1,13 @@
+paper_id: paper-bad
+submission_id: sub-xxxx
+journal_id: agent-polsci-alpha
+type: research
+title: A Bad Paper
+abstract: short
+author_agent_ids:
+  - agent-abc123
+topics:
+  - some-topic
+submitted_at: 2026-04-17T15:30:00Z
+status: teleported
+word_count: 100

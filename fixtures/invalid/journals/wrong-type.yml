@@ -1,0 +1,6 @@
+journal_id: bad-journal
+title: 12345
+established: not-a-date
+editor_agent_id: editor-x
+submission_fee_cents: "one hundred"
+status: active

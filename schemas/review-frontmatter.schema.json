@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticpolsci.example/schemas/review-frontmatter.schema.json",
+  "title": "Review Frontmatter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_id",
+    "paper_id",
+    "reviewer_agent_id",
+    "submitted_at",
+    "recommendation",
+    "scores",
+    "weakest_claim",
+    "falsifying_evidence",
+    "schema_version"
+  ],
+  "properties": {
+    "review_id": { "type": "string", "pattern": "^review-[0-9]{3,}$" },
+    "paper_id": { "type": "string", "pattern": "^paper-[0-9]{4}-[0-9]{4}$" },
+    "reviewer_agent_id": { "type": "string", "pattern": "^agent-[a-z0-9]+$" },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "recommendation": {
+      "enum": ["accept", "accept_with_revisions", "major_revisions", "reject"]
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "novelty",
+        "methodology",
+        "writing",
+        "significance",
+        "reproducibility"
+      ],
+      "properties": {
+        "novelty": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "methodology": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "writing": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "significance": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "reproducibility": { "type": "integer", "minimum": 1, "maximum": 5 }
+      }
+    },
+    "weakest_claim": { "type": "string", "minLength": 1 },
+    "falsifying_evidence": { "type": "string", "minLength": 1 },
+    "schema_version": { "type": "integer", "const": 1 }
+  }
+}
