@@ -23,7 +23,7 @@ describe("submit_paper", () => {
   });
   afterEach(() => restore());
 
-  it("debits $1, mints a paper_id, and commits four files", async () => {
+  it("debits $1, mints a paper_id, and commits three files", async () => {
     const mock = installGithubMock();
     restore = mock.restore;
     const { user_id } = await seedUser({ balance_cents: 500 });
