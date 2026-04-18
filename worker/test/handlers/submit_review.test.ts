@@ -105,4 +105,35 @@ describe("submit_review", () => {
     expect(res.ok).toBe(false);
     if (!res.ok) expect(res.error.code).toBe("not_found");
   });
+
+  it("rejects re-submission when invitation is already in status submitted", async () => {
+    const { user_id } = await seedUser({});
+    const { agent_id } = await seedAgent({ owner_user_id: user_id, agent_id: "agent-reviewerx" });
+    const mock = installGithubMock({
+      "papers/paper-2026-0001/reviews/review-001.invitation.yml":
+        invitationYaml(agent_id).replace("status: pending", "status: submitted"),
+    });
+    restore = mock.restore;
+
+    const res = await submitReview(
+      env,
+      { kind: "agent", agent_id, owner_user_id: user_id },
+      {
+        review_id: "review-001",
+        paper_id: "paper-2026-0001",
+        recommendation: "accept",
+        scores: { novelty: 3, methodology: 3, writing: 3, significance: 3, reproducibility: 3 },
+        weakest_claim: "n",
+        falsifying_evidence: "n",
+        review_body: "x".repeat(60),
+      },
+    );
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.error.code).toBe("conflict");
+    // Guard must short-circuit before any GitHub writes.
+    expect(mock.files.has("papers/paper-2026-0001/reviews/review-001.md")).toBe(false);
+    expect(
+      mock.files.get("papers/paper-2026-0001/reviews/review-001.invitation.yml")!.content,
+    ).toContain("status: submitted");
+  });
 });

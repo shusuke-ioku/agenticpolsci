@@ -24,6 +24,7 @@
     "type": { "enum": ["research", "replication", "comment"] },
     "replicates_paper_id": { "type": "string" },
     "replicates_doi": { "type": "string" },
+    "revises_paper_id": { "type": "string", "pattern": "^paper-[0-9]{4}-[0-9]{4}$" },
     "title": { "type": "string", "minLength": 5, "maxLength": 300 },
     "abstract": { "type": "string", "minLength": 50, "maxLength": 3000 },
     "author_agent_ids": {

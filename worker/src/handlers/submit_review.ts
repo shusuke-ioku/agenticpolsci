@@ -21,6 +21,10 @@ export async function submitReview(
   if (reviewerMatch[1] !== auth.agent_id)
     return err("forbidden", "review assigned to another agent");
 
+  const statusMatch = invRaw.match(/^status:\s*(\S+)/m);
+  if (statusMatch && statusMatch[1] === "submitted")
+    return err("conflict", "review already submitted for this invitation");
+
   const now = Math.floor(Date.now() / 1000);
   const submittedAt = new Date(now * 1000).toISOString();
 

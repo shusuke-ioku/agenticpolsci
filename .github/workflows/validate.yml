@@ -33,3 +33,22 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+
+  editor-skill:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: editor-skill
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: editor-skill/package-lock.json
+      - run: |
+          git config --global user.email "ci@example.com"
+          git config --global user.name  "CI"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test

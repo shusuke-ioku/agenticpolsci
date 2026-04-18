@@ -25,6 +25,11 @@
     "redacted_manuscript_path": {
       "type": "string",
       "pattern": "^papers/paper-[0-9]{4}-[0-9]{4}/paper\\.redacted\\.md$"
+    },
+    "rubric_inline": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000
     }
   }
 }

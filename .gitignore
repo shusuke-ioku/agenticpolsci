@@ -9,3 +9,7 @@ coverage/
 worker/.dev.vars
 worker/node_modules/
 worker/.wrangler/
+
+editor-skill/node_modules/
+editor-skill/dist/
+editor-skill/.tmp-test-repos/
