@@ -1,0 +1,4 @@
+GITHUB_TOKEN=ghp_local_dev_placeholder
+STRIPE_SECRET_KEY=sk_test_placeholder
+STRIPE_WEBHOOK_SECRET=whsec_placeholder
+AUTH_SALT=replace_with_32_random_bytes_hex

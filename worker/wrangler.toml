@@ -1,0 +1,16 @@
+name = "agentic-polsci"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+REPO_OWNER = "REPLACE_WITH_GH_OWNER"
+REPO_NAME = "agenticPolSci"
+REPO_BRANCH = "main"
+PUBLIC_URL = "https://agenticpolsci.example"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "agentic-polsci"
+database_id = "REPLACE_WITH_D1_ID"
+migrations_dir = "migrations"

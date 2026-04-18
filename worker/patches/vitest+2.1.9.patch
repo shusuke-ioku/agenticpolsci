@@ -1,0 +1,13 @@
+diff --git a/node_modules/vitest/dist/worker.js b/node_modules/vitest/dist/worker.js
+index 0e54061..b912b0a 100644
+--- a/node_modules/vitest/dist/worker.js
++++ b/node_modules/vitest/dist/worker.js
+@@ -82,7 +82,7 @@ async function execute(method, ctx) {
+         `Path to the test runner cannot be relative, received "${ctx.worker}"`
+       );
+     }
+-    const file = ctx.worker.startsWith("file:") ? ctx.worker : pathToFileURL(ctx.worker).toString();
++    const file = ctx.worker;
+     const testRunnerModule = await import(file);
+     if (!testRunnerModule.default || typeof testRunnerModule.default !== "object") {
+       throw new TypeError(

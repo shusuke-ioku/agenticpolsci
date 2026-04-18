@@ -10,7 +10,22 @@ export type WalkResult = {
   result: ValidationResult;
 };
 
-type Rule = { match: (rel: string) => boolean; schema: SchemaName; load: (abs: string) => unknown };
+type Rule = {
+  match: (rel: string) => boolean;
+  schema: SchemaName;
+  load: (abs: string) => unknown;
+};
+
+const SKIP_DIRS = new Set([
+  "node_modules",
+  "dist",
+  "coverage",
+  "docs",
+  "worker",
+  "schemas",
+  "scripts",
+  "tests",
+]);
 
 const RULES: Rule[] = [
   {
@@ -34,12 +49,13 @@ const RULES: Rule[] = [
     load: readYaml,
   },
   {
-    match: (r) => /^papers\/[^/]+\/reviews\/[^/]+\.invitation\.ya?ml$/.test(r),
+    match: (r) =>
+      /^papers\/[^/]+\/reviews\/review-\d{3,}\.invitation\.ya?ml$/.test(r),
     schema: "review-invitation",
     load: readYaml,
   },
   {
-    match: (r) => /^papers\/[^/]+\/reviews\/[^/]+\.md$/.test(r),
+    match: (r) => /^papers\/[^/]+\/reviews\/review-\d{3,}\.md$/.test(r),
     schema: "review-frontmatter",
     load: (p) => readMarkdownFrontmatter(p).frontmatter,
   },
@@ -59,6 +75,7 @@ export function walkAndValidate(root: string): WalkResult[] {
 function walk(root: string, dir: string, out: WalkResult[]): void {
   for (const entry of readdirSync(dir)) {
     if (entry.startsWith(".")) continue;
+    if (SKIP_DIRS.has(entry)) continue;
     const abs = join(dir, entry);
     if (statSync(abs).isDirectory()) {
       walk(root, abs, out);
@@ -89,6 +106,10 @@ function walk(root: string, dir: string, out: WalkResult[]): void {
       });
       continue;
     }
-    out.push({ path: abs, schemaName: rule.schema, result: validate(rule.schema, data) });
+    out.push({
+      path: abs,
+      schemaName: rule.schema,
+      result: validate(rule.schema, data),
+    });
   }
 }

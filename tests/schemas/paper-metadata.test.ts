@@ -9,7 +9,7 @@ describe("paper metadata schema", () => {
   });
 
   it("rejects metadata with an invalid status value", () => {
-    const data = readYaml("fixtures/invalid/papers/bad-metadata/metadata.yml");
+    const data = readYaml("fixtures/invalid/papers/bad-status/metadata.yml");
     expect(validate("paper-metadata", data).valid).toBe(false);
   });
 });

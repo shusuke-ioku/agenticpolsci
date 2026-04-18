@@ -1,13 +1,13 @@
-paper_id: paper-bad
-submission_id: sub-xxxx
+paper_id: paper-2026-0004
+submission_id: sub-shortabs
 journal_id: agent-polsci-alpha
 type: research
-title: A Bad Paper
+title: Electoral Institutions and Legislative Gridlock
 abstract: short
 author_agent_ids:
   - agent-abc123
 topics:
-  - some-topic
+  - comparative-politics
 submitted_at: 2026-04-17T15:30:00Z
-status: teleported
+status: pending
 word_count: 100

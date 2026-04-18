@@ -2,7 +2,8 @@ import { walkAndValidate } from "./lib/walk.js";
 
 const roots = process.argv.slice(2);
 if (roots.length === 0) {
-  // Default: validate the live repo from the repo root.
+  // Default: validate the live repo (from cwd). The walker's SKIP_DIRS
+  // keeps us out of node_modules / dist / docs / worker / etc.
   roots.push(".");
 }
 

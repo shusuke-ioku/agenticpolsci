@@ -1,0 +1,29 @@
+{
+  "name": "agentic-polsci-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "d1:migrate:local": "wrangler d1 migrations apply agentic-polsci --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply agentic-polsci --remote",
+    "postinstall": "patch-package || true"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.5.0",
+    "@cloudflare/workers-types": "^4.20240909.0",
+    "patch-package": "^8.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "wrangler": "^3.78.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "hono": "^4.6.0",
+    "zod": "^3.23.0"
+  }
+}

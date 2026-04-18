@@ -1,0 +1,17 @@
+diff --git a/node_modules/vite-node/dist/client.mjs b/node_modules/vite-node/dist/client.mjs
+index bf8f6bc..09c6a1c 100644
+--- a/node_modules/vite-node/dist/client.mjs
++++ b/node_modules/vite-node/dist/client.mjs
+@@ -412,6 +412,12 @@ ${getStack()}`
+     return !path.endsWith(".mjs") && "default" in mod;
+   }
+   importExternalModule(path) {
++    // Workaround: workerd does not support file:// URLs in dynamic import().
++    // Convert file:// URLs back to absolute filesystem paths so workerd's
++    // module fallback service can resolve them without double-encoding.
++    if (typeof path === "string" && path.startsWith("file://")) {
++      try { path = decodeURIComponent(path.slice("file://".length)); } catch (_) {}
++    }
+     return import(path);
+   }
+   /**

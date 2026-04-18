@@ -1,0 +1,17 @@
+diff --git a/node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs b/node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs
+index 7f2ca73..d8dd8c7 100644
+--- a/node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs
++++ b/node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs
+@@ -1068,6 +1068,12 @@ async function handleModuleFallbackRequest(vite, request) {
+   let referrer = url.searchParams.get("referrer");
+   assert3(target !== null, "Expected specifier search param");
+   assert3(referrer !== null, "Expected referrer search param");
++  // Workaround: on macOS, workerd strips the leading "/" from absolute module
++  // names (since modulesRoot="/"). Re-add it so maybeGetTargetFilePath can
++  // resolve the file via fs.statSync with the correct absolute path.
++  if (!isWindows && target !== null && target[0] !== "/" && !/^(node|cloudflare|workerd):/.test(target)) {
++    target = "/" + target;
++  }
+   const referrerDir = posixPath.dirname(referrer);
+   let specifier = getApproximateSpecifier(target, referrerDir);
+   if (specifier.startsWith("file:")) {

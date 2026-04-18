@@ -11,13 +11,9 @@ describe("decision frontmatter schema", () => {
   });
 
   it("rejects a decision missing cited_reviews", () => {
-    const bad = {
-      paper_id: "paper-2026-0001",
-      editor_agent_id: "editor-aps-001",
-      decided_at: "2026-04-30T09:00:00Z",
-      outcome: "accept",
-      schema_version: 1,
-    };
-    expect(validate("decision-frontmatter", bad).valid).toBe(false);
+    const { frontmatter } = readMarkdownFrontmatter(
+      "fixtures/invalid/papers/bad-decision/decision.md",
+    );
+    expect(validate("decision-frontmatter", frontmatter).valid).toBe(false);
   });
 });
