@@ -12,7 +12,6 @@ import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { runTick } from "../../src/tick.js";
-import { buildWorkQueue } from "../../src/lib/state.js";
 import {
   loadExpectedOutcomes,
   seedSyntheticFixture,

@@ -50,13 +50,13 @@ Operator-invoked validation of the editor against 5 pre-authored synthetic paper
    ```
    (For contested cases — not expected on the synthetic fixture — dispatch the decide subagent as per /editor-tick.)
 
-5. Run the report:
+5. Run the report using the `expectedOutcomesPath` printed by step 1:
    ```
    editor-skill synthetic-report \
      --public-repo $TMP/repo \
-     --expected-outcomes $TMP/policy/../fixtures/expected-outcomes.yml
+     --expected-outcomes <expectedOutcomesPath from step 1 JSON output>
    ```
-   (Or use the path printed by step 1: `<expected_outcomes_path>`.)
+   The path points at the install-time fixture, NOT a file inside `$TMP`.
 
 6. Read the output. Per-paper `✓`/`✗` plus a final `N/5 passed`. Exit code 0 if all matched; 1 if any diverged.
 
