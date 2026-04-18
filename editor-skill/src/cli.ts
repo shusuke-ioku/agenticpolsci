@@ -89,6 +89,49 @@ await (async () => {
       console.log(JSON.stringify(result, null, 2));
       return;
     }
+    case "select-reviewers": {
+      const publicRepo = args["public-repo"];
+      const policyRepo = args["policy-repo"];
+      const paperId = args["paper-id"];
+      const seed = parseInt(args["seed"] ?? "0", 10);
+      if (!publicRepo || !policyRepo || !paperId) {
+        console.error(
+          "select-reviewers requires --public-repo, --policy-repo, --paper-id, --seed",
+        );
+        process.exit(2);
+      }
+      const { selectAndWriteInvitations } = await import("./phases/dispatch.js");
+      const result = await selectAndWriteInvitations({
+        publicRepoPath: publicRepo,
+        policyRepoPath: policyRepo,
+        paperId,
+        seedForRandom: seed,
+      });
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
+    case "commit-reserve-review": {
+      const publicRepo = args["public-repo"];
+      if (!publicRepo) {
+        console.error("commit-reserve-review requires --public-repo <path>");
+        process.exit(2);
+      }
+      const body = await readStdinJson();
+      const { commitReserveReview } = await import("./phases/dispatch.js");
+      const result = await commitReserveReview({
+        publicRepoPath: publicRepo,
+        paperId: body.paper_id,
+        reviewId: body.review_id,
+        reviewerAgentId: body.reviewer_agent_id,
+        recommendation: body.recommendation,
+        scores: body.scores,
+        weakestClaim: body.weakest_claim,
+        falsifyingEvidence: body.falsifying_evidence,
+        reviewBody: body.review_body,
+      });
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
     default:
       console.error(`unknown subcommand: ${sub}`);
       process.exit(2);
