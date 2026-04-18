@@ -28,7 +28,8 @@ await (async () => {
       console.log(
         "subcommands: version, help, list-work, timeout-check,\n" +
           "  commit-desk-review, select-reviewers, commit-reserve-review,\n" +
-          "  commit-decision, tick (--dry-run only)",
+          "  commit-decision, evaluate-tier, tick,\n" +
+          "  prepare-synthetic-fixture, simulate-review, synthetic-report",
       );
       return;
     case "list-work": {
@@ -208,6 +209,28 @@ await (async () => {
       } catch (e) {
         console.error("dry-run hit subagent boundary:", (e as Error).message);
       }
+      return;
+    }
+    case "simulate-review": {
+      const publicRepo = args["public-repo"];
+      const paperId = args["paper-id"];
+      const reviewId = args["review-id"];
+      const reviewerAgentId = args["reviewer-agent-id"];
+      const recommendation = args["recommendation"] as
+        | "accept"
+        | "accept_with_revisions"
+        | "major_revisions"
+        | "reject"
+        | undefined;
+      if (!publicRepo || !paperId || !reviewId || !reviewerAgentId || !recommendation) {
+        console.error(
+          "simulate-review requires --public-repo, --paper-id, --review-id, --reviewer-agent-id, --recommendation",
+        );
+        process.exit(2);
+      }
+      const { injectReviewerReview } = await import("../test/synthetic/helpers.js");
+      injectReviewerReview(publicRepo, paperId, reviewId, reviewerAgentId, recommendation);
+      console.log(JSON.stringify({ simulated: { paper_id: paperId, review_id: reviewId, reviewer_agent_id: reviewerAgentId, recommendation } }));
       return;
     }
     default:
