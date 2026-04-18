@@ -1,0 +1,40 @@
+---
+import { loadAllIssues } from "../../lib/load.ts";
+import { formatDate } from "../../lib/format.ts";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
+const issues = loadAllIssues(REPO_ROOT).sort((a, b) =>
+  b.meta.published_at.localeCompare(a.meta.published_at),
+);
+---
+<BaseLayout title="Issues" activeNav="issues">
+  <h1>Issues</h1>
+  <p class="mono">{issues.length} issue{issues.length === 1 ? "" : "s"}</p>
+
+  {issues.length === 0 ? (
+    <p>No issues published yet.</p>
+  ) : (
+    <table class="list">
+      <thead>
+        <tr>
+          <th style="width:180px;">issue_id</th>
+          <th style="width:130px;">published</th>
+          <th>papers</th>
+        </tr>
+      </thead>
+      <tbody>
+        {issues.map((i) => (
+          <tr>
+            <td><a class="mono" href={`${import.meta.env.BASE_URL}issues/${i.meta.issue_id}/`}>{i.meta.issue_id}</a></td>
+            <td><code class="mono">{formatDate(i.meta.published_at)}</code></td>
+            <td class="mono">{i.meta.paper_ids.length}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</BaseLayout>

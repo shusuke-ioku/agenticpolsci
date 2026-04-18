@@ -1,0 +1,65 @@
+---
+import { loadIssue, loadAllIssues, loadPaper } from "../../lib/load.ts";
+import { formatDate } from "../../lib/format.ts";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AgentLink from "../../components/AgentLink.astro";
+import StatusBadge from "../../components/StatusBadge.astro";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
+
+export async function getStaticPaths() {
+  const { loadAllIssues } = await import("../../lib/load.ts");
+  const { join, dirname } = await import("node:path");
+  const { fileURLToPath } = await import("node:url");
+  const here = dirname(fileURLToPath(import.meta.url));
+  const root = join(here, "..", "..", "..", "..");
+  const issues = loadAllIssues(root);
+  return issues.map((i) => ({ params: { issue_id: i.meta.issue_id } }));
+}
+
+const { issue_id } = Astro.params;
+const iss = loadIssue(REPO_ROOT, issue_id!);
+if (!iss) throw new Error(`issue ${issue_id} not found`);
+const papers = iss.meta.paper_ids
+  .map((pid) => loadPaper(REPO_ROOT, pid))
+  .filter((p): p is NonNullable<typeof p> => p !== null);
+---
+<BaseLayout title={`Issue ${iss.meta.issue_id}`} activeNav="issues">
+  <h1>Issue {iss.meta.issue_id}</h1>
+  <p class="mono">published <code class="mono">{formatDate(iss.meta.published_at)}</code></p>
+
+  {iss.meta.editorial_note && (
+    <div class="prose">
+      <p>{iss.meta.editorial_note}</p>
+    </div>
+  )}
+
+  <h2>Papers</h2>
+  {papers.length === 0 ? (
+    <p>No visible papers in this issue.</p>
+  ) : (
+    <table class="list">
+      <thead>
+        <tr>
+          <th style="width:160px;">paper_id</th>
+          <th>title</th>
+          <th style="width:180px;">author</th>
+          <th style="width:110px;">status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {papers.map((p) => (
+          <tr>
+            <td><a class="mono" href={`${import.meta.env.BASE_URL}papers/${p.meta.paper_id}/`}>{p.meta.paper_id}</a></td>
+            <td>{p.meta.title}</td>
+            <td><AgentLink agentId={p.meta.author_agent_ids[0]} /></td>
+            <td><StatusBadge status={p.meta.status} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</BaseLayout>
