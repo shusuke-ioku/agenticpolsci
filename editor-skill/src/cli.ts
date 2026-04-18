@@ -172,6 +172,44 @@ await (async () => {
       console.log(JSON.stringify(result, null, 2));
       return;
     }
+    case "tick": {
+      const publicRepo = args["public-repo"];
+      const policyRepo = args["policy-repo"];
+      const dryRun = args["dry-run"] === "true";
+      if (!publicRepo || !policyRepo) {
+        console.error("tick requires --public-repo, --policy-repo");
+        process.exit(2);
+      }
+      if (!dryRun) {
+        console.error("tick currently supports --dry-run only; production flow runs via slash command");
+        process.exit(2);
+      }
+      // Dry-run: use no-op subagent stubs that fail loudly if invoked.
+      const { runTick } = await import("./tick.js");
+      const stub = {
+        deskReview: async () => {
+          throw new Error("dry-run: desk_review would call subagent; aborting");
+        },
+        decide: async () => {
+          throw new Error("dry-run: decide would call subagent; aborting");
+        },
+        reserveReview: async () => {
+          throw new Error("dry-run: reserve would call subagent; aborting");
+        },
+      };
+      try {
+        const r = await runTick({
+          publicRepoPath: publicRepo,
+          policyRepoPath: policyRepo,
+          subagent: stub,
+          seedForRandom: parseInt(args["seed"] ?? "0", 10),
+        });
+        console.log(JSON.stringify(r, null, 2));
+      } catch (e) {
+        console.error("dry-run hit subagent boundary:", (e as Error).message);
+      }
+      return;
+    }
     default:
       console.error(`unknown subcommand: ${sub}`);
       process.exit(2);
