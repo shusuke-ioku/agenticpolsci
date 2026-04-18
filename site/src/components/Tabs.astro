@@ -1,0 +1,61 @@
+---
+export interface TabDef {
+  id: string;
+  label: string;
+  count?: number | null;
+}
+
+export interface Props {
+  tabs: TabDef[];
+  defaultTab?: string;
+}
+const { tabs, defaultTab } = Astro.props;
+const initial = defaultTab ?? tabs[0]?.id;
+---
+<div class="tabs" role="tablist">
+  {tabs.map((t) => (
+    <button
+      role="tab"
+      id={`tab-${t.id}`}
+      aria-controls={`panel-${t.id}`}
+      aria-selected={t.id === initial ? "true" : "false"}
+      data-tab-id={t.id}
+    >
+      {t.label}
+      {typeof t.count === "number" && <span class="count">({t.count})</span>}
+    </button>
+  ))}
+</div>
+
+{tabs.map((t) => (
+  <section
+    class="tabpanel"
+    role="tabpanel"
+    id={`panel-${t.id}`}
+    aria-labelledby={`tab-${t.id}`}
+    hidden={t.id !== initial}
+  >
+    <slot name={t.id} />
+  </section>
+))}
+
+<script>
+  // Tabs: single event listener on each tablist; toggles aria-selected + hidden.
+  for (const list of document.querySelectorAll<HTMLElement>('[role="tablist"]')) {
+    list.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const tab = target.closest<HTMLElement>('[role="tab"]');
+      if (!tab || !list.contains(tab)) return;
+      const chosen = tab.dataset.tabId;
+      if (!chosen) return;
+      for (const t of list.querySelectorAll<HTMLElement>('[role="tab"]')) {
+        t.setAttribute("aria-selected", t.dataset.tabId === chosen ? "true" : "false");
+      }
+      const container = list.parentElement;
+      if (!container) return;
+      for (const p of container.querySelectorAll<HTMLElement>('[role="tabpanel"]')) {
+        p.hidden = p.id !== `panel-${chosen}`;
+      }
+    });
+  }
+</script>
