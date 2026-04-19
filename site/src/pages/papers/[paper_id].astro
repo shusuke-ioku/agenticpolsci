@@ -21,6 +21,36 @@ const paper = loadPaper(REPO_ROOT, paper_id!);
 if (!paper) throw new Error(`paper ${paper_id} not found or not visible`);
 
 const finalized = isFinalized(paper.meta);
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/<[^>]+>/g, "")
+    .replace(/&[a-z]+;/g, " ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function buildToc(html: string): { html: string; toc: { id: string; text: string }[] } {
+  const seen = new Set<string>();
+  const toc: { id: string; text: string }[] = [];
+  const out = html.replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/gi, (_m, attrs, inner) => {
+    const text = String(inner).replace(/<[^>]+>/g, "").trim();
+    let id = slugify(text) || `section-${toc.length + 1}`;
+    let n = 2;
+    const base = id;
+    while (seen.has(id)) id = `${base}-${n++}`;
+    seen.add(id);
+    toc.push({ id, text });
+    const existingAttrs = attrs ? String(attrs) : "";
+    return `<h2${existingAttrs} id="${id}">${inner}</h2>`;
+  });
+  return { html: out, toc };
+}
+
+const { html: manuscriptHtmlWithIds, toc } = finalized
+  ? buildToc(paper.manuscript_html)
+  : { html: paper.manuscript_html, toc: [] };
 // Note: the slot id stays "manuscript" in both states (the Tabs component
 // has a fixed allowlist of slot names); only the tab label changes.
 const tabs = finalized
@@ -68,6 +98,16 @@ const tabs = finalized
     {finalized ? (
       <div slot="manuscript">
         <div class="prose abstract"><p><strong>Abstract.</strong> {paper.meta.abstract}</p></div>
+        {toc.length > 0 && (
+          <nav class="paper-toc" aria-label="Contents">
+            <div class="paper-toc-label">Contents</div>
+            <ol class="paper-toc-list">
+              {toc.map((t) => (
+                <li><a href={`#${t.id}`}>{t.text}</a></li>
+              ))}
+            </ol>
+          </nav>
+        )}
         {paper.has_pdf && (
           <p class="pdf-link">
             <a href={`${import.meta.env.BASE_URL}papers/${paper.meta.paper_id}/paper.pdf`} download>
@@ -76,7 +116,7 @@ const tabs = finalized
             <span class="pdf-note"> · typeset via r2-typst</span>
           </p>
         )}
-        <div class="prose" set:html={paper.manuscript_html}></div>
+        <div class="prose" set:html={manuscriptHtmlWithIds}></div>
       </div>
     ) : (
       <div slot="manuscript">
@@ -176,3 +216,45 @@ const tabs = finalized
     </div>
   </Tabs>
 </BaseLayout>
+
+<style>
+  .paper-toc {
+    border: 1.5px solid var(--color-text);
+    padding: 10px 14px;
+    margin: 16px 0 20px 0;
+    background: var(--color-bg);
+  }
+  .paper-toc-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .paper-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: paper-toc;
+  }
+  .paper-toc-list li {
+    margin: 2px 0;
+    font-size: 12px;
+    line-height: 1.55;
+    counter-increment: paper-toc;
+  }
+  .paper-toc-list li::before {
+    content: counter(paper-toc) ". ";
+    color: #888;
+  }
+  .paper-toc-list a {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .paper-toc-list a:hover,
+  .paper-toc-list a:focus-visible {
+    border-bottom-color: var(--color-text);
+  }
+</style>
