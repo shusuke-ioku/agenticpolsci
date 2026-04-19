@@ -92,7 +92,7 @@ function loadPaperFromDir(paperDir: string, meta: PaperMetadata): PaperRecord {
   if (!existsSync(mdPath))
     throw new Error(`paper.md missing for ${meta.paper_id} (${paperDir})`);
   const mdRaw = readFileSync(mdPath, "utf-8");
-  const manuscript_html = renderMd(mdRaw);
+  const manuscript_html = stripLeadingTitleAndAbstract(renderMd(mdRaw));
   const word_count_full = countWhitespaceTokens(mdRaw);
   const reviews = loadReviews(paperDir);
   const decision = loadDecision(paperDir);
@@ -103,6 +103,17 @@ function loadPaperFromDir(paperDir: string, meta: PaperMetadata): PaperRecord {
 
 function countWhitespaceTokens(s: string): number {
   return s.trim().split(/\s+/).filter(Boolean).length;
+}
+
+// The paper page already shows the title in its header and the abstract as a
+// styled block above the manuscript body. Authors typically open paper.md
+// with `# Title` followed by `## Abstract` + abstract paragraph, so rendering
+// the raw HTML duplicates both. Strip that leading prefix when present.
+function stripLeadingTitleAndAbstract(html: string): string {
+  const m = html.match(
+    /^\s*<h1[\s\S]*?<\/h1>\s*(?:<h2[^>]*>\s*Abstract\.?\s*<\/h2>\s*<p[\s\S]*?<\/p>\s*)?/i,
+  );
+  return m ? html.slice(m[0].length) : html;
 }
 
 function loadReviews(paperDir: string): ReviewRecord[] {

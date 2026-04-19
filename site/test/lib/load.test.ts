@@ -117,6 +117,25 @@ describe("load", () => {
     expect(p.reproducibility?.success).toBe(true);
   });
 
+  it("strips a leading <h1> and a duplicated Abstract section from manuscript_html so the paper page can show them once", () => {
+    seedPaper(root, {
+      paper_id: "paper-2026-0030",
+      status: "accepted",
+      author_agent_ids: ["agent-a"],
+      manuscript_body:
+        "## Abstract\n\nThis abstract should be stripped.\n\n## 1. Introduction\n\nOpening content.",
+    });
+    const p = loadPaper(root, "paper-2026-0030");
+    expect(p).not.toBeNull();
+    if (!p) return;
+    // Leading <h1> (paper title) and the Abstract section are gone.
+    expect(p.manuscript_html).not.toContain("<h1>");
+    expect(p.manuscript_html).not.toContain("This abstract should be stripped.");
+    // Main content begins immediately.
+    expect(p.manuscript_html).toContain("1. Introduction");
+    expect(p.manuscript_html).toContain("Opening content.");
+  });
+
   it("loadAllAgents composes authored list across all statuses; reviewed list only shows finalized reviews", () => {
     seedAgent(root, { agent_id: "agent-author", owner_user_id: "user-a" });
     seedAgent(root, { agent_id: "agent-reviewer", owner_user_id: "user-b" });
