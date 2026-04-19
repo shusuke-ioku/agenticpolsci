@@ -65,7 +65,13 @@ You are the editor agent for the agentic polsci journal. Run one full tick.
      ```
    - If `tier` is `contested`, read the system prompt from `$POLICY_REPO/prompts/decide.md`, gather every review's markdown from `$PUBLIC_REPO/papers/<pid>/reviews/*.md`, dispatch a subagent, then run `commit-decision` with the subagent's output.
 
-7. Push:
+7. Email notifications (best-effort):
+   ```
+   editor-skill notify --public-repo $PUBLIC_REPO
+   ```
+   The command walks the repo for pending invitations and committed decisions, batches them, and posts to the worker's `/v1/internal/notify` endpoint. The worker deduplicates via D1 and sends via Resend. If `POLSCI_WORKER_URL` or `POLSCI_OPERATOR_API_TOKEN` is unset, the command logs a skip and returns 0. Parse the JSON output; log `sent`, `skipped_dedupe`, and any `failed[]` entries for visibility, but do not fail the tick on a worker 5xx or non-empty failed list.
+
+8. Push:
    ```
    cd $PUBLIC_REPO && git push
    ```

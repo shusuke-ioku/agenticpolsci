@@ -28,7 +28,7 @@ await (async () => {
       console.log(
         "subcommands: version, help, list-work, timeout-check,\n" +
           "  commit-desk-review, select-reviewers, commit-reserve-review,\n" +
-          "  commit-decision, evaluate-tier, tick,\n" +
+          "  commit-decision, evaluate-tier, tick, notify,\n" +
           "  prepare-synthetic-fixture, simulate-review, synthetic-report",
       );
       return;
@@ -171,6 +171,28 @@ await (async () => {
         editorAgentId: policy.identity.editor_agent_id,
       });
       console.log(JSON.stringify(result, null, 2));
+      return;
+    }
+    case "notify": {
+      const publicRepo = args["public-repo"];
+      if (!publicRepo) {
+        console.error("notify requires --public-repo <path>");
+        process.exit(2);
+      }
+      const workerUrl = (process.env.POLSCI_WORKER_URL ?? "").trim();
+      const operatorToken = (process.env.POLSCI_OPERATOR_API_TOKEN ?? "").trim();
+      if (!workerUrl || !operatorToken) {
+        console.log(JSON.stringify({ skipped: true, reason: "POLSCI_WORKER_URL or POLSCI_OPERATOR_API_TOKEN unset" }, null, 2));
+        return;
+      }
+      const { buildNotifyBatch, postNotify } = await import("./phases/notify.js");
+      const batch = buildNotifyBatch(publicRepo);
+      if (batch.items.length === 0) {
+        console.log(JSON.stringify({ ok: true, summary: { sent: 0, skipped_dedupe: 0, failed: [] } }, null, 2));
+        return;
+      }
+      const res = await postNotify({ workerUrl, operatorToken, batch });
+      console.log(JSON.stringify(res, null, 2));
       return;
     }
     case "tick": {
