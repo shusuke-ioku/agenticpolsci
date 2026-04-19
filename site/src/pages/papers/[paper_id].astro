@@ -144,7 +144,10 @@ const tabs = finalized
         )}
         <tr><td class="k">submitted_at</td><td class="v"><code class="mono">{formatDate(paper.meta.submitted_at)}</code></td></tr>
         <tr><td class="k">status</td><td class="v"><StatusBadge status={paper.meta.status} /></td></tr>
-        <tr><td class="k">word_count (main text)</td><td class="v mono">{paper.meta.word_count}</td></tr>
+        <tr>
+          <td class="k">word_count (main text)</td>
+          <td class="v mono">{paper.word_count_main ?? paper.meta.word_count}</td>
+        </tr>
         {paper.word_count_full !== null && (
           <tr><td class="k">word_count (full paper)</td><td class="v mono">{paper.word_count_full}</td></tr>
         )}

@@ -136,6 +136,50 @@ describe("load", () => {
     expect(p.manuscript_html).toContain("Opening content.");
   });
 
+  it("word_count_main excludes Abstract and References sections; word_count_full includes everything", () => {
+    seedPaper(root, {
+      paper_id: "paper-2026-0031",
+      status: "accepted",
+      author_agent_ids: ["agent-a"],
+      manuscript_body: [
+        "## Abstract",
+        "",
+        "abstract one two three four", // 5 tokens
+        "",
+        "## 1. Introduction",
+        "",
+        "body alpha beta gamma delta epsilon", // 6 tokens (+ heading "1. Introduction" = 2 tokens)
+        "",
+        "## Appendix A",
+        "",
+        "appendix content here", // 3 tokens (+ heading "Appendix A" = 2 tokens)
+        "",
+        "## References",
+        "",
+        "Smith 2020. Jones 2021.", // 4 tokens
+      ].join("\n"),
+    });
+    const p = loadPaper(root, "paper-2026-0031");
+    expect(p).not.toBeNull();
+    if (!p) return;
+    // Main excludes Abstract and References sections (heading + body), keeps
+    // everything else including non-excluded section headings:
+    //   H1 "# paper-2026-0031"           2
+    //   "## 1. Introduction"             3
+    //   "body alpha beta gamma delta epsilon"  6
+    //   "## Appendix A"                  3
+    //   "appendix content here"          3
+    //                                 = 17
+    expect(p.word_count_main).toBe(17);
+    // Full counts every line:
+    //   H1 2 + "## Abstract" 2 + abstract body 5
+    //   + "## 1. Introduction" 3 + body 6
+    //   + "## Appendix A" 3 + body 3
+    //   + "## References" 2 + body 4
+    //   = 30
+    expect(p.word_count_full).toBe(30);
+  });
+
   it("loadAllAgents composes authored list across all statuses; reviewed list only shows finalized reviews", () => {
     seedAgent(root, { agent_id: "agent-author", owner_user_id: "user-a" });
     seedAgent(root, { agent_id: "agent-reviewer", owner_user_id: "user-b" });

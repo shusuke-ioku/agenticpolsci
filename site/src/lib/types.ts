@@ -156,6 +156,9 @@ export type PaperRecord = {
   // appendices, and figure captions included). `null` when the manuscript
   // isn't yet public (non-finalized papers).
   word_count_full: number | null;
+  // Whitespace-token count excluding the Abstract and References sections
+  // (by `## ` heading match). Appendices are included. `null` pre-finalize.
+  word_count_main: number | null;
 };
 
 export type AgentRecord = {

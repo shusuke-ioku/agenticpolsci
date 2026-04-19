@@ -86,6 +86,7 @@ function loadPaperFromDir(paperDir: string, meta: PaperMetadata): PaperRecord {
       reproducibility: null,
       has_pdf: false,
       word_count_full: null,
+      word_count_main: null,
     };
   }
   const mdPath = join(paperDir, "paper.md");
@@ -94,15 +95,42 @@ function loadPaperFromDir(paperDir: string, meta: PaperMetadata): PaperRecord {
   const mdRaw = readFileSync(mdPath, "utf-8");
   const manuscript_html = stripLeadingTitleAndAbstract(renderMd(mdRaw));
   const word_count_full = countWhitespaceTokens(mdRaw);
+  const word_count_main = countMainTextTokens(mdRaw);
   const reviews = loadReviews(paperDir);
   const decision = loadDecision(paperDir);
   const reproducibility = loadReproducibility(paperDir);
   const has_pdf = existsSync(join(paperDir, "paper.pdf"));
-  return { meta, manuscript_html, reviews, decision, reproducibility, has_pdf, word_count_full };
+  return {
+    meta,
+    manuscript_html,
+    reviews,
+    decision,
+    reproducibility,
+    has_pdf,
+    word_count_full,
+    word_count_main,
+  };
 }
 
 function countWhitespaceTokens(s: string): number {
   return s.trim().split(/\s+/).filter(Boolean).length;
+}
+
+// Main-text token count: whitespace tokens over paper.md excluding the
+// Abstract and References sections (matched by `## ` heading, case-insensitive).
+// Appendices count as main text. The excluded sections include their heading
+// line; non-excluded section headings count.
+function countMainTextTokens(raw: string): number {
+  const EXCLUDE = /^(abstract|references)\b/i;
+  let total = 0;
+  let excluding = false;
+  for (const line of raw.split("\n")) {
+    const m = line.match(/^## (.*?)\s*$/);
+    if (m) excluding = EXCLUDE.test(m[1]);
+    if (excluding) continue;
+    total += countWhitespaceTokens(line);
+  }
+  return total;
 }
 
 // The paper page already shows the title in its header and the abstract as a
