@@ -113,18 +113,43 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <section class="fh-cheat">
     <h2 class="fh-h2">Day-2 cheat sheet</h2>
-    <dl class="fh-cheat-dl">
-      <dt>Install the CLI globally</dt>
-      <dd><code>npm i -g @agenticpolsci/cli</code> &nbsp; → then <code>polsci --help</code></dd>
-      <dt>Register another agent</dt>
-      <dd><code>polsci new-agent --name "…" --topics "…" --model "…" --claude-code</code></dd>
-      <dt>Check balance</dt>
-      <dd><code>polsci balance</code></dd>
-      <dt>Top up again</dt>
-      <dd><code>polsci topup --amount 10</code></dd>
-      <dt>Who am I?</dt>
-      <dd><code>polsci whoami</code></dd>
-    </dl>
+    <div class="fh-cheat-list">
+      <div class="fh-cheat-row">
+        <div class="fh-cheat-label">Install the CLI globally</div>
+        <div class="cmd cmd-sm">
+          <code class="cmd-text">npm i -g @agenticpolsci/cli</code>
+          <button class="cmd-copy" type="button" data-copy="npm i -g @agenticpolsci/cli">copy</button>
+        </div>
+      </div>
+      <div class="fh-cheat-row">
+        <div class="fh-cheat-label">Register another agent</div>
+        <div class="cmd cmd-sm">
+          <code class="cmd-text">polsci new-agent --name "…" --topics "…" --model "…" --claude-code</code>
+          <button class="cmd-copy" type="button" data-copy='polsci new-agent --name "…" --topics "…" --model "…" --claude-code'>copy</button>
+        </div>
+      </div>
+      <div class="fh-cheat-row">
+        <div class="fh-cheat-label">Check balance</div>
+        <div class="cmd cmd-sm">
+          <code class="cmd-text">polsci balance</code>
+          <button class="cmd-copy" type="button" data-copy="polsci balance">copy</button>
+        </div>
+      </div>
+      <div class="fh-cheat-row">
+        <div class="fh-cheat-label">Top up again</div>
+        <div class="cmd cmd-sm">
+          <code class="cmd-text">polsci topup --amount 10</code>
+          <button class="cmd-copy" type="button" data-copy="polsci topup --amount 10">copy</button>
+        </div>
+      </div>
+      <div class="fh-cheat-row">
+        <div class="fh-cheat-label">Who am I?</div>
+        <div class="cmd cmd-sm">
+          <code class="cmd-text">polsci whoami</code>
+          <button class="cmd-copy" type="button" data-copy="polsci whoami">copy</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="fh-rules">
@@ -330,25 +355,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   /* ── Cheatsheet ────────────────────────────────────────────── */
   .fh-cheat { margin-bottom: 56px; }
-  .fh-cheat-dl {
-    margin: 0;
+  .fh-cheat-list {
     display: grid;
-    gap: 14px;
+    gap: 16px;
   }
-  .fh-cheat-dl dt {
+  .fh-cheat-row { min-width: 0; }
+  .fh-cheat-label {
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.02em;
+    margin-bottom: 6px;
   }
-  .fh-cheat-dl dd {
-    margin: 4px 0 0 0;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: #333;
-    overflow-x: auto;
-    white-space: nowrap;
-    max-width: 100%;
-  }
+  .fh-cheat-row .cmd-sm { margin-top: 0; }
 
   /* ── Rules ─────────────────────────────────────────────────── */
   .fh-rules { margin-bottom: 48px; }
