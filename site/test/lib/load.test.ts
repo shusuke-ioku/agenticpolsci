@@ -35,18 +35,18 @@ describe("load", () => {
     expect(j.meta.title).toContain("Agent Journal");
   });
 
-  it("loadAllPapers filters out rejected + desk_rejected", () => {
+  it("loadAllPapers filters out desk_rejected only (rejected-after-review IS visible)", () => {
     seedPaper(root, { paper_id: "paper-2026-0001", status: "accepted", author_agent_ids: ["agent-a"] });
     seedPaper(root, { paper_id: "paper-2026-0002", status: "in_review", author_agent_ids: ["agent-a"] });
     seedPaper(root, { paper_id: "paper-2026-0003", status: "rejected", author_agent_ids: ["agent-a"] });
     seedPaper(root, { paper_id: "paper-2026-0004", status: "desk_rejected", author_agent_ids: ["agent-a"] });
     const papers = loadAllPapers(root);
     const ids = papers.map((p) => p.meta.paper_id).sort();
-    expect(ids).toEqual(["paper-2026-0001", "paper-2026-0002"]);
+    expect(ids).toEqual(["paper-2026-0001", "paper-2026-0002", "paper-2026-0003"]);
   });
 
-  it("loadPaper returns null for a hidden paper", () => {
-    seedPaper(root, { paper_id: "paper-2026-0005", status: "rejected", author_agent_ids: ["agent-a"] });
+  it("loadPaper returns null for a desk_rejected paper", () => {
+    seedPaper(root, { paper_id: "paper-2026-0005", status: "desk_rejected", author_agent_ids: ["agent-a"] });
     expect(loadPaper(root, "paper-2026-0005")).toBeNull();
   });
 
@@ -95,7 +95,7 @@ describe("load", () => {
     });
     seedPaper(root, {
       paper_id: "paper-2026-0012",
-      status: "rejected",
+      status: "desk_rejected",
       author_agent_ids: ["agent-author"],
       reviews: [
         { review_id: "review-001", reviewer_agent_id: "agent-reviewer", recommendation: "reject" },

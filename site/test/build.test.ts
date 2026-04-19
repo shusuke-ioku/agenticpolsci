@@ -47,6 +47,12 @@ beforeAll(() => {
     author_agent_ids: ["agent-author"],
     title: "A Rejected Paper",
   });
+  seedPaper(fixtureRoot, {
+    paper_id: "paper-2026-deskrej",
+    status: "desk_rejected",
+    author_agent_ids: ["agent-author"],
+    title: "A Desk-Rejected Paper",
+  });
 
   // Copy the site/ project into the fixture so it can resolve `../../..` back to fixtureRoot.
   const sourceSite = join(__dirname, "..");
@@ -98,8 +104,13 @@ describe("build integration", () => {
     expect(existsSync(p)).toBe(true);
   });
 
-  it("dist/papers/paper-2026-rejected/ does NOT exist", () => {
+  it("dist/papers/paper-2026-rejected/ DOES exist (policy: rejected is public)", () => {
     const p = join(siteDir, "dist", "papers", "paper-2026-rejected", "index.html");
+    expect(existsSync(p)).toBe(true);
+  });
+
+  it("dist/papers/paper-2026-deskrej/ does NOT exist (desk_rejected is hidden)", () => {
+    const p = join(siteDir, "dist", "papers", "paper-2026-deskrej", "index.html");
     expect(existsSync(p)).toBe(false);
   });
 

@@ -155,19 +155,21 @@ describe("synthetic-submission validation — plumbing", () => {
     expect(meta).toMatch(/desk_reject_reason_tag: prompt_injection/);
   });
 
-  it("site build generates pages for accepted papers only", () => {
+  it("site build generates pages for all non-desk-rejected papers (including rejected-after-review)", () => {
+    // Visible: accepted (0001, 0002) and rejected-after-review (0003).
     expect(existsSync(join(siteDir, "dist", "papers", "paper-2026-0001", "index.html"))).toBe(true);
     expect(existsSync(join(siteDir, "dist", "papers", "paper-2026-0002", "index.html"))).toBe(true);
-    expect(existsSync(join(siteDir, "dist", "papers", "paper-2026-0003", "index.html"))).toBe(false);
+    expect(existsSync(join(siteDir, "dist", "papers", "paper-2026-0003", "index.html"))).toBe(true);
+    // Hidden: desk_rejected (0004, 0005).
     expect(existsSync(join(siteDir, "dist", "papers", "paper-2026-0004", "index.html"))).toBe(false);
     expect(existsSync(join(siteDir, "dist", "papers", "paper-2026-0005", "index.html"))).toBe(false);
   });
 
-  it("home page lists exactly the 2 visible papers", () => {
+  it("home page lists the 3 visible papers (accepted + accepted + rejected) and not the desk-rejected pair", () => {
     const html = readFileSync(join(siteDir, "dist", "index.html"), "utf-8");
     expect(html).toContain("paper-2026-0001");
     expect(html).toContain("paper-2026-0002");
-    expect(html).not.toContain("paper-2026-0003");
+    expect(html).toContain("paper-2026-0003");
     expect(html).not.toContain("paper-2026-0004");
     expect(html).not.toContain("paper-2026-0005");
   });

@@ -14,14 +14,17 @@ const ALL_STATUSES: PaperStatus[] = [
 ];
 
 describe("isPubliclyVisible", () => {
-  it("hides rejected and desk_rejected", () => {
-    expect(isPubliclyVisible({ status: "rejected" })).toBe(false);
+  it("hides desk_rejected (never went to review)", () => {
     expect(isPubliclyVisible({ status: "desk_rejected" })).toBe(false);
+  });
+
+  it("shows rejected (reviewed-and-rejected; the record is part of the journal)", () => {
+    expect(isPubliclyVisible({ status: "rejected" })).toBe(true);
   });
 
   it("shows every other status", () => {
     for (const status of ALL_STATUSES) {
-      if (status === "rejected" || status === "desk_rejected") continue;
+      if (status === "desk_rejected") continue;
       expect(isPubliclyVisible({ status })).toBe(true);
     }
   });
