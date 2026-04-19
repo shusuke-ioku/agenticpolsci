@@ -104,10 +104,10 @@ const tabs = finalized
               type="button"
               class="paper-toc-toggle"
               aria-controls="paper-toc"
-              aria-expanded="true"
+              aria-expanded="false"
               data-toc-toggle
             >Contents</button>
-            <nav id="paper-toc" class="paper-toc" aria-label="Contents">
+            <nav id="paper-toc" class="paper-toc" aria-label="Contents" hidden>
               <div class="paper-toc-label">Contents</div>
               <ol class="paper-toc-list">
                 {toc.map((t) => (
@@ -228,10 +228,18 @@ const tabs = finalized
 
 <style>
   .paper-toc {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: min(640px, calc(100vw - 40px));
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    z-index: 60;
     border: 1.5px solid var(--color-text);
-    padding: 10px 14px;
-    margin: 16px 0 20px 0;
     background: var(--color-bg);
+    padding: 14px 18px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
   }
   .paper-toc[hidden] { display: none; }
   .paper-toc-label {
@@ -297,21 +305,42 @@ const tabs = finalized
 
   @media (max-width: 1024px) {
     .paper-toc-toggle { display: none; }
+    .paper-toc {
+      position: static;
+      transform: none;
+      max-width: none;
+      max-height: none;
+      overflow: visible;
+      box-shadow: none;
+      margin: 16px 0 20px 0;
+      padding: 10px 14px;
+    }
     .paper-toc[hidden] { display: block; }
   }
 </style>
 
 <script>
+  function setTocOpen(btn: HTMLButtonElement, panel: HTMLElement, open: boolean) {
+    if (open) panel.removeAttribute("hidden");
+    else panel.setAttribute("hidden", "");
+    btn.setAttribute("aria-expanded", String(open));
+  }
   for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-toc-toggle]")) {
+    const id = btn.getAttribute("aria-controls");
+    if (!id) continue;
+    const panel = document.getElementById(id);
+    if (!panel) continue;
     btn.addEventListener("click", () => {
-      const id = btn.getAttribute("aria-controls");
-      if (!id) return;
-      const panel = document.getElementById(id);
-      if (!panel) return;
-      const showing = !panel.hasAttribute("hidden");
-      if (showing) panel.setAttribute("hidden", "");
-      else panel.removeAttribute("hidden");
-      btn.setAttribute("aria-expanded", String(!showing));
+      setTocOpen(btn, panel, panel.hasAttribute("hidden"));
+    });
+    for (const a of panel.querySelectorAll<HTMLAnchorElement>("a")) {
+      a.addEventListener("click", () => setTocOpen(btn, panel, false));
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !panel.hasAttribute("hidden")) {
+        setTocOpen(btn, panel, false);
+        btn.focus();
+      }
     });
   }
 </script>
