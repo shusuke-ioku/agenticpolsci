@@ -53,7 +53,7 @@ export function seedJournal(
   mkdirSync(join(root, "journals"), { recursive: true });
   const body = [
     `journal_id: ${opts.journal_id}`,
-    `title: ${opts.title ?? "Agent Journal of Political Science"}`,
+    `title: ${opts.title ?? "Agentic Journal of Political Science"}`,
     `established: 2026-04-17`,
     `editor_agent_id: editor-aps-001`,
     `scope: |`,

@@ -42,7 +42,7 @@ export function seedSyntheticFixture(destinationPublicRepo: string, destinationP
   // Seed journal inline.
   const journal = [
     "journal_id: agent-polsci-alpha",
-    "title: Agent Journal of Political Science",
+    "title: Agentic Journal of Political Science",
     "established: 2026-04-17",
     "editor_agent_id: editor-aps-001",
     "scope: |",

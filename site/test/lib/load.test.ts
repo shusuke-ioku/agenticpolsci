@@ -32,7 +32,7 @@ describe("load", () => {
     seedJournal(root, { journal_id: "agent-polsci-alpha" });
     const j = loadJournal(root, "agent-polsci-alpha");
     expect(j.meta.journal_id).toBe("agent-polsci-alpha");
-    expect(j.meta.title).toContain("Agent Journal");
+    expect(j.meta.title).toContain("Agentic Journal");
   });
 
   it("loadAllPapers lists papers of every status (universal visibility)", () => {

@@ -33,7 +33,7 @@ export async function resendSend(env: Env, msg: ResendMessage): Promise<ResendRe
 }
 
 export function defaultFrom(env: Env): string {
-  return env.EMAIL_FROM?.trim() || "Agent Journal <onboarding@resend.dev>";
+  return env.EMAIL_FROM?.trim() || "Agentic Journal <onboarding@resend.dev>";
 }
 
 /**
@@ -61,7 +61,7 @@ export async function sendVerificationEmail(
     ``,
     `If you did not register, you can ignore this message.`,
     ``,
-    `— The Agent Journal of Political Science`,
+    `— The Agentic Journal of Political Science`,
   ].join("\n");
   const html = `<!doctype html>
 <html><body style="font-family:ui-monospace,Menlo,Consolas,monospace;max-width:540px;margin:40px auto;padding:0 20px;color:#000;">
@@ -108,7 +108,7 @@ export function buildAssignmentMessage(
     ``,
     `Paper page: ${link}`,
     ``,
-    `— The Agent Journal of Political Science`,
+    `— The Agentic Journal of Political Science`,
   ].join("\n");
   const html = renderHtml(
     subject,
@@ -140,7 +140,7 @@ export function buildDecisionMessage(
     ``,
     `Full decision letter, reviews, and editor reasoning: ${link}`,
     ``,
-    `— The Agent Journal of Political Science`,
+    `— The Agentic Journal of Political Science`,
   ].join("\n");
   const html = renderHtml(
     subject,
@@ -161,7 +161,7 @@ export function buildDeskRejectMessage(
     ``,
     `Editor reasoning (if available): ${link}`,
     ``,
-    `— The Agent Journal of Political Science`,
+    `— The Agentic Journal of Political Science`,
   ].join("\n");
   const html = renderHtml(
     subject,
@@ -185,7 +185,7 @@ export function buildRevisionRequestMessage(
     ``,
     `Paper page: ${link}`,
     ``,
-    `— The Agent Journal of Political Science`,
+    `— The Agentic Journal of Political Science`,
   ].join("\n");
   const html = renderHtml(
     subject,
@@ -199,5 +199,5 @@ export function buildRevisionRequestMessage(
 function renderHtml(title: string, body: string): string {
   return `<!doctype html><html><body style="font-family:ui-monospace,Menlo,Consolas,monospace;max-width:540px;margin:40px auto;padding:0 20px;color:#000;">` +
     `<h2 style="font-size:18px;margin:0 0 12px 0;">${title}</h2>${body}` +
-    `<p style="color:#666;font-size:12px;">— The Agent Journal of Political Science</p></body></html>`;
+    `<p style="color:#666;font-size:12px;">— The Agentic Journal of Political Science</p></body></html>`;
 }

@@ -32,7 +32,7 @@ export function prepareSyntheticFixture(targetRoot: string): PreparedFixture {
     join(publicRepo, "journals", "agent-polsci-alpha.yml"),
     [
       "journal_id: agent-polsci-alpha",
-      "title: Agent Journal of Political Science",
+      "title: Agentic Journal of Political Science",
       "established: 2026-04-17",
       "editor_agent_id: editor-aps-001",
       "scope: |",

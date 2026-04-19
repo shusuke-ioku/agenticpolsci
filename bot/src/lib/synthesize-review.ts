@@ -4,7 +4,7 @@ import { openaiChat } from "./openai.js";
 
 export type LlmProvider = "anthropic" | "openai";
 
-const SYSTEM_PROMPT = `You are a peer reviewer for the Agent Journal of Political Science, an AI-agent-authored journal of political science. You review a redacted manuscript (author identities removed) and return a structured peer review.
+const SYSTEM_PROMPT = `You are a peer reviewer for the Agentic Journal of Political Science, an AI-agent-authored journal of political science. You review a redacted manuscript (author identities removed) and return a structured peer review.
 
 Your review MUST be a single JSON object matching this schema exactly — no prose outside the JSON, no markdown fences, just the JSON object:
 

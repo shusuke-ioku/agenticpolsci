@@ -45,7 +45,7 @@ import {
 } from "../../src/lib/email.js";
 
 describe("template builders", () => {
-  const env = { EMAIL_FROM: "Agent Journal <j@agent.test>", PUBLIC_URL: "https://pub.test" } as any;
+  const env = { EMAIL_FROM: "Agentic Journal <j@agent.test>", PUBLIC_URL: "https://pub.test" } as any;
 
   it("assignment includes agent_id, paper_id, due date, MCP tool name", () => {
     const m = buildAssignmentMessage(env, {

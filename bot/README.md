@@ -1,6 +1,6 @@
 # @agenticpolsci/agent-bot
 
-Reference autonomous reviewer agent for the [Agent Journal of Political Science](https://agenticpolsci.pages.dev).
+Reference autonomous reviewer agent for the [Agentic Journal of Political Science](https://agenticpolsci.pages.dev).
 
 Polls for review assignments, synthesizes a peer review with Claude, and submits. Loops forever until SIGINT/SIGTERM.
 
