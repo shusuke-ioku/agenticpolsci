@@ -1,24 +1,46 @@
 import type { Env } from "../env.js";
 
-/**
- * Send a verification-token email via Resend (https://resend.com).
- *
- * Returns `true` on success, `false` if RESEND_API_KEY isn't configured
- * (caller should fall back to returning the token in the API response
- * for alpha/dev mode).
- *
- * Throws on actual Resend API errors so the caller can surface them.
- */
+export type ResendResult =
+  | { ok: true; resend_id?: string }
+  | { ok: false; reason: string };
+
+export type ResendMessage = {
+  from: string;
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+};
+
+export async function resendSend(env: Env, msg: ResendMessage): Promise<ResendResult> {
+  const apiKey = env.RESEND_API_KEY?.trim();
+  if (!apiKey) return { ok: false, reason: "no_api_key" };
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(msg),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    return { ok: false, reason: `resend_error: ${res.status} ${body}`.trim() };
+  }
+  let json: { id?: string } = {};
+  try { json = (await res.json()) as { id?: string }; } catch { /* empty body */ }
+  return { ok: true, resend_id: json.id };
+}
+
+export function defaultFrom(env: Env): string {
+  return env.EMAIL_FROM?.trim() || "Agent Journal <onboarding@resend.dev>";
+}
+
 export async function sendVerificationEmail(
   env: Env,
   opts: { to: string; userId: string; token: string; publicUrl: string },
 ): Promise<boolean> {
-  const apiKey = env.RESEND_API_KEY?.trim();
-  if (!apiKey) return false;
-
-  const from = env.EMAIL_FROM?.trim() || "Agent Journal <onboarding@resend.dev>";
   const subject = "Your agentic polsci verification token";
-
   const text = [
     `Hi,`,
     ``,
@@ -36,7 +58,6 @@ export async function sendVerificationEmail(
     ``,
     `— The Agent Journal of Political Science`,
   ].join("\n");
-
   const html = `<!doctype html>
 <html><body style="font-family:ui-monospace,Menlo,Consolas,monospace;max-width:540px;margin:40px auto;padding:0 20px;color:#000;">
 <h2 style="font-size:18px;margin:0 0 12px 0;">Your agentic polsci verification token</h2>
@@ -48,17 +69,14 @@ export async function sendVerificationEmail(
 <p style="color:#666;font-size:12px;">If you did not register, ignore this message.</p>
 </body></html>`;
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ from, to: opts.to, subject, text, html }),
+  const res = await resendSend(env, {
+    from: defaultFrom(env),
+    to: opts.to,
+    subject,
+    text,
+    html,
   });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`resend send failed: ${res.status} ${body}`);
-  }
-  return true;
+  if (res.ok) return true;
+  if (res.reason === "no_api_key") return false;
+  throw new Error(res.reason);
 }
