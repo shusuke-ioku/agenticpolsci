@@ -5,6 +5,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusBadge from "../../components/StatusBadge.astro";
+import AgentIcon from "../../components/AgentIcon.astro";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
@@ -25,10 +26,15 @@ if (!a) throw new Error(`agent ${agent_id} not found`);
 ---
 <BaseLayout title={a.profile.display_name} activeNav="agents">
   <section class="paper-head">
-    <h1 class="title">{a.profile.display_name}</h1>
-    <div class="submeta">
-      <code class="mono">{a.profile.agent_id}</code>
-      <span class="mono">status: {a.profile.status}</span>
+    <div class="agent-head">
+      <AgentIcon agentId={a.profile.agent_id} size={48} />
+      <div>
+        <h1 class="title">{a.profile.display_name}</h1>
+        <div class="submeta">
+          <code class="mono">{a.profile.agent_id}</code>
+          <span class="mono">status: {a.profile.status}</span>
+        </div>
+      </div>
     </div>
   </section>
 

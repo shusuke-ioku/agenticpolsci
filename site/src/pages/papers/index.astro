@@ -4,6 +4,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PaperRow from "../../components/PaperRow.astro";
+import TableFilter from "../../components/TableFilter.astro";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
@@ -16,6 +17,17 @@ const papers = loadAllPapers(REPO_ROOT);
   {papers.length === 0 ? (
     <p>No papers yet.</p>
   ) : (
+    <>
+    <TableFilter
+      placeholder="filter by paper_id, title, author, topic, status…"
+      sortKeys={[
+        { key: "paper_id", label: "paper_id" },
+        { key: "title", label: "title" },
+        { key: "author", label: "author" },
+        { key: "date", label: "date" },
+        { key: "status", label: "status" },
+      ]}
+    />
     <table class="list">
       <thead>
         <tr>
@@ -30,5 +42,6 @@ const papers = loadAllPapers(REPO_ROOT);
         {papers.map((p) => <PaperRow paper={p} />)}
       </tbody>
     </table>
+    </>
   )}
 </BaseLayout>

@@ -1,9 +1,9 @@
 :root {
-  --font-body: -apple-system, "Inter", "SF Pro Text", system-ui, sans-serif;
-  --font-mono: "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-body: "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, ui-monospace, monospace;
+  --font-mono: "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, ui-monospace, monospace;
   --color-text: #000;
   --color-bg: #fff;
-  --color-border: #000;
+  --color-border: #e5e5e5;
   --max-width: 960px;
 }
 
@@ -21,8 +21,7 @@ html, body {
 
 a {
   color: var(--color-text);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration: none;
 }
 
 a:focus-visible {
@@ -42,15 +41,15 @@ code, kbd, .mono {
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 48px;
 }
 
 /* Top bar */
 .topbar {
   display: flex;
   align-items: baseline;
-  border-bottom: 1px solid var(--color-border);
-  padding: 14px 0;
+  padding: 14px 48px;
+  margin-bottom: 48px;
   gap: 16px;
 }
 .topbar .title { font-size: 15px; font-weight: 700; }
@@ -70,10 +69,68 @@ code, kbd, .mono {
 
 /* Footer */
 .footer {
-  border-top: 1px solid var(--color-border);
-  padding: 14px 0;
+  padding: 14px 48px;
   font-size: 12px;
   margin-top: 40px;
+}
+
+/* Table filter (search + sort above a .list) */
+.tablefilter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0 12px 0;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.tablefilter-input {
+  flex: 1 1 240px;
+  min-width: 180px;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  border: 1px solid var(--color-text);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.tablefilter-input:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 2px;
+}
+.tablefilter-sort {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tablefilter-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+}
+.tablefilter-sort-select {
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  border: 1px solid var(--color-text);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.tablefilter-dir {
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  border: 1px solid var(--color-text);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.tablefilter-dir:hover { background: var(--color-text); color: var(--color-bg); }
+.tablefilter-count {
+  font-size: 11px;
+  color: var(--color-text);
+  margin-left: auto;
 }
 
 /* Listing tables */
@@ -100,23 +157,97 @@ code, kbd, .mono {
 .list .pt-title { font-weight: 600; }
 .list .pt-sub { font-size: 11px; color: var(--color-text); margin-top: 2px; font-family: var(--font-mono); }
 
-/* Status badge */
+/* Status badge — keeps a dark border so outlined vs filled stays distinguishable */
 .badge {
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.04em;
   padding: 2px 6px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-text);
   white-space: nowrap;
 }
 .badge.filled { background: var(--color-text); color: var(--color-bg); }
 .badge.outlined { background: var(--color-bg); color: var(--color-text); }
 
-/* Headings */
-h1 { font-size: 22px; margin: 20px 0 8px 0; }
-h2 { font-size: 17px; margin: 18px 0 6px 0; }
-h3 { font-size: 14px; margin: 14px 0 4px 0; text-transform: uppercase; letter-spacing: 0.06em; }
+/* Hero (home-page intro + CTA) — centered, whitespace-driven, mono-first */
+.hero {
+  margin: 48px auto 72px auto;
+  padding: 56px 24px;
+  text-align: center;
+  max-width: 720px;
+}
+.hero-tagline {
+  margin: 0 0 20px 0;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.hero-lede {
+  margin: 0 auto 36px auto;
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 520px;
+}
+.hero-ctas {
+  display: inline-flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Button base + primary/secondary variants */
+.btn {
+  display: inline-block;
+  padding: 12px 22px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 80ms linear, color 80ms linear;
+}
+.btn-primary {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+.btn-primary:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.btn-secondary {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.btn-secondary:hover {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+.btn:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .hero { padding: 40px 16px; margin-bottom: 48px; }
+  .hero-tagline { font-size: 26px; }
+  .hero-lede { font-size: 14px; }
+}
+
+/* Headings — generous top margin for visual section breaks */
+h1 { font-size: 22px; margin: 32px 0 12px 0; }
+h2 { font-size: 17px; margin: 40px 0 12px 0; }
+h3 { font-size: 14px; margin: 28px 0 8px 0; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Page content breathes: give main content and each full-page section room */
+main.container > * + * { margin-top: 12px; }
+main.container > h2:first-of-type { margin-top: 32px; }
+main.container > table.list,
+main.container > table.kv { margin-top: 8px; margin-bottom: 32px; }
 
 /* Paper detail */
 .paper-head { padding: 18px 0 12px 0; border-bottom: 1px solid var(--color-border); }
@@ -160,8 +291,10 @@ h3 { font-size: 14px; margin: 14px 0 4px 0; text-transform: uppercase; letter-sp
   margin-left: 4px;
   text-transform: none;
 }
-.tabpanel { padding: 16px 0; }
+.tabpanel { padding: 24px 0; }
 .tabpanel[hidden] { display: none; }
+.tabpanel > h2 { margin-top: 16px; }
+.tabpanel > h2:first-child { margin-top: 0; }
 
 /* Review cards */
 .review {
@@ -213,6 +346,25 @@ h3 { font-size: 14px; margin: 14px 0 4px 0; text-transform: uppercase; letter-sp
   margin: 10px 0;
   font-size: 12px;
 }
+
+/* Agent icon */
+.agent-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+.agent-link-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.agent-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.agent-head .title { margin: 0 0 4px 0; }
 
 /* Responsive */
 @media (max-width: 720px) {

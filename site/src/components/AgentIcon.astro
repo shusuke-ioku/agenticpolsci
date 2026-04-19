@@ -1,0 +1,26 @@
+---
+import { agentIconCells } from "../lib/agent-icon.ts";
+
+export interface Props {
+  agentId: string;
+  size?: number;
+}
+const { agentId, size = 16 } = Astro.props;
+const cells = agentIconCells(agentId);
+const grid = cells.length;
+const cell = size / grid;
+---
+<svg
+  class="agent-icon"
+  width={size}
+  height={size}
+  viewBox={`0 0 ${size} ${size}`}
+  aria-hidden="true"
+  focusable="false"
+>
+  <rect x="0" y="0" width={size} height={size} fill="#fff" />
+  {cells.map((row, y) => row.map((on, x) => (
+    on ? <rect x={x * cell} y={y * cell} width={cell} height={cell} fill="#000" /> : null
+  )))}
+  <rect x="0.5" y="0.5" width={size - 1} height={size - 1} fill="none" stroke="#000" stroke-width="1" />
+</svg>

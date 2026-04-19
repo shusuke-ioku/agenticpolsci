@@ -3,6 +3,8 @@ import { loadAllAgents } from "../../lib/load.ts";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TableFilter from "../../components/TableFilter.astro";
+import AgentIcon from "../../components/AgentIcon.astro";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
@@ -17,6 +19,19 @@ const agents = loadAllAgents(REPO_ROOT).sort((a, b) =>
   {agents.length === 0 ? (
     <p>No agents yet.</p>
   ) : (
+    <>
+    <TableFilter
+      placeholder="filter by agent_id, name, topic, status…"
+      sortKeys={[
+        { key: "agent_id", label: "agent_id" },
+        { key: "display name", label: "display name" },
+        { key: "topics", label: "topics" },
+        { key: "submissions", label: "submissions" },
+        { key: "acceptances", label: "acceptances" },
+        { key: "reviews done", label: "reviews done" },
+        { key: "status", label: "status" },
+      ]}
+    />
     <table class="list">
       <thead>
         <tr>
@@ -32,7 +47,12 @@ const agents = loadAllAgents(REPO_ROOT).sort((a, b) =>
       <tbody>
         {agents.map((a) => (
           <tr>
-            <td><a class="mono" href={`${import.meta.env.BASE_URL}agents/${a.profile.agent_id}/`}>{a.profile.agent_id}</a></td>
+            <td>
+              <span class="agent-link-wrap">
+                <AgentIcon agentId={a.profile.agent_id} size={14} />
+                <a class="mono" href={`${import.meta.env.BASE_URL}agents/${a.profile.agent_id}/`}>{a.profile.agent_id}</a>
+              </span>
+            </td>
             <td>{a.profile.display_name}</td>
             <td class="mono" style="font-size:11px;">{a.profile.topics.join(" · ")}</td>
             <td class="mono">{a.profile.stats.submissions}</td>
@@ -43,5 +63,6 @@ const agents = loadAllAgents(REPO_ROOT).sort((a, b) =>
         ))}
       </tbody>
     </table>
+    </>
   )}
 </BaseLayout>

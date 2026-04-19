@@ -1,0 +1,88 @@
+---
+export interface SortKey {
+  key: string;
+  label: string;
+}
+
+export interface Props {
+  sortKeys: SortKey[];
+  placeholder?: string;
+}
+const { sortKeys, placeholder = "filter..." } = Astro.props;
+---
+<div class="tablefilter" role="search">
+  <input
+    type="search"
+    class="tablefilter-input"
+    placeholder={placeholder}
+    aria-label={placeholder}
+  />
+  <div class="tablefilter-sort">
+    <label class="tablefilter-label">sort by</label>
+    <select class="tablefilter-sort-select" aria-label="Sort column">
+      {sortKeys.map((s) => <option value={s.key}>{s.label}</option>)}
+    </select>
+    <button
+      type="button"
+      class="tablefilter-dir"
+      data-dir="asc"
+      aria-label="Toggle sort direction"
+    >↑</button>
+  </div>
+  <span class="tablefilter-count" aria-live="polite"></span>
+</div>
+
+<script>
+  type TF = HTMLElement;
+
+  function wire(wrap: TF) {
+    const input = wrap.querySelector<HTMLInputElement>(".tablefilter-input")!;
+    const select = wrap.querySelector<HTMLSelectElement>(".tablefilter-sort-select")!;
+    const dirBtn = wrap.querySelector<HTMLButtonElement>(".tablefilter-dir")!;
+    const countEl = wrap.querySelector<HTMLElement>(".tablefilter-count")!;
+    const table = wrap.nextElementSibling as HTMLTableElement | null;
+    if (!table || !table.classList.contains("list")) return;
+    const tbody = table.tBodies[0];
+    if (!tbody) return;
+    const rows = Array.from(tbody.rows);
+    const headerTexts = Array.from(table.tHead!.rows[0].cells).map((c) =>
+      (c.textContent ?? "").trim().toLowerCase(),
+    );
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      let visibleCount = 0;
+      for (const r of rows) {
+        const match = q ? (r.textContent ?? "").toLowerCase().includes(q) : true;
+        r.hidden = !match;
+        if (match) visibleCount++;
+      }
+      const sortKey = select.value;
+      const dir = dirBtn.dataset.dir === "asc" ? 1 : -1;
+      const colIdx = headerTexts.indexOf(sortKey);
+      if (colIdx >= 0) {
+        const visible = rows.filter((r) => !r.hidden);
+        visible.sort((a, b) => {
+          const aText = (a.cells[colIdx]?.textContent ?? "").trim().toLowerCase();
+          const bText = (b.cells[colIdx]?.textContent ?? "").trim().toLowerCase();
+          return aText.localeCompare(bText) * dir;
+        });
+        for (const r of visible) tbody.appendChild(r);
+      }
+      countEl.textContent = q
+        ? `${visibleCount} of ${rows.length}`
+        : `${rows.length}`;
+    };
+
+    input.addEventListener("input", apply);
+    select.addEventListener("change", apply);
+    dirBtn.addEventListener("click", () => {
+      dirBtn.dataset.dir = dirBtn.dataset.dir === "asc" ? "desc" : "asc";
+      dirBtn.textContent = dirBtn.dataset.dir === "asc" ? "↑" : "↓";
+      apply();
+    });
+    apply();
+  }
+
+  for (const wrap of document.querySelectorAll<HTMLElement>(".tablefilter")) wire(wrap);
+</script>
