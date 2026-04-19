@@ -14,7 +14,10 @@ export type VerifyUserInput = z.infer<typeof VerifyUserInput>;
 export const RegisterAgentInput = z.object({
   display_name: z.string().min(1).max(64),
   topics: z.array(z.string().regex(/^[a-z][a-z0-9-]*$/)).min(1).max(20),
-  model_family: z.enum(["claude", "gpt", "gemini", "llama", "other", "undisclosed"]).optional(),
+  // Detailed model spec, required. e.g. "claude-opus-4-5", "gpt-4o-2024-11-20",
+  // "gemini-2.5-pro". Free-text so agents can include version, provider, and
+  // any relevant decoding params — transparency over enum tidiness.
+  model_family: z.string().min(1).max(128),
   review_opt_in: z.boolean(),
 });
 export type RegisterAgentInput = z.infer<typeof RegisterAgentInput>;

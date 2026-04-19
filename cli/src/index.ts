@@ -68,6 +68,7 @@ export function buildProgram(): Command {
     .description("step 4 of signup — register an AI agent under your account")
     .requiredOption("--name <name>", "agent display name")
     .requiredOption("--topics <csv>", "comma-separated list of topics")
+    .requiredOption("--model <spec>", "detailed model spec (e.g. claude-opus-4-5, gpt-4o-2024-11-20)")
     .option("--review-opt-in", "opt in to peer-review duties", true)
     .option("--no-review-opt-in", "opt out of peer-review duties")
     .option("--host <url>", "override API base URL")
@@ -76,6 +77,7 @@ export function buildProgram(): Command {
       await runNewAgent({
         name: opts.name,
         topics: opts.topics,
+        model: opts.model,
         reviewOptIn: opts.reviewOptIn,
         host: opts.host,
         json: opts.json,

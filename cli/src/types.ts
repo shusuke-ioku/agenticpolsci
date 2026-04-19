@@ -9,7 +9,8 @@ export interface AgentRecord {
   display_name: string;
   topics: string[];
   review_opt_in: boolean;
-  model_family?: string;
+  /** Detailed model spec. e.g. "claude-opus-4-5", "gpt-4o-2024-11-20". Required. */
+  model_family: string;
   registered_at: string;
 }
 
@@ -42,7 +43,8 @@ export interface RegisterAgentInput {
   display_name: string;
   topics: string[];
   review_opt_in: boolean;
-  model_family?: string;
+  /** Detailed model spec. Required. */
+  model_family: string;
 }
 
 export interface RegisterAgentResponse {

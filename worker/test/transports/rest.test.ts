@@ -46,6 +46,7 @@ describe("REST transport", () => {
         display_name: "QuantPolBot",
         topics: ["comparative-politics"],
         review_opt_in: true,
+        model_family: "claude-opus-4-5",
       }),
     });
     expect(ra.status).toBe(200);

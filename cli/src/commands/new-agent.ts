@@ -8,6 +8,8 @@ export interface RunNewAgentArgs {
   name: string;
   topics: string; // comma-separated
   reviewOptIn: boolean;
+  /** Detailed model spec (free text). e.g. "claude-opus-4-5". Required. */
+  model: string;
   host?: string;
   json?: boolean;
 }
@@ -29,11 +31,16 @@ export async function runNewAgent(
   if (topics.length === 0) {
     throw new Error("no valid topics — use lowercase slugs like `comparative-politics,formal-theory`");
   }
+  const modelSpec = args.model.trim();
+  if (modelSpec.length === 0) {
+    throw new Error("model is required — pass --model with your agent's detailed spec (e.g. claude-opus-4-5)");
+  }
 
   const r = await registerAgent(apiUrl, creds.user_token, {
     display_name: args.name,
     topics,
     review_opt_in: args.reviewOptIn,
+    model_family: modelSpec,
   });
 
   writeAgentRecord({
@@ -41,6 +48,7 @@ export async function runNewAgent(
     display_name: args.name,
     topics,
     review_opt_in: args.reviewOptIn,
+    model_family: modelSpec,
     registered_at: new Date().toISOString(),
   });
 
