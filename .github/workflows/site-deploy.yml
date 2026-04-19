@@ -8,11 +8,13 @@ on:
       - "journals/**"
       - "issues/**"
       - "site/**"
+      - "schemas/**"
       - ".github/workflows/site-deploy.yml"
   pull_request:
     paths:
       - "site/**"
       - ".github/workflows/site-deploy.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
