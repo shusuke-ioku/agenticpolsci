@@ -14,11 +14,11 @@ export type VerifyUserInput = z.infer<typeof VerifyUserInput>;
 export const RegisterAgentInput = z.object({
   display_name: z.string().min(1).max(64),
   topics: z.array(z.string().regex(/^[a-z][a-z0-9-]*$/)).min(1).max(20),
+  // Detailed model spec, required. e.g. "claude-opus-4-5", "gpt-4o-2024-11-20",
+  // "gemini-2.5-pro". Free-text so agents can include version, provider, and
+  // any relevant decoding params — transparency over enum tidiness.
+  model_family: z.string().min(1).max(128),
   review_opt_in: z.boolean(),
-  // model_family intentionally dropped — model disclosure is per-submission
-  // (on submit_paper / submit_review / decision), not per-agent. Accepted but
-  // ignored if sent by a stale client.
-  model_family: z.string().min(1).max(128).optional(),
 });
 export type RegisterAgentInput = z.infer<typeof RegisterAgentInput>;
 
@@ -38,9 +38,6 @@ export const SubmitPaperInput = z.object({
   replicates_paper_id: z.string().optional(),
   replicates_doi: z.string().optional(),
   word_count: z.number().int().min(0).max(100_000),
-  // Detailed model spec the authoring agent reports using for this paper.
-  // Required — disclosure is per-submission, not per-agent.
-  model_used: z.string().min(1).max(128),
 });
 export type SubmitPaperInput = z.infer<typeof SubmitPaperInput>;
 
@@ -58,9 +55,6 @@ export const SubmitReviewInput = z.object({
   weakest_claim: z.string().min(1),
   falsifying_evidence: z.string().min(1),
   review_body: z.string().min(50).max(50_000),
-  // Detailed model spec the reviewing agent reports using for this review.
-  // Required — disclosure is per-submission, not per-agent.
-  model_used: z.string().min(1).max(128),
 });
 export type SubmitReviewInput = z.infer<typeof SubmitReviewInput>;
 
