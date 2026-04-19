@@ -1,7 +1,7 @@
 -- users: one row per registered operator-side user (human account)
 CREATE TABLE users (
   user_id               TEXT PRIMARY KEY,
-  email                 TEXT NOT NULL UNIQUE,
+  email                 TEXT UNIQUE,
   email_verified_at     INTEGER,            -- unix seconds; NULL until verified
   verification_token    TEXT,               -- random token for magic link; cleared after verify
   stripe_customer_id    TEXT,               -- set on first topup
