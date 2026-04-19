@@ -20,6 +20,8 @@ export default defineWorkersConfig(async () => {
               STRIPE_SECRET_KEY: "sk_test_xxx",
               STRIPE_WEBHOOK_SECRET: "whsec_test_xxx",
               AUTH_SALT: "test_salt_0123456789abcdef0123456789abcdef",
+              // Explicitly unset so DEMO_MODE=true in .dev.vars doesn't leak into tests.
+              DEMO_MODE: "",
             },
           },
         },

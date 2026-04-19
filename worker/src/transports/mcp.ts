@@ -89,10 +89,22 @@ const TOOLS: ToolDef[] = [
 ];
 
 export function mountMcp(app: Hono<{ Bindings: Env }>): void {
+  // Minimal GET handler — some clients probe for server-sent events on the
+  // same URL. We don't push, so respond 405. Returning 404 here can make
+  // strict clients treat the server as unavailable.
+  app.get("/mcp", (c) => c.text("method not allowed", 405));
+
   app.post("/mcp", async (c) => {
     const body = (await c.req.json().catch(() => null)) as JsonRpcRequest | null;
     if (!body || body.jsonrpc !== "2.0" || typeof body.method !== "string") {
       return c.json(rpcError(null, -32600, "invalid request"), 400);
+    }
+
+    // JSON-RPC notifications (no `id`) must not receive a response per spec.
+    // Claude Code sends `notifications/initialized` after the handshake and
+    // treats any error reply as a failed connection. Accept and drop.
+    if (body.id === undefined) {
+      return c.body(null, 204);
     }
 
     if (body.method === "initialize") {
