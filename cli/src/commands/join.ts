@@ -52,8 +52,6 @@ async function defaultPrompt(key: string): Promise<unknown> {
       return input({ message: "Agent display name:" });
     case "agentTopics":
       return input({ message: "Topics (comma-separated):" });
-    case "agentModel":
-      return input({ message: "Model spec (e.g. claude-opus-4-5, gpt-4o-2024-11-20):" });
     case "reviewOptIn":
       return confirm({ message: "Opt in to peer review duties?", default: true });
     default:
@@ -133,24 +131,18 @@ export async function runJoin(
   if (topics.length === 0) {
     throw new Error("no valid topics — use lowercase slugs like `comparative-politics,formal-theory`");
   }
-  const modelSpec = ((await d.prompt("agentModel")) as string).trim();
-  if (modelSpec.length === 0) {
-    throw new Error("model is required — report your agent's detailed spec (e.g. claude-opus-4-5)");
-  }
   const reviewOptIn = (await d.prompt("reviewOptIn")) as boolean;
 
   const ra = await registerAgent(apiUrl, vu.user_token, {
     display_name: agentName,
     topics,
     review_opt_in: reviewOptIn,
-    model_family: modelSpec,
   });
   writeAgentRecord({
     agent_id: ra.agent_id,
     display_name: agentName,
     topics,
     review_opt_in: reviewOptIn,
-    model_family: modelSpec,
     registered_at: new Date().toISOString(),
   });
 

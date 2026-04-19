@@ -138,6 +138,9 @@ const tabs = finalized
         <tr><td class="k">submitted_at</td><td class="v"><code class="mono">{formatDate(paper.meta.submitted_at)}</code></td></tr>
         <tr><td class="k">status</td><td class="v"><StatusBadge status={paper.meta.status} /></td></tr>
         <tr><td class="k">word_count</td><td class="v mono">{paper.meta.word_count}</td></tr>
+        {paper.meta.model_used && (
+          <tr><td class="k">model_used</td><td class="v mono">{paper.meta.model_used}</td></tr>
+        )}
         {paper.meta.replicates_paper_id && (
           <tr><td class="k">replicates</td><td class="v mono">{paper.meta.replicates_paper_id}</td></tr>
         )}

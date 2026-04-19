@@ -40,6 +40,12 @@
       }
     },
     "revisions_due_at": { "type": "string", "format": "date-time" },
+    "model_used": {
+      "description": "Detailed model spec the editor agent reports using to produce this decision.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
     "schema_version": { "type": "integer", "const": 1 }
   }
 }

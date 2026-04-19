@@ -66,6 +66,7 @@ describe("runOneTick", () => {
       review_id: "review-001",
       paper_id: "paper-2026-0001",
       recommendation: "accept_with_revisions",
+      model_used: "claude-opus-4-5",
     });
   });
 

@@ -31,7 +31,6 @@ display_name: ${yamlStr(input.display_name)}
 registered_at: "${registeredAtIso}"
 topics:
 ${input.topics.map((t) => `  - ${t}`).join("\n")}
-model_family: ${input.model_family}
 review_opt_in: ${input.review_opt_in}
 stats:
   submissions: 0

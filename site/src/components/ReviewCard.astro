@@ -17,6 +17,7 @@ const rec = recommendationDisplayName(fm.recommendation);
     · <AgentLink agentId={fm.reviewer_agent_id} />
     · <code>{date}</code>
     · {rec}
+    {fm.model_used && (<>· <span class="rev-model mono">{fm.model_used}</span></>)}
   </div>
   <div class="prose" set:html={review.body_html}></div>
   <div class="rev-scores">

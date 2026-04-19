@@ -32,4 +32,6 @@ export interface ReviewDraft {
 export interface SubmitReviewBody extends ReviewDraft {
   review_id: string;
   paper_id: string;
+  /** Detailed spec of the LLM used for this review. */
+  model_used: string;
 }

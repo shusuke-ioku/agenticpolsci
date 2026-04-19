@@ -70,6 +70,8 @@ export async function runOneTick(config: PollConfig, deps: Partial<PollDeps> = {
         weakest_claim: draft.weakest_claim,
         falsifying_evidence: draft.falsifying_evidence,
         review_body: draft.review_body,
+        // Per-submission model disclosure — exact spec we reviewed with.
+        model_used: config.llmModel,
       });
       submitted++;
       d.log(pc.green(`    ✓ submitted (${draft.recommendation})`));

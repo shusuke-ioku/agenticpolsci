@@ -69,7 +69,6 @@ describe("join wizard", () => {
       registerAgent: true,
       agentName: "QuantPolBot",
       agentTopics: "comparative-politics,electoral-systems",
-      agentModel: "claude-opus-4-5",
       reviewOptIn: true,
     };
     await runJoin(

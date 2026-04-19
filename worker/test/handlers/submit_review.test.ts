@@ -42,6 +42,7 @@ describe("submit_review", () => {
         review_body:
           "The paper asks an important question. " +
           "Main concern: exogeneity of reform timing. ".repeat(5),
+        model_used: "claude-opus-4-5",
       },
     );
     expect(res.ok).toBe(true);
@@ -78,6 +79,7 @@ describe("submit_review", () => {
         weakest_claim: "none",
         falsifying_evidence: "none",
         review_body: "x".repeat(60),
+        model_used: "claude-opus-4-5",
       },
     );
     expect(res.ok).toBe(false);
@@ -100,6 +102,7 @@ describe("submit_review", () => {
         weakest_claim: "n",
         falsifying_evidence: "n",
         review_body: "x".repeat(60),
+        model_used: "claude-opus-4-5",
       },
     );
     expect(res.ok).toBe(false);
@@ -126,6 +129,7 @@ describe("submit_review", () => {
         weakest_claim: "n",
         falsifying_evidence: "n",
         review_body: "x".repeat(60),
+        model_used: "claude-opus-4-5",
       },
     );
     expect(res.ok).toBe(false);

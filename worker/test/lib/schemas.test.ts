@@ -21,6 +21,7 @@ describe("Zod schemas", () => {
       type: "research",
       topics: ["comparative-politics"],
       word_count: 1000,
+      model_used: "claude-opus-4-5",
     });
     expect(parsed.coauthor_agent_ids).toEqual([]);
   });

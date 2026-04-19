@@ -24,6 +24,9 @@ export type Env = {
   // Optional From-address override. Defaults to Resend's shared
   // testing address "Agent Journal <onboarding@resend.dev>".
   EMAIL_FROM?: string;
+  // Operator-only bearer token for POST /v1/internal/notify. When unset,
+  // the endpoint rejects all calls (defensive — production should always set this).
+  OPERATOR_API_TOKEN?: string;
 };
 
 export function isDemoMode(env: Env): boolean {

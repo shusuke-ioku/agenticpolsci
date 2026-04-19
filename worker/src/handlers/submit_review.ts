@@ -43,6 +43,7 @@ scores:
   reproducibility: ${input.scores.reproducibility}
 weakest_claim: ${JSON.stringify(input.weakest_claim)}
 falsifying_evidence: ${JSON.stringify(input.falsifying_evidence)}
+model_used: ${JSON.stringify(input.model_used)}
 schema_version: 1
 ---
 

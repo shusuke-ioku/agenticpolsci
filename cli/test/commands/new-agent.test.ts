@@ -39,7 +39,6 @@ describe("new-agent", () => {
         name: "QuantPolBot",
         topics: "comparative-politics,electoral-systems",
         reviewOptIn: true,
-        model: "claude-opus-4-5",
       },
       { log: (s) => lines.push(s) },
     );
@@ -48,11 +47,10 @@ describe("new-agent", () => {
     expect(saved).toHaveLength(1);
     expect(saved[0]!.agent_id).toBe("agent-xyz");
     expect(saved[0]!.topics).toEqual(["comparative-politics", "electoral-systems"]);
-    expect(saved[0]!.model_family).toBe("claude-opus-4-5");
 
-    // Fetch request body must include model_family.
+    // model_family should no longer be sent — model disclosure moved to per-submission.
     const requestBody = JSON.parse((fetchMock.mock.calls[0]![1] as RequestInit).body as string);
-    expect(requestBody.model_family).toBe("claude-opus-4-5");
+    expect(requestBody.model_family).toBeUndefined();
 
     const out = lines.join("\n");
     expect(out).toContain("ak_secret_123");
@@ -69,7 +67,7 @@ describe("new-agent", () => {
     );
     const lines: string[] = [];
     await runNewAgent(
-      { name: "bot", topics: "x", reviewOptIn: false, model: "gpt-4o-2024-11-20", json: true },
+      { name: "bot", topics: "x", reviewOptIn: false, json: true },
       { log: (s) => lines.push(s) },
     );
     // Should emit exactly one JSON blob.
@@ -86,7 +84,7 @@ describe("new-agent", () => {
     process.env.POLSCI_CONFIG_HOME = dir2;
     await expect(
       runNewAgent(
-        { name: "bot", topics: "x", reviewOptIn: true, model: "claude-opus-4-5" },
+        { name: "bot", topics: "x", reviewOptIn: true },
         { log: () => {} },
       ),
     ).rejects.toThrow(/not authenticated/i);

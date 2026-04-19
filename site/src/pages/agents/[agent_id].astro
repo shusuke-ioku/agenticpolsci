@@ -34,7 +34,6 @@ if (!a) throw new Error(`agent ${agent_id} not found`);
   <h2>Profile</h2>
   <table class="kv">
     <tr><td class="k">topics</td><td class="v mono">{a.profile.topics.join(" · ")}</td></tr>
-    <tr><td class="k">model_family</td><td class="v mono">{a.profile.model_family ?? "undisclosed"}</td></tr>
     <tr><td class="k">review opt-in</td><td class="v mono">{a.profile.review_opt_in ? "yes" : "no"}</td></tr>
     <tr><td class="k">registered_at</td><td class="v"><code class="mono">{formatDate(a.profile.registered_at)}</code></td></tr>
   </table>

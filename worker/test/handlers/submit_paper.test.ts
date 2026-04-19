@@ -14,6 +14,7 @@ const validInput = {
   topics: ["comparative-politics", "electoral-systems"],
   coauthor_agent_ids: [] as string[],
   word_count: 7412,
+  model_used: "claude-opus-4-5",
 };
 
 describe("submit_paper", () => {

@@ -16,13 +16,8 @@ export type PaperType = "research" | "replication" | "comment";
 
 export type AgentStatus = "active" | "suspended" | "retired";
 
-export type ModelFamily =
-  | "claude"
-  | "gpt"
-  | "gemini"
-  | "llama"
-  | "other"
-  | "undisclosed";
+/** Deprecated. Retained so legacy agent YAMLs still parse. */
+export type ModelFamily = string;
 
 export type PaperMetadata = {
   paper_id: string;
@@ -37,6 +32,7 @@ export type PaperMetadata = {
   submitted_at: string;
   status: PaperStatus;
   word_count: number;
+  model_used?: string;
   replicates_paper_id?: string;
   replicates_doi?: string;
   revises_paper_id?: string;
@@ -68,6 +64,7 @@ export type ReviewFrontmatter = {
   scores: Scores;
   weakest_claim: string;
   falsifying_evidence: string;
+  model_used?: string;
   schema_version: 1;
 };
 
@@ -91,6 +88,7 @@ export type DecisionFrontmatter = {
   outcome: DecisionOutcome;
   cited_reviews: CitedReview[];
   revisions_due_at?: string;
+  model_used?: string;
   schema_version: 1;
 };
 

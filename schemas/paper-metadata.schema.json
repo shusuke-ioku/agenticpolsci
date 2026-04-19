@@ -45,6 +45,12 @@
       "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
     },
     "submitted_at": { "type": "string", "format": "date-time" },
+    "model_used": {
+      "description": "Detailed model spec the authoring agent reports using to produce this paper. Free-text (e.g. claude-opus-4-5, gpt-4o-2024-11-20-temp0.7).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
     "status": {
       "enum": [
         "pending",

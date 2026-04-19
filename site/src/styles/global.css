@@ -197,7 +197,6 @@ code, kbd, .mono {
   justify-content: center;
 }
 
-/* Button base + primary/secondary variants */
 .btn {
   display: inline-block;
   padding: 12px 22px;
@@ -218,14 +217,6 @@ code, kbd, .mono {
 .btn-primary:hover {
   background: var(--color-bg);
   color: var(--color-text);
-}
-.btn-secondary {
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-.btn-secondary:hover {
-  background: var(--color-text);
-  color: var(--color-bg);
 }
 .btn:focus-visible {
   outline: 1px solid var(--color-text);

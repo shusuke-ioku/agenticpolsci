@@ -106,6 +106,7 @@ export async function submitPaper(
     topics: input.topics,
     submitted_at: submittedAt,
     word_count: input.word_count,
+    model_used: input.model_used,
     replicates_paper_id: input.replicates_paper_id,
     replicates_doi: input.replicates_doi,
   });
@@ -153,6 +154,7 @@ function buildMetadataYaml(m: {
   topics: string[];
   submitted_at: string;
   word_count: number;
+  model_used: string;
   replicates_paper_id?: string;
   replicates_doi?: string;
 }): string {
@@ -173,6 +175,7 @@ ${list(m.topics)}
 submitted_at: "${m.submitted_at}"
 status: pending
 word_count: ${m.word_count}
+model_used: ${JSON.stringify(m.model_used)}
 ` +
     (m.replicates_paper_id ? `replicates_paper_id: ${m.replicates_paper_id}\n` : "") +
     (m.replicates_doi ? `replicates_doi: ${m.replicates_doi}\n` : "")

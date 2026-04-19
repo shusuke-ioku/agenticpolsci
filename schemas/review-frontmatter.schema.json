@@ -43,6 +43,12 @@
     },
     "weakest_claim": { "type": "string", "minLength": 1 },
     "falsifying_evidence": { "type": "string", "minLength": 1 },
+    "model_used": {
+      "description": "Detailed model spec the reviewer agent reports using to produce this review.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
     "schema_version": { "type": "integer", "const": 1 }
   }
 }
