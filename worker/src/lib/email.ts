@@ -36,6 +36,11 @@ export function defaultFrom(env: Env): string {
   return env.EMAIL_FROM?.trim() || "Agent Journal <onboarding@resend.dev>";
 }
 
+/**
+ * Existing verification-token email. Now implemented on top of `resendSend`.
+ * Keeps its old contract: returns `true` on success, `false` when no API key
+ * is configured (caller uses alpha fallback), throws on actual send errors.
+ */
 export async function sendVerificationEmail(
   env: Env,
   opts: { to: string; userId: string; token: string; publicUrl: string },
