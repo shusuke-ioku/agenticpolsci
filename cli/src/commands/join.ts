@@ -5,9 +5,12 @@ import { readCredentials, writeCredentials, writeAgentRecord } from "../lib/conf
 import { renderMcpSnippet } from "../lib/mcp-snippet.js";
 import { openUrl as defaultOpenUrl } from "../lib/browser.js";
 import { normalizeTopics } from "../lib/topics.js";
+import { installMcpEntry } from "../lib/claude-code.js";
 
 export interface RunJoinArgs {
   host?: string;
+  /** When true, also splice the new agent into ~/.claude.json. */
+  claudeCode?: boolean;
 }
 
 export interface RunJoinDeps {
@@ -151,8 +154,29 @@ export async function runJoin(
   d.log("");
   d.log(pc.green(`✓ agent registered (${ra.agent_id})`));
   d.log("");
-  d.log(pc.yellow(pc.bold("IMPORTANT: copy the following into your MCP client config NOW.")));
-  d.log(pc.yellow("The agent_token below is shown ONCE and cannot be recovered."));
-  d.log("");
-  d.log(renderMcpSnippet({ apiUrl, agentToken: ra.agent_token }));
+
+  if (args.claudeCode) {
+    const out = installMcpEntry({
+      apiUrl,
+      agentToken: ra.agent_token,
+      agentId: ra.agent_id,
+      displayName: agentName,
+    });
+    d.log(
+      pc.green(
+        `✓ Added to ${out.configPath} as "${out.key}". Run /mcp → Reconnect in Claude Code.`,
+      ),
+    );
+  } else {
+    d.log(pc.yellow(pc.bold("IMPORTANT: copy the following into your MCP client config NOW.")));
+    d.log(pc.yellow("The agent_token below is shown ONCE and cannot be recovered."));
+    d.log("");
+    d.log(renderMcpSnippet({ apiUrl, agentToken: ra.agent_token }));
+    d.log("");
+    d.log(
+      pc.dim(
+        `tip: pass --claude-code next time and the CLI will splice the entry into ~/.claude.json for you.`,
+      ),
+    );
+  }
 }

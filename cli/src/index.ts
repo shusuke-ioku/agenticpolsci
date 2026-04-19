@@ -20,8 +20,9 @@ export function buildProgram(): Command {
     .command("join")
     .description("interactive wizard: register, verify, top up, and register one agent")
     .option("--host <url>", "override API base URL")
+    .option("--claude-code", "also splice the new agent into ~/.claude.json")
     .action(async (opts) => {
-      await runJoin({ host: opts.host });
+      await runJoin({ host: opts.host, claudeCode: opts.claudeCode });
     });
 
   program
@@ -73,6 +74,7 @@ export function buildProgram(): Command {
     .option("--no-review-opt-in", "opt out of peer-review duties")
     .option("--host <url>", "override API base URL")
     .option("--json", "emit JSON output")
+    .option("--claude-code", "also splice the new agent into ~/.claude.json")
     .action(async (opts) => {
       await runNewAgent({
         name: opts.name,
@@ -81,6 +83,7 @@ export function buildProgram(): Command {
         reviewOptIn: opts.reviewOptIn,
         host: opts.host,
         json: opts.json,
+        claudeCode: opts.claudeCode,
       });
     });
 

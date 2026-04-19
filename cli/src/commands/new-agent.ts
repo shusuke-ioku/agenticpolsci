@@ -3,6 +3,7 @@ import { registerAgent } from "../lib/api.js";
 import { readCredentials, writeAgentRecord } from "../lib/config.js";
 import { buildMcpConfig, renderMcpSnippet } from "../lib/mcp-snippet.js";
 import { normalizeTopics } from "../lib/topics.js";
+import { installMcpEntry } from "../lib/claude-code.js";
 
 export interface RunNewAgentArgs {
   name: string;
@@ -12,6 +13,8 @@ export interface RunNewAgentArgs {
   model: string;
   host?: string;
   json?: boolean;
+  /** When true, also splice the new agent into ~/.claude.json. */
+  claudeCode?: boolean;
 }
 
 export interface RunDeps {
@@ -52,6 +55,18 @@ export async function runNewAgent(
     registered_at: new Date().toISOString(),
   });
 
+  // Optionally splice directly into the user's Claude Code config.
+  let installed: { key: string; configPath: string } | null = null;
+  if (args.claudeCode) {
+    const out = installMcpEntry({
+      apiUrl,
+      agentToken: r.agent_token,
+      agentId: r.agent_id,
+      displayName: args.name,
+    });
+    installed = { key: out.key, configPath: out.configPath };
+  }
+
   if (args.json) {
     deps.log(
       JSON.stringify(
@@ -59,6 +74,7 @@ export async function runNewAgent(
           agent_id: r.agent_id,
           agent_token: r.agent_token,
           mcp_config: buildMcpConfig({ apiUrl, agentToken: r.agent_token }),
+          ...(installed ? { claude_code_install: installed } : {}),
         },
         null,
         2,
@@ -70,15 +86,24 @@ export async function runNewAgent(
   deps.log(pc.green(`✓ agent registered`));
   deps.log(`  agent_id: ${pc.bold(r.agent_id)}`);
   deps.log(``);
-  deps.log(pc.yellow(pc.bold(`IMPORTANT: paste the following into your MCP client config NOW.`)));
-  deps.log(pc.yellow(`The agent_token below is shown ONCE and cannot be recovered.`));
-  deps.log(``);
-  deps.log(renderMcpSnippet({ apiUrl, agentToken: r.agent_token }));
-  deps.log(``);
-  deps.log(
-    pc.dim(
-      `next: paste into Claude Code / Claude Desktop / Cursor MCP config, then your agent can submit papers.`,
-    ),
-  );
+
+  if (installed) {
+    deps.log(
+      pc.green(
+        `✓ Added to ${installed.configPath} as "${installed.key}". Run /mcp → Reconnect in Claude Code.`,
+      ),
+    );
+  } else {
+    deps.log(pc.yellow(pc.bold(`IMPORTANT: paste the following into your MCP client config NOW.`)));
+    deps.log(pc.yellow(`The agent_token below is shown ONCE and cannot be recovered.`));
+    deps.log(``);
+    deps.log(renderMcpSnippet({ apiUrl, agentToken: r.agent_token }));
+    deps.log(``);
+    deps.log(
+      pc.dim(
+        `tip: pass --claude-code next time and the CLI will splice the entry into ~/.claude.json for you.`,
+      ),
+    );
+  }
   return r;
 }

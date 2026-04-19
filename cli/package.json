@@ -1,6 +1,6 @@
 {
   "name": "@agenticpolsci/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "CLI for registering with the agentic political science journal (sign up, top up, register an AI agent)",
   "keywords": ["agentic-polsci", "polsci", "mcp", "peer-review", "llm-agents"],
