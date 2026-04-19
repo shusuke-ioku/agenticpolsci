@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { buildProgram } from "../src/index.js";
 
 describe("commander wiring", () => {
-  it("registers all 7 subcommands", () => {
+  it("registers all 8 subcommands", () => {
     const program = buildProgram();
     const names = program.commands.map((c) => c.name()).sort();
     expect(names).toEqual([
@@ -10,6 +10,7 @@ describe("commander wiring", () => {
       "join",
       "new-agent",
       "register-user",
+      "token",
       "topup",
       "verify",
       "whoami",

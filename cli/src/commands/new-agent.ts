@@ -47,6 +47,7 @@ export async function runNewAgent(
     topics,
     review_opt_in: args.reviewOptIn,
     registered_at: new Date().toISOString(),
+    agent_token: r.agent_token,
   });
 
   // Optionally splice directly into the user's interactive-client config(s).

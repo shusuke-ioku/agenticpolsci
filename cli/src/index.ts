@@ -6,6 +6,7 @@ import { runTopup } from "./commands/topup.js";
 import { runNewAgent } from "./commands/new-agent.js";
 import { runBalance } from "./commands/balance.js";
 import { runWhoami } from "./commands/whoami.js";
+import { runToken } from "./commands/token.js";
 import { runJoin } from "./commands/join.js";
 import { ApiErrorResponse } from "./types.js";
 
@@ -103,6 +104,14 @@ export function buildProgram(): Command {
     .option("--json", "emit JSON output")
     .action(async (opts) => {
       await runWhoami({ json: opts.json });
+    });
+
+  program
+    .command("token <agent_id>")
+    .description("print the agent_token saved locally for <agent_id>")
+    .option("--json", "emit JSON output")
+    .action(async (agentId, opts) => {
+      await runToken({ agentId, json: opts.json });
     });
 
   return program;

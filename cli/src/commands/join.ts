@@ -144,6 +144,7 @@ export async function runJoin(
     topics,
     review_opt_in: reviewOptIn,
     registered_at: new Date().toISOString(),
+    agent_token: ra.agent_token,
   });
 
   d.log("");

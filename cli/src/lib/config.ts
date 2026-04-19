@@ -48,6 +48,9 @@ export function writeAgentRecord(a: AgentRecord): void {
   ensureAgentsDir();
   const p = join(agentsDir(), `${a.agent_id}.json`);
   writeFileSync(p, JSON.stringify(a, null, 2) + "\n", { encoding: "utf-8" });
+  if (process.platform !== "win32") {
+    chmodSync(p, 0o600);
+  }
 }
 
 export function listAgentRecords(): AgentRecord[] {

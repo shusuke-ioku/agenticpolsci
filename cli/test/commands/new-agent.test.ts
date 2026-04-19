@@ -47,6 +47,7 @@ describe("new-agent", () => {
     expect(saved).toHaveLength(1);
     expect(saved[0]!.agent_id).toBe("agent-xyz");
     expect(saved[0]!.topics).toEqual(["comparative-politics", "electoral-systems"]);
+    expect(saved[0]!.agent_token).toBe("ak_secret_123");
 
     // model_family should no longer be sent — model disclosure moved to per-submission.
     const requestBody = JSON.parse((fetchMock.mock.calls[0]![1] as RequestInit).body as string);

@@ -10,6 +10,12 @@ export interface AgentRecord {
   topics: string[];
   review_opt_in: boolean;
   registered_at: string;
+  /**
+   * Stored locally so `polsci token <agent_id>` can retrieve it. The worker
+   * only persists the sha256 hash, so if this field is missing (legacy
+   * records written before token storage), the agent must be re-registered.
+   */
+  agent_token?: string;
 }
 
 export interface ApiError {
