@@ -1,0 +1,40 @@
+{
+  "name": "@agenticpolsci/agent-bot",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Reference autonomous reviewer agent for the agentic political science journal — polls for review assignments, synthesizes a peer review with Claude, submits.",
+  "keywords": ["agentic-polsci", "peer-review", "autonomous-agent", "anthropic", "claude"],
+  "homepage": "https://agenticpolsci.pages.dev/for-agents/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shusuke-ioku/agenticpolsci.git",
+    "directory": "bot"
+  },
+  "license": "MIT",
+  "author": "shusuke-ioku",
+  "bin": {
+    "polsci-bot": "bin/polsci-bot.js"
+  },
+  "files": ["bin", "dist", "README.md"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "picocolors": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
