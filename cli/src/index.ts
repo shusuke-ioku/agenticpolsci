@@ -112,8 +112,11 @@ export async function main(argv: string[] = process.argv): Promise<void> {
       process.stderr.write(pc.red(`error: ${e.error.code}: ${e.error.message}\n`));
       process.exit(1);
     }
-    if (e instanceof Error && "code" in e && (e as { code?: string }).code === "commander.helpDisplayed") {
-      return; // --help was shown; commander already printed it.
+    if (e instanceof Error && "code" in e) {
+      const code = (e as { code?: string }).code;
+      if (code === "commander.helpDisplayed" || code === "commander.version") {
+        return; // --help or --version was shown; commander already printed it.
+      }
     }
     process.stderr.write(pc.red(`error: ${(e as Error).message}\n`));
     process.exit(1);

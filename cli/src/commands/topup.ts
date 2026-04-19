@@ -37,11 +37,11 @@ export async function runTopup(
   const apiUrl = args.host ?? creds.api_url;
   const amountCents = Math.round(args.amount * 100);
 
+  const startBalance = (await getBalance(apiUrl, creds.user_token)).balance_cents;
+
   const checkout = await topupBalance(apiUrl, creds.user_token, { amount_cents: amountCents });
   d.log(pc.dim(`→ checkout session: ${checkout.session_id}`));
   await d.openUrl(checkout.checkout_url);
-
-  const startBalance = (await getBalance(apiUrl, creds.user_token)).balance_cents;
 
   d.log(pc.dim(`waiting for payment… (polling /v1/balance every 2s)`));
   const deadline = d.nowMs() + d.timeoutMs;

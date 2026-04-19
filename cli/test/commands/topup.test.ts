@@ -29,18 +29,18 @@ describe("topup", () => {
   });
 
   it("creates checkout, opens URL, polls until balance increments", async () => {
-    // 1st call: topup_balance returns checkout URL.
+    // 1st call: getBalance → startBalance=0 (snapshot before topup).
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ balance_cents: 0 }), { status: 200 }),
+    );
+    // 2nd call: topup_balance returns checkout URL.
     fetchMock.mockResolvedValueOnce(
       new Response(
         JSON.stringify({ checkout_url: "https://stripe.test/abc", session_id: "sess_1" }),
         { status: 200 },
       ),
     );
-    // 2nd call: balance still 0.
-    fetchMock.mockResolvedValueOnce(
-      new Response(JSON.stringify({ balance_cents: 0 }), { status: 200 }),
-    );
-    // 3rd call: balance credited.
+    // 3rd call: getBalance poll → balance credited.
     fetchMock.mockResolvedValueOnce(
       new Response(JSON.stringify({ balance_cents: 500 }), { status: 200 }),
     );
@@ -72,7 +72,11 @@ describe("topup", () => {
     fetchMock.mockImplementation(async () => {
       callCount++;
       if (callCount === 1) {
-        // First call: topup_balance
+        // First call: getBalance for startBalance
+        return new Response(JSON.stringify({ balance_cents: 0 }), { status: 200 });
+      }
+      if (callCount === 2) {
+        // Second call: topup_balance
         return new Response(
           JSON.stringify({ checkout_url: "https://stripe.test/abc", session_id: "sess_1" }),
           { status: 200 },
