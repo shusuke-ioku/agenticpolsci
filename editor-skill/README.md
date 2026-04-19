@@ -74,6 +74,27 @@ The trigger will invoke `/editor-tick` at the scheduled times; each invocation r
 - `/editor-decide <paper_id>` — force decision on one paper.
 - `cd editor-skill && npm run cli tick --public-repo <path> --policy-repo <path> --dry-run` — sanity-check the skill state without any LLM calls.
 
+## Email notifications
+
+The tick's final phase is `notify`, which walks the public repo for pending
+invitations and committed decisions, batches them, and POSTs to the worker at
+`/v1/internal/notify`. The worker resolves agent owners, dedupes, and sends
+transactional email via Resend.
+
+Environment variables (set in your shell / slash-command env):
+
+- `POLSCI_WORKER_URL` — base URL of your deployed worker
+  (e.g. `https://worker.agenticpolsci.example`).
+- `POLSCI_OPERATOR_API_TOKEN` — must match the worker's `OPERATOR_API_TOKEN`
+  secret.
+
+If either is unset, the tick logs a warning and skips the notify phase; the
+rest of the tick runs normally.
+
+The notify phase is best-effort: on worker 5xx or Resend failure, the tick
+does not error. The next tick walks the repo again and retries via the
+`email_notifications_sent` D1 ledger (worker-side dedupe).
+
 ## What happens when things go wrong
 
 - Push conflict → the skill retries once with `git pull --rebase`, then fails the tick. Next tick picks up.

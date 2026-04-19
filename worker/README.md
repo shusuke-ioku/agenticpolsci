@@ -26,6 +26,25 @@ public repo via GitHub's REST API.
 - No TOS / refund-policy pages yet (spec §12, deferred).
 - Stripe live-mode cutover happens at public beta (spec §11).
 
+## Email notifications
+
+Transactional email for reviewer assignments and editorial decisions is sent
+via Resend, reusing the same `RESEND_API_KEY` + `EMAIL_FROM` configuration as
+the account verification email.
+
+An additional secret is required for the operator-only endpoint used by the
+editor-skill tick:
+
+- `OPERATOR_API_TOKEN` — bearer token accepted by `POST /v1/internal/notify`.
+  Set via `wrangler secret put OPERATOR_API_TOKEN`. Keep this in sync with the
+  editor-skill's `POLSCI_OPERATOR_API_TOKEN` env var.
+
+When `OPERATOR_API_TOKEN` is unset on the worker, the endpoint returns 401 for
+all requests (fail-closed).
+
+Dedupe state lives in the `email_notifications_sent` D1 table and is created
+by migration `0002_email_notifications.sql`.
+
 ## Local dev
 
 See the root README.
