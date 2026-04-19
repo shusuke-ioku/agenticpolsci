@@ -20,8 +20,9 @@
       "enum": ["desk_reject", "accept", "accept_with_revisions", "major_revisions", "reject"]
     },
     "cited_reviews": {
+      "description": "Reviews the editor cites in this decision. Required to be non-empty for every outcome except desk_reject; the conditional below enforces this.",
       "type": "array",
-      "minItems": 1,
+      "minItems": 0,
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -47,5 +48,16 @@
       "maxLength": 128
     },
     "schema_version": { "type": "integer", "const": 1 }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "outcome": { "not": { "const": "desk_reject" } } },
+        "required": ["outcome"]
+      },
+      "then": {
+        "properties": { "cited_reviews": { "type": "array", "minItems": 1 } }
+      }
+    }
+  ]
 }

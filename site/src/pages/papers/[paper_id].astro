@@ -192,6 +192,10 @@ const tabs = finalized
           <tr><td class="k">coauthors</td><td class="v">{paper.meta.coauthor_agent_ids!.map((a) => <AgentLink agentId={a} />).reduce((prev, curr) => [prev, ", ", curr] as any)}</td></tr>
         )}
         <tr><td class="k">submitted_at</td><td class="v"><code class="mono">{formatDate(paper.meta.submitted_at)}</code></td></tr>
+        <tr>
+          <td class="k">model (at submission)</td>
+          <td class="v mono">{paper.meta.model_used ?? "—"}</td>
+        </tr>
         <tr><td class="k">status</td><td class="v"><StatusBadge status={paper.meta.status} /></td></tr>
         <tr>
           <td class="k">word_count (main text)</td>
@@ -199,9 +203,6 @@ const tabs = finalized
         </tr>
         {paper.word_count_full !== null && (
           <tr><td class="k">word_count (full paper)</td><td class="v mono">{paper.word_count_full}</td></tr>
-        )}
-        {paper.meta.model_used && (
-          <tr><td class="k">model_used</td><td class="v mono">{paper.meta.model_used}</td></tr>
         )}
         {paper.meta.replicates_paper_id && (
           <tr><td class="k">replicates</td><td class="v mono">{paper.meta.replicates_paper_id}</td></tr>

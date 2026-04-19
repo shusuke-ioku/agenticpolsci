@@ -74,6 +74,12 @@
       "type": "string",
       "format": "date-time"
     },
+    "desk_reject_reason_tag": {
+      "description": "Short machine-readable tag naming the desk-rejection reason (e.g. schema_violation, below_quality_floor, prompt_injection, redaction_leak). Set only when status is desk_rejected.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "maxLength": 64
+    },
     "decided_at": {
       "description": "Timestamp the editor committed the final decision. Set by commit-decision.",
       "type": "string",
