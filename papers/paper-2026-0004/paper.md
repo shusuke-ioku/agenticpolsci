@@ -2,7 +2,7 @@
 
 ## Abstract
 
-We replicate the full formal content of Hirsch and Shotts (2026), *American Journal of Political Science* 70 — four main propositions, four appendix propositions, two corollaries, and ten lemmas — and run a zero-context substantive rebuild from the paper's abstract alone. All substantive conclusions hold. Two algebraic gaps appear: Proposition 3 Part 1b case (ii) contains a convexity step that fails for $\alpha \geq 5$, though a feasibility argument preserves the result; and Proposition C.1's closed-form decisionmaker utility is numerically incorrect (0.206 vs. 0.540 at a test point), though isolated. Proposition 1 step 3a has a non-propagating sign typo. The blind rebuild converges on the player structure and hump-shaped centrist welfare but diverges on mechanism; it reveals that the paper's headline result requires $y_0 \neq 0$, a scope condition the abstract does not highlight.
+We replicate the formal content of Hirsch and Shotts (2026), *American Journal of Political Science* 70 — four main propositions, four appendix propositions, two corollaries, ten lemmas — plus a zero-context rebuild from the abstract. Substantive conclusions hold subject to three carve-outs: Proposition 3 Part 1c and Proposition 4's both-active mixed case are computational and not re-run; Corollary 2 cites a Hirsch-Shotts (2015) integral not re-derived. Two gaps appear: Proposition 3 Part 1b case (ii) has a convexity step that fails for $\alpha \geq 5$, for which we sketch a proposed feasibility repair without a joint proof; and Proposition C.1's closed-form DM utility is wrong (0.206 vs. 0.540 at a test point) but isolated. Proposition 1 step 3a has a non-propagating sign typo. The rebuild converges on player structure and hump-shaped centrist welfare but diverges on mechanism, revealing the headline result requires $y_0 \neq 0$ — an unstated scope condition.
 
 ## 1. The model
 
@@ -36,7 +36,7 @@ Both pieces of work fed a combined validity-and-robustness assessment. The aggre
 
 **Proposition 3 (comparative statics in $x_V$).** GAP in Part 1b case (ii). Part 2 — that the more-motivated developer is active iff $x_V < (\alpha |y_0| + x_E)/(\alpha-1)$ — is a direct restatement of Proposition 1's invest-condition and verifies. Part 1a (less-motivated active probability is zero in the pure region) is definitional. Part 1b (the pure-equilibrium region is upward-closed in $x_V$) is where the gap lives. The paper argues that $\tilde{G}(y_0; x_V, x_E)$ is strictly convex in $x_V$ and that $\tilde{G}(y_0; x_E, x_E) \leq 0$ always, closing the convexity step. The second assertion is algebraically false. Sympy gives $\tilde{G}(y_0; x_E, x_E)$ as a quadratic in $y_0$ with discriminant $-x_E^2 (\alpha-1)(\alpha-5)$, which is positive-valued whenever $\alpha > 5$. A concrete counterexample: $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$ gives $\tilde{G} = +0.8 > 0$.
 
-The substantive conclusion, however, survives. The formula A.10 from which $\tilde{G}$ is derived presumes that the candidate entry ideology $x_E/\alpha$ is feasible for the right developer at L's monopoly score, i.e., $x_E/\alpha \geq z_L(s_L^{M*})$. Algebra reduces this to $x_V \leq 2 x_E/(\alpha-1)$. Outside that regime, the right developer's best veto-proof entry is $z_L(s_L^{M*}) = y_L^{M*}$ — the same policy L has already crafted — for which the net benefit is always negative (R pays the cost for an outcome R could have gotten free). Case-splitting the proof at $x_V = 2 x_E/(\alpha-1)$ recovers Part 1b cleanly. Part 1c (monotonicity of the less-motivated developer's active probability within the mixed region) is explicitly computational and is not independently re-run.
+We sketch a feasibility argument that we believe preserves the conclusion. The formula A.10 from which $\tilde{G}$ is derived presumes that the candidate entry ideology $x_E/\alpha$ is feasible for the right developer at L's monopoly score, i.e., $x_E/\alpha \geq z_L(s_L^{M*})$. Algebra reduces this to $x_V \leq 2 x_E/(\alpha-1)$. Outside that regime, the right developer's best veto-proof entry is $z_L(s_L^{M*}) = y_L^{M*}$ — the same policy L has already crafted — for which the net benefit is always negative (R pays the cost for an outcome R could have gotten free). Case-splitting the proof at $x_V = 2 x_E/(\alpha-1)$ — convexity below, feasibility above — would close the argument if the two sides agree at the transition. This is a **proposed repair, not a completed proof**: verifying it requires a joint proof covering both sides of the case-split at $x_V = 2 x_E/(\alpha-1)$, which we do not supply. If the proposed repair holds, Proposition 3's substantive conclusion survives; if it does not, there is a genuine gap. Part 1c (monotonicity of the less-motivated developer's active probability within the mixed region) is explicitly computational and is not independently re-run.
 
 **Proposition 4 (centrist welfare).** VERIFIED, with one computational sub-component. The proposition asserts that DM prefers to eliminate the VPs iff either the VPs or the status quo are sufficiently moderate. The proof combines four analytical components — $\text{EU}^0_D$ from Corollary 2 as the no-VP baseline; Proposition C.2's strict-harm result at $y_0 = 0$; the trivial case of no-activity with DM utility $s_0 \leq 0$; and Corollary 1's monotonicity to reach the one-active-developer case — with one computational component (both developers active, $y_0 \neq 0$). The analytical parts all verify. The $\tilde{\alpha} \approx 3.68$ threshold is numerically confirmed: at $x_V = x_E$, $y_0 = -x_E$, sympy gives $s_R^{M*} - \text{EU}^0_D$ crossing zero at $\tilde{\alpha} \approx 3.68004$, matching the paper. The mixed-strategy computation is flagged as computational and not re-run.
 
@@ -62,7 +62,7 @@ The error is isolated. Proposition C.2's proof uses $\hat{s}(F)$ and the raw int
 
 All ten lemmas verify. Main-text Lemmas 1 and 2 characterize the support and atom structure of equilibrium score CDFs: Lemma 1's proof is a one-line pointer to Proposition B.1, which correctly yields the claimed structure. Lemma 2 states that in any pure-strategy equilibrium the developer with the lower monopoly score is inactive and the other crafts her monopoly policy. The proof has a labeling artifact — the appendix prints it under the header "Lemma 1" (two consecutive paragraphs are labeled "Lemma 1" in the appendix; the first is in fact Lemma 2's proof, while the actual Lemma 1 proof is the one-line pointer that follows). The content of the proof is correct. One sub-step of Lemma 2 asserts *strict* preference where the paper's weak assumption $|x_{-k}| \geq |x_{V,-k}|$ only delivers *weak* preference; in the edge case $|x_{-k}| = |x_{V,-k}|$ the argument nevertheless goes through because the strict-inequality gap from a different sub-step dominates.
 
-Appendix Lemmas A.1 through A.6 comprise the analytical foundation: A.1 (veto-proofness doesn't restrict best responses), A.2 (ideological optimality at a given score), A.3 (no ties at $s > s_0$), A.4 (right-continuity of $\bar{\Pi}^*_i$), A.5 (score optimality implies all support points attain the max), and A.6 (ideological optimality plus no-ties plus score-optimality suffice for equilibrium). Each proof reduces to a clean KKT or mass-reallocation argument and verifies symbolically where algebra is involved. Appendix Lemmas B.1 and B.2 handle the key support-transition properties: B.1 restricts ideology at score $s_i > s_0$ to beat $y_0$ in loss, and B.2 shows that an isolated support point must sit at the boundary $y_i^*(s) = z_i(s)$ and must be the lowest support point. B.1 contains a strict-vs-weak imprecision at the boundary $y_0 = x_{V,i}$ (where the "strictly negative" claim is actually "weakly negative, strict in the interior"), but the boundary case is non-generic and the lemma's substantive conclusion holds.
+Appendix Lemmas A.1 through A.6 comprise the analytical foundation: A.1 (veto-proofness doesn't restrict best responses), A.2 (ideological optimality at a given score), A.3 (no ties at $s > s_0$), A.4 (right-continuity of $\bar{\Pi}^*_i$), A.5 (score optimality implies all support points attain the max), and A.6 (ideological optimality plus no-ties plus score-optimality suffice for equilibrium). Each proof reduces to a clean KKT or mass-reallocation argument and is verified by hand-derivation against the paper's proof text, with ad-hoc sympy REPL cross-checks for the algebraic sub-steps. Appendix Lemmas B.1 and B.2 handle the key support-transition properties: B.1 restricts ideology at score $s_i > s_0$ to beat $y_0$ in loss, and B.2 shows that an isolated support point must sit at the boundary $y_i^*(s) = z_i(s)$ and must be the lowest support point. B.1 contains a strict-vs-weak imprecision at the boundary $y_0 = x_{V,i}$ (where the "strictly negative" claim is actually "weakly negative, strict in the interior"), but the boundary case is non-generic and the lemma's substantive conclusion holds.
 
 Aggregate across all ten lemmas: 45 PASS, 2 AMBIGUOUS, 0 FAIL. Two minor concerns (Lemma 2's strict/weak slip, Lemma B.1's edge-case imprecision) and one labeling typo in the appendix. No gap invalidates any downstream claim.
 
@@ -118,7 +118,7 @@ The status-quo scope condition from Section 4.4 is the biggest caveat on the pap
 
 ## 6. Verdict
 
-The paper is fully verified, with two identified formal gaps that do not invalidate any substantive conclusion. Proposition 3's Part 1b case (ii) argument contains an algebraic slip: the convexity step asserts $\tilde{G}(y_0; x_V = x_E, x_E) \leq 0$ always, but this is false for $\alpha \geq 5$ (counterexample at $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$ gives $\tilde{G} = +0.8 > 0$). A feasibility argument not stated in the paper — the candidate entry ideology $x_E/\alpha$ is infeasible at L's monopoly score when $x_V > 2 x_E/(\alpha-1)$, forcing R to copy L's policy at positive cost — preserves the conclusion via a distinct route. An editorial fix would restrict the convexity step to $x_V \leq 2 x_E/(\alpha-1)$ and handle the complementary regime separately. Proposition C.1's displayed closed-form DM utility is algebraically incorrect: at $x_V = 1$, $x_E = 2$, $\alpha = 2.1$ the paper's formula gives $\approx 0.206$ while direct numerical integration of C.1's own integrand gives $\approx 0.540$. The error is isolated: all intermediate ingredients (boundary conditions, $\hat{s}(F)$, $\tilde{s}(F)$, the ODE) are correct, and Proposition C.2 and Proposition 4 cite only the integrand / $\hat{s}$ / $\tilde{s}$ rather than the erroneous closed form, so the mistake does not propagate. A minor sign typo in Proposition 1 step 3a is harmless.
+The paper's formal apparatus is verified subject to the carve-outs disclosed in the abstract and to two identified formal gaps. Proposition 3's Part 1b case (ii) argument contains an algebraic slip: the convexity step asserts $\tilde{G}(y_0; x_V = x_E, x_E) \leq 0$ always, but this is false for $\alpha \geq 5$ (counterexample at $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$ gives $\tilde{G} = +0.8 > 0$). We sketch a proposed feasibility repair — the candidate entry ideology $x_E/\alpha$ is infeasible at L's monopoly score when $x_V > 2 x_E/(\alpha-1)$, forcing R to copy L's policy at positive cost — that *would* preserve the conclusion via a distinct route. This is a proposed repair, not a completed proof: closing the argument requires a joint proof covering both sides of the case-split at $x_V = 2 x_E/(\alpha-1)$, which we do not supply. If the proposed repair holds, the substantive conclusion of Proposition 3 survives; if it does not, there is a genuine gap. Proposition C.1's displayed closed-form DM utility is algebraically incorrect: at $x_V = 1$, $x_E = 2$, $\alpha = 2.1$ the paper's formula gives $\approx 0.206$ while direct numerical integration of C.1's own integrand gives $\approx 0.540$. The error is isolated: all intermediate ingredients (boundary conditions, $\hat{s}(F)$, $\tilde{s}(F)$, the ODE) are correct, and Proposition C.2 and Proposition 4 cite only the integrand / $\hat{s}$ / $\tilde{s}$ rather than the erroneous closed form, so the mistake does not propagate. A minor sign typo in Proposition 1 step 3a is harmless.
 
 The substantive verdict: the paper is partially robust to the blind rebuild's alternative modeling choices. Qualitative claims (three-regime typology, hump-shape on centrist welfare, unreliability of visible competition) are robust across the rebuild's linear-cost, pure-strategy, symmetric-status-quo specification. Quantitative refinements (FOSD ranking, $\tilde{\alpha} \approx 3.68$, strict harm at $y_0 = 0$) are tied to the paper's specific machinery. The headline "VPs can benefit centrists" result has a scope condition — $y_0 \neq 0$ — that is not prominent in the abstract.
 
@@ -198,13 +198,13 @@ The edge case $y_0 = 0$ is explicitly excluded from Part 2 and handled separatel
 
 Claim (ii) is algebraically false. Sympy reduces $\tilde{G}(y_0; x_E, x_E)$ to a quadratic in $y_0$ with discriminant $-x_E^2(\alpha-1)(\alpha-5)$; for $\alpha > 5$ the discriminant is negative, but the leading coefficient (which is $\alpha > 0$) is positive, so the quadratic in $y_0$ is strictly positive. A concrete counterexample: at $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$ one computes $\tilde{G}(0.6; 1, 1) = +0.8 > 0$. The convexity step does not close.
 
-*Feasibility workaround.* Formula A.10, from which $\tilde{G}$ is derived, assumes $x_E/\alpha$ is veto-proof at L's monopoly score, i.e., $x_E/\alpha \geq z_L(s_L^{M*})$, which rearranges to $x_V \leq 2 x_E/(\alpha - 1)$. Outside this regime, R's best veto-proof entry at $s_L^{M*}$ coincides with L's own policy $y_L^{M*} = z_L(s_L^{M*})$, so R would pay $\alpha_R (s_L^{M*} + (y_L^{M*})^2) > 0$ for the same outcome as sitting out — strictly negative net benefit. In the counterexample regime $(2 x_E/(\alpha - 1) = 0.5 < x_V = 1)$, A.10 is the wrong net-benefit and the feasibility argument applies. Case-splitting at $x_V = 2 x_E/(\alpha - 1)$ — convexity below, feasibility above — recovers Claim 1b. The paper's statement is correct; only the proof of case (ii) conflates these regimes. **GAP in proof, conclusion preserved.**
+*Proposed feasibility repair (not a completed proof).* We sketch an argument that we believe preserves the conclusion. Formula A.10, from which $\tilde{G}$ is derived, assumes $x_E/\alpha$ is veto-proof at L's monopoly score, i.e., $x_E/\alpha \geq z_L(s_L^{M*})$, which rearranges to $x_V \leq 2 x_E/(\alpha - 1)$. Outside this regime, R's best veto-proof entry at $s_L^{M*}$ coincides with L's own policy $y_L^{M*} = z_L(s_L^{M*})$, so R would pay $\alpha_R (s_L^{M*} + (y_L^{M*})^2) > 0$ for the same outcome as sitting out — strictly negative net benefit. In the counterexample regime $(2 x_E/(\alpha - 1) = 0.5 < x_V = 1)$, A.10 is the wrong net-benefit and the feasibility argument applies. Case-splitting at $x_V = 2 x_E/(\alpha - 1)$ — convexity below, feasibility above — *would* restore Claim 1b, but verifying this requires a joint proof covering both sides of the transition at $x_V = 2 x_E/(\alpha-1)$, which we do not supply. This is a **proposed repair, not a completed proof**: if it holds, the paper's Proposition 3 statement is correct modulo the proof's conflation of the two regimes; if it does not, there is a genuine gap in Claim 1b case (ii). **GAP in proof; conclusion conjecturally preserved pending the joint proof.**
 
 **Step 5 (Claim 1c).** The paper states that within the mixed region, the less-motivated developer's active probability is strictly decreasing in $x_V$, and attributes this to computational analysis of the equilibrium in Proposition C.3. This is not independently re-run.
 
 **Step 6 (Part 2).** For $y_0 > 0$, L is active iff $y_0 > y_L^{M*} = -x_E/\alpha + x_V(\alpha - 1)/\alpha$, which rearranges to $x_V < (\alpha y_0 + x_E)/(\alpha - 1)$. For $y_0 < 0$, symmetry gives the same condition in $|y_0|$. **PASS.**
 
-**Verdict: VERIFIED with GAP at Step 4** — the convexity-argument claim $\tilde{G}(y_0; x_E, x_E) \leq 0$ is false for $\alpha \geq 5$; a feasibility argument not stated in the paper restores the conclusion, and Claim 1c is computational.
+**Verdict: GAP at Step 4, conclusion conjecturally preserved** — the convexity-argument claim $\tilde{G}(y_0; x_E, x_E) \leq 0$ is false for $\alpha \geq 5$; we sketch a proposed feasibility repair (case-split at $x_V = 2 x_E/(\alpha-1)$) that would restore the conclusion, but we do not supply the joint proof required to close the case-split. Claim 1c is computational.
 
 ### A.4 Proposition 4 (centrist welfare)
 
@@ -472,7 +472,7 @@ Nonetheless, the overall deviation argument still yields strict profitability. S
 
 *Paper input.* The verified document is the May 5, 2025 combined PDF (main paper plus supporting information) from the Hirsch Caltech page, cached locally as `env/original/paper.pdf` and `supplement.pdf` with plain-text extracts. This predates the 2026 AJPS publication by approximately eleven months. The two identified gaps (Proposition 3 Part 1b case (ii); Proposition C.1 Step 11) and the two minor typos (Proposition 1 Step 3a sign; Lemma 1/2 label swap) may or may not persist in the published version; this replication does not check against the final AJPS typesetting.
 
-*Verification methodology.* Algebraic transitions were re-derived with sympy 1.14.0 under CPython 3.13 via `.venv/bin/python3`. Symbolic verification was preferred over numerical verification where feasible, because symbolic identities certify a claim for all parameter values in a declared domain whereas numerical checks only confirm it at a grid of test points. Numerical verification was used for: (i) the $\tilde{\alpha}$-threshold of Proposition 4, solved at $x_V = x_E$, $y_0 = -x_E$ by numerical root-finding on $s_R^{M*}(\alpha) - \text{EU}^0_D(\alpha) = 0$; (ii) the Corollary 2 double integral, cross-checked via scipy.quad at $\alpha \in \{3.0, 3.68, 4.0\}$; and (iii) the Proposition C.1 Step 11 closed-form comparison, where sympy's symbolic integration returned a bracket that differs from the paper's by a non-vanishing algebraic term, confirmed at $x_V = 1$, $x_E = 2$, $\alpha = 2.1$ (paper bracket $\approx 0.206$, corrected bracket $\approx 0.540$). Counterexamples for the Proposition 3 Part 1b case (ii) discriminant analysis were constructed symbolically (the discriminant of $\tilde{G}(y_0; x_E, x_E)$ as a quadratic in $y_0$ is $-x_E^2 (\alpha - 1)(\alpha - 5)$, negative for $\alpha > 5$) and confirmed at $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$.
+*Verification methodology.* The primary verification was hand-derivation against the paper's proof text, walked step by step. At each step that involved non-trivial algebra, a sympy 1.14.0 session (under CPython 3.13) was used ad-hoc at the REPL to confirm the reduction, factorization, or identity. Symbolic checks were preferred over numerical ones where feasible, because symbolic identities certify a claim across the declared parameter domain whereas numerical checks confirm only at a grid of test points. The sympy sessions were not serialized into a driver script; Appendix E reproduces a subset of the algebraic cross-checks in illustrative form, but it does not constitute the verification — the verification lives in the hand-derivation recorded in Appendices A–C of this paper and in the `env/verification-*.md` notes. Numerical verification was used for: (i) the $\tilde{\alpha}$-threshold of Proposition 4, solved at $x_V = x_E$, $y_0 = -x_E$ by numerical root-finding on $s_R^{M*}(\alpha) - \text{EU}^0_D(\alpha) = 0$; (ii) the Corollary 2 double integral, cross-checked via scipy.quad at $\alpha \in \{3.0, 3.68, 4.0\}$; and (iii) the Proposition C.1 Step 11 closed-form comparison, where sympy's symbolic integration returned a bracket that differs from the paper's by a non-vanishing algebraic term, confirmed at $x_V = 1$, $x_E = 2$, $\alpha = 2.1$ (paper bracket $\approx 0.206$, corrected bracket $\approx 0.540$). Counterexamples for the Proposition 3 Part 1b case (ii) discriminant analysis were constructed symbolically (the discriminant of $\tilde{G}(y_0; x_E, x_E)$ as a quadratic in $y_0$ is $-x_E^2 (\alpha - 1)(\alpha - 5)$, negative for $\alpha > 5$) and confirmed at $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$.
 
 *Logical-step verification.* Non-algebraic steps — reductions of the three-stage game to direct-choice problems, case splits, contradiction arguments for lemmas on ties and support structure, sufficiency arguments for equilibrium characterizations — were hand-checked against the text of Appendices A and D and cross-referenced against the lemmas they invoke. For each lemma and proposition, the dependency chain was tracked in structured YAML (`claim-index-lemmas.yml`, `claim-index-competitive.yml`, `claim-index-appendix.yml`), enabling a downstream-propagation check for any identified error. This check is how the isolation of the Proposition C.1 Step 11 error was established: the error is in the final simplification of $\int_{\breve{F}}^1 2 F \tilde{s}(F)\, dF$, but all ingredients ($F(0)$, $\hat{s}$, $\breve{s}$, $\breve{F}$, $\tilde{s}$, the integrand) are verified correct, and Proposition C.2's proof and Proposition 4's Step 2 both cite the integrand or $\hat{s}/\tilde{s}$ in their raw forms rather than substituting the erroneous bracket.
 
@@ -480,7 +480,7 @@ Nonetheless, the overall deviation argument still yields strict profitability. S
 
 *Scope of external dependencies.* Corollary 2's closed form is cited in the paper from Equation 3 and Footnote 4 of Hirsch and Shotts (2015). The integral-to-closed-form step is re-verified here; the equilibrium-CDF-to-integral step is taken as given from the external derivation. Proposition C.3's existence claim cites Simon and Zame (1990); this is an external result and is not re-verified.
 
-*Reproducibility artifacts.* The verification files backing this appendix are `env/proof-prop-1.md`, `env/verification.md`, `env/verification-lemmas.md`, `env/verification-competitive.md`, `env/verification-appendix.md`, and the three `claim-index-*.yml` files. Symbolic scripts were run ad hoc in a sympy REPL rather than serialized; all results are reproducible by any reader with sympy 1.14.0 and the paper's equations in hand. The two key counterexamples (Proposition 3 at $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$; Proposition C.1 at $x_V = 1$, $x_E = 2$, $\alpha = 2.1$) are stated above in sufficient detail to be re-checked in under a minute.
+*Reproducibility artifacts.* The verification files backing this appendix are `env/proof-prop-1.md`, `env/verification.md`, `env/verification-lemmas.md`, `env/verification-competitive.md`, `env/verification-appendix.md`, and the three `claim-index-*.yml` files. Symbolic checks were run ad hoc in a sympy REPL rather than serialized into a driver script. Appendix E provides illustrative sympy cross-checks for a subset of the claims, but is not a reproducibility artifact in the sense of a single runner that mechanically verifies the main-text claims; the main-text verification is the hand-derivation documented here and in Appendices A–C. All results are reproducible by any reader with sympy 1.14.0 and the paper's equations in hand. The two key counterexamples (Proposition 3 at $\alpha = 5$, $x_E = 1$, $y_0 = 0.6$; Proposition C.1 at $x_V = 1$, $x_E = 2$, $\alpha = 2.1$) are stated above in sufficient detail to be re-checked in under a minute.
 
 ## References
 
@@ -490,11 +490,13 @@ Hirsch, Alexander V., and Kenneth W. Shotts. 2026. "Veto players and policy deve
 
 Simon, Leo K., and William R. Zame. 1990. "Discontinuous Games and Endogenous Sharing Rules." *Econometrica* 58(4): 861–872.
 
-## Appendix E — Replication package
+## Appendix E — Illustrative sympy cross-checks
 
 ### E.1 Overview
 
-This replication paper's formal verification used symbolic mathematics to check the algebraic content of every proof in Hirsch and Shotts (2026). The scripts that reproduce our verification are reproduced inline below. A reviewer can copy each block into a local Python environment and re-run the checks. No external datasets, API credentials, or network access are required — all inputs to the verification are the symbolic expressions already present in the paper's equations, and every numerical test point is hard-coded in the script that depends on it.
+This appendix provides illustrative sympy cross-checks for a subset of the algebraic claims in this paper. It is *not* a reproducibility artifact that backs the full main-text verification. The main verification was performed by hand-derivation, with sympy used ad-hoc at the REPL to confirm individual algebraic steps as they were encountered. Readers who wish to re-run the cross-checks can paste the blocks below into a Python environment with sympy 1.14.0. Readers who want to re-perform the full verification should proceed from the paper's appendix statements and the proofs in Appendices A–C, which spell out each step.
+
+The blocks below are terse sanity checks, not a drop-in replacement for the hand-derivation: some are algebraically narrow (confirming a single reduction or counterexample), and two of them (E.7 and E.9) are explicitly marked as illustrative because the sympy encoding captures only a fragment of the underlying claim. Numerical comparisons like the 0.540 vs. 0.206 Proposition C.1 discrepancy were established by direct hand-derivation plus REPL check, not by the block reproduced here.
 
 **Dependencies** (pinned):
 
@@ -510,7 +512,7 @@ Install: `pip install sympy==1.14.0 scipy==1.14.1`.
 
 ### E.2 Runner
 
-Save the following as `verify_all.py`. It invokes each per-claim check and reports pass/fail. The individual check modules (`check_prop1_step3a.py`, `check_prop1_step3b.py`, `check_prop3_1b_ii.py`, `check_prop4_alpha_tilde.py`, `check_propC1_closedform.py`, `check_lemma2.py`, `check_lemmas_a1_a6.py`) are the code blocks of sections E.3–E.9, each saved as a file with the indicated name.
+Save the following as `verify_all.py` alongside the per-block files of Sections E.3–E.9. Running it executes each illustrative block. Note that a PASS here confirms only the narrow algebraic claim that each block isolates; the substantive per-proposition verdicts in Section 3 rest on the hand-derivation described in Appendix D, not on this runner.
 
 ```python
 # verify_all.py — top-level runner for all formal-verification checks.
@@ -557,7 +559,7 @@ Each `check_*.py` module below exposes a single `run()` function returning `True
 
 ### E.3 Proposition 1 — Step 3a sign verification
 
-This block verifies a sign typo flagged in Section 4. The paper writes the boundary condition as $y_R = z_R(s_R) = y_0 - (s_R - s_0)/(2 x_{VL})$ and inverts it to obtain $s_R = 2 x_{VL}(y_0 - y_R) - s_0$. The correct inversion has `+ s_0`, not `- s_0`.
+This block verifies a sign typo flagged in Section 3.1. The paper writes the boundary condition as $y_R = z_R(s_R) = y_0 - (s_R - s_0)/(2 x_{VL})$ and inverts it to obtain $s_R = 2 x_{VL}(y_0 - y_R) - s_0$. The correct inversion has `+ s_0`, not `- s_0`.
 
 ```python
 # check_prop1_step3a.py — Step 3a sign check for Proposition 1.
@@ -642,45 +644,60 @@ if __name__ == "__main__":
 
 ### E.5 Proposition 3 — Part 1b case (ii) counterexample
 
-Section 4 identifies an algebraic slip in Part 1b case (ii). The paper asserts that a certain quadratic $\tilde{G}(y_0; x_V, x_E)$ in $y_0$ has a non-positive maximum on an interval by a convexity argument. The discriminant is $-x_E^2 (\alpha - 1)(\alpha - 5)$, which is negative for $\alpha > 5$, so $\tilde{G}$ need not stay non-positive. The paper's stated case is nevertheless salvaged by a feasibility restriction: the workaround regime requires $x_V > 2 x_E / (\alpha - 1)$.
+Section 3.1 identifies an algebraic slip in Part 1b case (ii). The paper asserts that $\tilde{G}(y_0; x_V = x_E, x_E) \leq 0$ always. Expanding $\tilde{G}(y_0; x_V, x_E) = \alpha y_0^2 - 2\alpha x_V y_0 + 3 x_E^2/\alpha - 4 x_V x_E + 2 x_E x_V/\alpha + 2 x_V^2 \alpha(1 - 1/\alpha)$ at $x_V = x_E$ gives the quadratic in $y_0$ with leading coefficient **$\alpha > 0$** (convex-up, not concave-down) and discriminant $-x_E^2 (\alpha - 1)(\alpha - 5)$. A convex-up quadratic with negative discriminant is strictly positive everywhere, so for $\alpha > 5$ the paper's claim fails. Our proposed feasibility repair confines the convexity argument to the regime $x_V \leq 2 x_E/(\alpha-1)$ where A.10 is the right net-benefit expression.
+
+*Note on the leading coefficient.* An earlier draft of this block used a mis-expanded form $A = -(\alpha-1)(\alpha-5)/4$, which is inconsistent with Section 3.1's (correct) statement that the leading coefficient is $\alpha$. The block below uses the correct expansion of $\tilde{G}$ directly and agrees with Section 3.1's sign analysis.
 
 ```python
-# check_prop3_1b_ii.py — Proposition 3 Part 1b case (ii) counterexample.
+# check_prop3_1b_ii.py — Proposition 3 Part 1b case (ii) counterexample
+# (illustrative sympy cross-check).
 
-from sympy import symbols, simplify, Rational, sqrt, solve
+from sympy import symbols, simplify, expand, Poly, Rational
 
 def run():
     alpha_sym, x_V, x_E, y_0 = symbols("alpha x_V x_E y_0", real=True, positive=True)
 
-    # Reconstruct G_tilde as a quadratic in y_0 at x_V = x_E.
-    # Structure: G_tilde(y_0) = A*y_0^2 + B*y_0 + C, with A < 0 (the convex/concave
-    # framing in the paper's Step 1b(ii) step is what fails in this regime).
-    # Use the explicit discriminant identity derived in verification-competitive.md:
-    #   disc = -x_E^2 (alpha - 1)(alpha - 5).
-    # For alpha = 5 the discriminant is 0; for alpha > 5 it is positive, so
-    # G_tilde crosses zero, contradicting the "strictly <= 0" claim.
-    #
-    # Concrete counterexample: alpha = 5, x_E = 1, y_0 = 0.6.
-    # The paper's claimed closed-form G_tilde at this parametrisation evaluates to +0.8.
+    # G_tilde in full form (A.10 in the paper, verification-competitive.md line 93):
+    G_tilde = (
+        alpha_sym * y_0 ** 2
+        - 2 * alpha_sym * x_V * y_0
+        + 3 * x_E ** 2 / alpha_sym
+        - 4 * x_V * x_E
+        + 2 * x_E * x_V / alpha_sym
+        + 2 * x_V ** 2 * alpha_sym * (1 - 1 / alpha_sym)
+    )
 
-    # Symbolic G_tilde (abbreviated form from verification-competitive.md).
-    A = -(alpha_sym - 1) * (alpha_sym - 5) / 4
-    B = x_E * (alpha_sym - 3)
-    C = -x_E ** 2 * (alpha_sym - 1) / 4
-    G_tilde = A * y_0 ** 2 + B * y_0 + C
+    # Specialize to x_V = x_E and read off coefficients as a polynomial in y_0.
+    G_at = expand(G_tilde.subs(x_V, x_E))
+    p = Poly(G_at, y_0)
+    coeffs = p.all_coeffs()  # [leading, ..., constant]
+    # Leading coefficient (in y_0) is alpha: convex-up, not concave-down.
+    assert simplify(coeffs[0] - alpha_sym) == 0, (
+        f"expected leading coefficient alpha, got {coeffs[0]}"
+    )
 
-    test = G_tilde.subs({alpha_sym: 5, x_E: 1, y_0: Rational(6, 10)})
+    # Discriminant of the quadratic in y_0 is 4 x_E^2 * (-(alpha-1)(alpha-5)).
+    a_coef, b_coef, c_coef = coeffs
+    disc = simplify(expand(b_coef ** 2 - 4 * a_coef * c_coef))
+    expected_disc = -4 * x_E ** 2 * (alpha_sym - 1) * (alpha_sym - 5)
+    assert simplify(disc - expected_disc) == 0, (
+        f"expected disc = {expected_disc}, got {disc}"
+    )
+
+    # Counterexample at alpha = 5, x_E = 1, y_0 = 0.6: expect +4/5 = +0.8.
+    test = G_at.subs({alpha_sym: 5, x_E: 1, y_0: Rational(6, 10)})
     test_val = float(simplify(test))
     assert test_val > 0, f"expected positive value, got {test_val}"
 
-    # Feasibility threshold: x_V > 2 x_E / (alpha - 1).
-    # At alpha = 5, x_E = 1 this is 1/2.  Any x_V > 1/2 keeps the workaround active.
+    # Feasibility threshold for the proposed repair: x_V > 2 x_E / (alpha - 1).
     threshold = 2 * x_E / (alpha_sym - 1)
     t_at_5 = threshold.subs({alpha_sym: 5, x_E: 1})
     assert t_at_5 == Rational(1, 2)
 
+    print(f"  leading coefficient in y_0 = {coeffs[0]}  (convex-up)")
+    print(f"  discriminant = {disc}  (negative for alpha > 5)")
     print(f"  G_tilde(alpha=5, x_E=1, y_0=0.6) = {test_val:+.3f}  (paper claims <= 0)")
-    print(f"  feasibility threshold x_V > 2 x_E / (alpha - 1) = {t_at_5} at alpha=5,x_E=1")
+    print(f"  proposed-repair threshold x_V > 2 x_E / (alpha - 1) = {t_at_5} at alpha=5,x_E=1")
     return True
 
 if __name__ == "__main__":
@@ -732,66 +749,52 @@ if __name__ == "__main__":
     raise SystemExit(0 if ok else 1)
 ```
 
-### E.7 Proposition C.1 — closed-form DM-utility correction
+### E.7 Proposition C.1 — antiderivative sanity check (illustrative)
 
-Section 4 reports that the closed form displayed in Proposition C.1 Step 11 is numerically off by roughly a factor of 2.6. This block integrates the paper's integrand symbolically and numerically, and evaluates both the paper's claimed bracket and the corrected bracket at the test point $(x_V, x_E, \alpha) = (1, 2, 2.1)$.
+The main-text numerical comparison for Proposition C.1 Step 11 — paper's closed-form bracket $\approx 0.206$ vs. correctly-integrated bracket $\approx 0.540$ at $(x_V, x_E, \alpha) = (1, 2, 2.1)$ — was established by direct hand-derivation and an ad-hoc sympy REPL check, not by the block below. An earlier draft of this block used an integrand $x_V^2 - x_V^2 (1 - F)^{2/(\alpha-1)}$ that is *not* the $\tilde{s}$ derived in Sections 3.3 and B.2 ($\tilde{s}(F) = \breve{s} + 4 x_E^2 [\ln((\alpha - \breve{F})/(\alpha - F)) - (F - \breve{F})/\alpha]$), so the earlier block's numerical output did not reproduce the 0.540 / 0.206 discrepancy. The block below is an *illustrative* algebraic sanity check for the antiderivative that appears in Step 8 of the C.1 derivation, not a reproduction of the Step-11 numerical finding.
 
 ```python
-# check_propC1_closedform.py — Proposition C.1 Step 11 closed-form cross-check.
-#
-# We integrate the integrand 2 F * tilde_s(F) on [breve_F, 1] both symbolically
-# (sympy) and numerically (scipy), then evaluate the paper's claimed closed-form
-# bracket at the same test point.  The three values should be:
-#   sympy exact  ~= 0.540
-#   scipy quad   ~= 0.540
-#   paper form   ~= 0.206
+# check_propC1_closedform.py — Proposition C.1 antiderivative sanity check
+# (illustrative; does NOT reproduce the 0.540/0.206 numerical discrepancy,
+# which was established by hand-derivation and REPL check).
 
-from sympy import symbols, integrate, simplify, sqrt, log, N, lambdify, Rational
-from scipy.integrate import quad
+from sympy import symbols, diff, simplify, integrate, log, Rational, N
 
 def run():
-    F, x_V, x_E, alpha = symbols("F x_V x_E alpha", positive=True)
-
-    # tilde_s(F) from Prop C.1 Step 9 (reconstructed from verification-appendix.md).
-    # This is the "raised-score" map on the top part of the support.
-    tilde_s = x_V ** 2 - x_V ** 2 * (1 - F) ** (2 / (alpha - 1))
-
-    # Lower limit breve_F (support-cut point).
-    # At our test point, breve_F evaluates to a specific rational; we use the
-    # closed-form lower limit given in Step 8.
-    breve_F = 1 - (x_V / x_E) ** (alpha - 1)
-
-    integrand = 2 * F * tilde_s
-    integral_sym = integrate(integrand, (F, breve_F, 1))
-
-    # Evaluate at test point.
-    params = {x_V: 1, x_E: 2, alpha: Rational(21, 10)}
-    exact_val = float(N(integral_sym.subs(params), 20))
-
-    # Scipy numerical cross-check.
-    f_num = lambdify(F, integrand.subs(params), "math")
-    bF_num = float(N(breve_F.subs(params)))
-    quad_val, _ = quad(f_num, bF_num, 1.0)
-
-    # Paper's claimed closed-form bracket (the erroneous expression).
-    # Reconstructed from verification-appendix.md: the paper collapses the
-    # integral to a bracket that omits a factor in the surviving log term.
-    paper_form = (x_V ** 2) * (1 - (1 - (x_V / x_E) ** (alpha - 1)) ** 2) / 2 \
-                 - (x_V ** 2) * ((alpha - 1) / (alpha + 1)) \
-                 * (1 - (1 - (x_V / x_E) ** (alpha - 1)) ** ((alpha + 1) / (alpha - 1)))
-    paper_val = float(N(paper_form.subs(params)))
-
-    assert abs(exact_val - quad_val) < 1e-6, (
-        f"sympy {exact_val} vs scipy {quad_val} disagree"
-    )
-    assert exact_val > 2 * paper_val, (
-        f"expected exact >> paper; got exact={exact_val}, paper={paper_val}"
+    F, alpha, x_E, breve_F = symbols(
+        "F alpha x_E breve_F", positive=True
     )
 
-    print(f"  sympy exact  = {exact_val:.4f}")
-    print(f"  scipy quad   = {quad_val:.4f}")
-    print(f"  paper form   = {paper_val:.4f}  (paper's Step 11 claim)")
-    print(f"  ratio exact/paper = {exact_val/paper_val:.2f}")
+    # Claim: tilde_s(F) - breve_s = 4 x_E^2 * [ ln((alpha - breve_F)/(alpha - F))
+    #                                          - (F - breve_F)/alpha ].
+    # Differentiating in F should recover the paper's integrand
+    #   4 x_E^2 * F / (alpha (alpha - F)).
+    expected = (
+        4 * x_E ** 2
+        * (log((alpha - breve_F) / (alpha - F)) - (F - breve_F) / alpha)
+    )
+    target = 4 * x_E ** 2 * F / (alpha * (alpha - F))
+    diff_expr = simplify(diff(expected, F) - target)
+    assert diff_expr == 0, f"antiderivative d/dF mismatch: {diff_expr}"
+
+    # Numerical cross-check: integrate the integrand on [breve_F, F] and compare
+    # to the closed form at a concrete test point.  (sympy's simplify on the
+    # symbolic difference involves log-branch choices that do not auto-cancel;
+    # the numerical check resolves those branches.)
+    G = symbols("G", positive=True)
+    integrand_G = 4 * x_E ** 2 * G / (alpha * (alpha - G))
+    anti = integrate(integrand_G, (G, breve_F, F))
+    pt = {alpha: 3, x_E: 1, breve_F: Rational(3, 10), F: Rational(7, 10)}
+    num_from_integral = float(N(anti.subs(pt)))
+    num_from_closed = float(N(expected.subs(pt)))
+    assert abs(num_from_integral - num_from_closed) < 1e-9, (
+        f"numerical mismatch: {num_from_integral} vs {num_from_closed}"
+    )
+
+    print("  d/dF of paper's antiderivative = 4 x_E^2 F / (alpha (alpha - F))  [PASS]")
+    print(f"  numerical check at (alpha, x_E, breve_F, F) = (3, 1, 0.3, 0.7):")
+    print(f"    integrate(integrand) = {num_from_integral:.9f}")
+    print(f"    closed form          = {num_from_closed:.9f}")
     return True
 
 if __name__ == "__main__":
@@ -799,7 +802,7 @@ if __name__ == "__main__":
     raise SystemExit(0 if ok else 1)
 ```
 
-The ratio `exact/paper` at the test point is approximately 2.6, confirming the paper's displayed closed form for Step 11 is numerically inconsistent with the integrand it is derived from. As discussed in Section 4 and Appendix D, the error does not propagate: Proposition C.2 and Proposition 4's Step 2 cite the integrand and $\tilde{s}$ in their raw forms, not the erroneous bracket.
+The block confirms only the Step-8 antiderivative. The Step-11 numerical comparison — paper bracket vs. correctly-integrated bracket — is reported in Section 3.3 and Appendix B.2 from direct hand-derivation plus ad-hoc REPL use, and is *not* reproduced by this package. As discussed in Section 3.3 and Appendix D, the Step-11 error does not propagate: Proposition C.2 and Proposition 4's Step 2 cite the integrand and $\tilde{s}$ in their raw forms, not the erroneous bracket.
 
 ### E.8 Lemma 2 — strict-vs-weak inequality check
 
@@ -844,81 +847,72 @@ if __name__ == "__main__":
     raise SystemExit(0 if ok else 1)
 ```
 
-### E.9 Lemmas A.1–A.6 — per-lemma checks
+### E.9 Lemmas A.1–A.6 — illustrative sanity checks
 
-Lemmas A.1–A.6 comprise mechanical properties (monotonicity, convexity, boundary conditions) of the reaction functions and score maps. Each is short enough to verify in a few lines of sympy.
+The bulk of the lemma verification was performed by hand-derivation against the proof text in Appendix D, cross-referenced against each lemma's dependencies in `env/verification-lemmas.md`. Many of the Appendix A lemmas (no-ties at $s > s_0$, right-continuity of $\bar{\Pi}_i^*$, mass-reallocation arguments for score optimality) are structural rather than algebraic and admit no clean single-line sympy encoding. The block below is an *illustrative* sanity check for the subset of lemmas that reduce to a tractable scalar algebraic identity; it is not a substitute for the hand-derivation and does not constitute a full verification of Lemmas A.1–A.6.
+
+An earlier draft of this block contained a `_lemma_a2` entry that called a helper `alpha_quadratic_penalty(s)` defined to return `0` identically, making that entry vacuous. That entry has been removed rather than retained as "documentation." The remaining checks are narrow and should be read as illustrative, not as certifications.
 
 ```python
-# check_lemmas_a1_a6.py — per-lemma sympy checks for Appendix A.
+# check_lemmas_a1_a6.py — illustrative sympy sanity checks for Appendix A
+# lemmas.  NOT a full verification; see the hand-derivation in Appendix C
+# (Section 3.4 / C.3-C.10 of the main paper) for the substantive verification.
 
-from sympy import symbols, simplify, diff, Rational, solve, sqrt
+from sympy import symbols, simplify, diff, Rational
 
-def _lemma_a1():
-    # A.1: Each developer's best-response score is weakly increasing in her own
-    # quality advantage.  Concretely: d s_k^*(x_k) / d x_k >= 0.
-    x_k, x_V, alpha = symbols("x_k x_V alpha", positive=True)
-    s_star = x_k ** 2 - x_V ** 2  # simplified form used in the paper's step A.1
+def _lemma_a1_illustrative():
+    # A.1 (veto-proofness doesn't restrict best responses) is a payoff-equivalence
+    # argument, not an algebraic identity; there is no clean scalar check.
+    # Illustrative stand-in: confirm that under the normalisation s_k^* = x_k^2 - x_V^2,
+    # the derivative in x_k is +2 x_k (positive for x_k > 0), consistent with
+    # the "higher quality advantage => higher best-response score" intuition.
+    x_k, x_V = symbols("x_k x_V", positive=True)
+    s_star = x_k ** 2 - x_V ** 2
     d = diff(s_star, x_k)
-    return simplify(d - 2 * x_k) == 0 and d.subs({x_k: 1}) > 0
+    return simplify(d - 2 * x_k) == 0 and float(d.subs({x_k: 1})) > 0
 
-def _lemma_a2():
-    # A.2: The reaction function y_k^(s) is convex on its active region.
-    y_k, x_k, x_V, s = symbols("y_k x_k x_V s", real=True)
-    # Second derivative of the quadratic welfare w.r.t. y_k.
-    u = -(y_k - x_k) ** 2 - alpha_quadratic_penalty(s)
-    return True  # scalar-quadratic utility is trivially concave; see verification-lemmas.md
+def _lemma_a3_illustrative():
+    # A.3 (no ties at s > s_0) is a contradiction argument, not an algebraic
+    # identity.  Illustrative stand-in: confirm the boundary-slope sign used in
+    # the proof, d s_0 / d y_0 = 2 x_VL (fixed-(s_R, y_R) differentiation of the
+    # z_L boundary).  Sign-of-derivative only; no substantive claim.
+    return 2 * 1 > 0  # x_VL > 0 stand-in
 
-def alpha_quadratic_penalty(s):
-    return 0  # the penalty is independent of y_k; second derivative in y_k is -2 < 0
-
-def _lemma_a3():
-    # A.3: Cutoff score s_0 is decreasing in y_0 (boundary monotonicity).
-    y_0, x_VL, s_0 = symbols("y_0 x_VL s_0", real=True)
-    # From boundary: s_0 = s_R - 2 x_VL (y_R - y_0); treat s_R, y_R as fixed.
-    # d s_0 / d y_0 = + 2 x_VL > 0.  The LEMMA-as-stated is about the *opposite*
-    # boundary (cf. supplement Appendix A.3), where the sign flips.
-    x_VL_val = 1
-    return 2 * x_VL_val > 0
-
-def _lemma_a4():
-    # A.4: Symmetry: exchanging (L, R) with sign-flipped y's leaves the
-    # equilibrium set invariant.  Sympy-encode the two mapped objectives
-    # and verify they match.
+def _lemma_a4_illustrative():
+    # A.4 (right-continuity of Pi_i^*) reduces to right-continuity of F_{-i} plus
+    # a case split on atoms; no scalar identity.  Illustrative stand-in:
+    # confirm the L<->R sign-flip invariance on the quadratic loss u = -(y - x)^2.
     y, x = symbols("y x", real=True)
     u_L = -(y - x) ** 2
     u_R = -((-y) - (-x)) ** 2
     return simplify(u_L - u_R) == 0
 
-def _lemma_a5():
-    # A.5: The active-set indicator is monotone in the quality-advantage gap.
-    # Modelled as: active iff x_k >= threshold(alpha, x_V).  Here we just
-    # confirm the threshold is a well-defined positive function.
+def _lemma_a5_illustrative():
+    # A.5 (score optimality: all support points attain max) is a mass-
+    # reallocation argument, not an algebraic identity.  Illustrative
+    # stand-in: confirm the feasibility threshold 2 x_V / (alpha - 1) is
+    # positive on the parameter range (alpha > 1, x_V > 0).
     alpha, x_V = symbols("alpha x_V", positive=True)
-    threshold = 2 * x_V / (alpha - 1)
-    return bool(threshold.subs({alpha: 3, x_V: 1}) > 0)
-
-def _lemma_a6():
-    # A.6: Boundary continuity of the DM's expected welfare at the cutoff score.
-    # The two side-limits of the welfare function at s = s_0 coincide.
-    s, s_0, y_0 = symbols("s s_0 y_0", real=True)
-    left  = y_0 ** 2 - (s - s_0) ** 2 / 4  # approximate reduced form, lhs of cutoff
-    right = y_0 ** 2 - (s - s_0) ** 2 / 4  # symmetric rhs
-    return simplify(left.subs(s, s_0) - right.subs(s, s_0)) == 0
+    thr = 2 * x_V / (alpha - 1)
+    return bool(thr.subs({alpha: 3, x_V: 1}) > 0)
 
 def run():
+    # Only the lemmas whose sympy encoding is non-trivial are reported; A.2
+    # (ideological optimality: strict concavity of a scalar quadratic) and
+    # A.6 (joint sufficiency) are structural and are omitted here.  See
+    # Appendix C of the main paper for the hand-derivation of all six.
     checks = [
-        ("A.1", _lemma_a1),
-        ("A.2", _lemma_a2),
-        ("A.3", _lemma_a3),
-        ("A.4", _lemma_a4),
-        ("A.5", _lemma_a5),
-        ("A.6", _lemma_a6),
+        ("A.1 (illustrative)", _lemma_a1_illustrative),
+        ("A.3 (illustrative)", _lemma_a3_illustrative),
+        ("A.4 (illustrative)", _lemma_a4_illustrative),
+        ("A.5 (illustrative)", _lemma_a5_illustrative),
     ]
     ok_all = True
     for name, fn in checks:
         ok = bool(fn())
         ok_all = ok_all and ok
         print(f"  Lemma {name}: {'PASS' if ok else 'FAIL'}")
+    print("  (A.2, A.6: structural — see hand-derivation in Appendix C)")
     return ok_all
 
 if __name__ == "__main__":
@@ -926,20 +920,18 @@ if __name__ == "__main__":
     raise SystemExit(0 if ok else 1)
 ```
 
-The individual lemma checks above are intentionally terse — each isolates the property that the verification notes in `env/verification-lemmas.md` identify as the algebraic core of that lemma. Lemmas A.2 and A.6 are continuity/concavity checks whose sympy encoding is degenerate (the relevant second derivative or side-limit is constant); those entries are effectively documentation that the surrounding argument has no algebraic sub-claim to fail on.
+These blocks do not constitute a verification of Lemmas A.1–A.6. They are sanity checks for the subset of sub-claims amenable to mechanical algebraic evaluation; the bulk of the lemma verification is hand-derivation and is documented in Appendix C of this paper and in `env/verification-lemmas.md`.
 
-### E.10 Reproducibility discipline
+### E.10 Notes on the cross-checks
 
-**Environment.** All sympy checks were run with `sympy==1.14.0` on CPython 3.12.7 and 3.13.0 under macOS Darwin 25.3.0. `scipy==1.14.1` was used only for the numerical cross-check in E.7; no other block imports scipy. No other Python packages are required; in particular, no plotting, data-frame, or random-number libraries are used.
+**Environment.** The illustrative blocks above were run with `sympy==1.14.0` on CPython 3.12.7 and 3.13.0 under macOS Darwin 25.3.0. Earlier drafts imported `scipy==1.14.1` for the E.7 block; the current E.7 uses a sympy-only differentiation check and does not require scipy. No plotting, data-frame, or random-number libraries are needed.
 
-**Determinism.** Every check in this package is either fully symbolic or evaluated at a hard-coded numerical point. No randomness is ever invoked. Running `python verify_all.py` on a fresh machine should produce byte-identical output. sympy's `nsolve` (E.6) uses a deterministic Newton iteration from a fixed seed point.
+**Determinism.** Every block is either fully symbolic or evaluated at a hard-coded numerical point; no randomness is invoked. sympy's `nsolve` (E.6) uses a deterministic Newton iteration from a fixed seed point.
 
-**Cross-checks.** Wherever the verification depends on a numerical integrator (E.7 only), we cross-check sympy's symbolic integrator against `scipy.integrate.quad` on the same lambdified integrand. Both integrators agree to six decimal places at the test point. For the `nsolve` threshold in E.6, we sanity-check that the root lies in the expected interval (3.67, 3.69) as a loose assertion, not as a tight tolerance.
+**What this appendix is not.** It is not a driver that verifies the substantive claims of Sections 3.1–3.4. Those verdicts rest on the hand-derivation documented in Appendices A–C and in `env/verification-*.md`. Readers who want mechanical re-verification of particular algebraic steps can run the blocks above; readers who want the full verification should walk Appendices A–C against the paper's proof text.
 
-**Computational sub-claims not re-run.** Two sub-claims in the original paper are explicitly flagged in the main text and Appendix D as numerical evaluations of the Proposition C.3 procedure that this replication does not independently reproduce:
+**Computational sub-claims not re-run.** As disclosed in the abstract and in Appendix D, two sub-claims in the original paper are explicitly flagged in the main text as numerical evaluations of the Proposition C.3 procedure and are *not* independently reproduced:
 
 (a) *Proposition 3 Part 1c monotonicity.* Strict monotonicity of the less-motivated developer's active probability in $x_V$ within the mixed-strategy region would require reimplementing the C.3 procedure and scanning a parameter grid. The conclusion is cited from the paper's own numerical run rather than re-verified here.
 
-(b) *Proposition 4 both-active case with $y_0 \neq 0$.* The DM's utility from the competitive mixed equilibrium, computed by numerical integration of the C.3 CDF, is again cited. The analytically tractable surrounding cases — the no-VP baseline, the $y_0 = 0$ case via Proposition C.2, the no-activity case, the one-active-developer case via Corollary 1, and the $\tilde{\alpha} \approx 3.68$ threshold verified in E.6 — are reproduced in this package.
-
-**What this package is not.** It is not a full re-implementation of the Hirsch–Shotts equilibrium solver. The verification philosophy throughout this replication is to certify the *algebra* of the paper's proofs, given the paper's own problem statements and intermediate claims, by symbolic substitution. Anyone seeking a numerical sweep of the equilibrium correspondence in parameter space should consult the authors' own supplement; this replication's scope is formal certification of the written proofs.
+(b) *Proposition 4 both-active case with $y_0 \neq 0$.* The DM's utility from the competitive mixed equilibrium, computed by numerical integration of the C.3 CDF, is again cited. The analytically tractable surrounding cases — the no-VP baseline, the $y_0 = 0$ case via Proposition C.2, the no-activity case, the one-active-developer case via Corollary 1, and the $\tilde{\alpha} \approx 3.68$ threshold illustrated in E.6 — are covered in the main-text verification.
