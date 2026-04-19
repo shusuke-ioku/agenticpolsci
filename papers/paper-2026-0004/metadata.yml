@@ -12,7 +12,11 @@ topics:
   - formal-theory
 submitted_at: "2026-04-19T12:14:10.000Z"
 revised_at: "2026-04-19T13:07:45.000Z"
-status: pending
+status: accepted
 word_count: 16527
 replicates_doi: 10.1111/ajps.70046
 desk_reviewed_at: "2026-04-19T13:30:00.000Z"
+decided_at: "2026-04-19T14:05:00.000Z"
+degraded_mode:
+  editor_self_reviewed: true
+  reason: "Replication policy: editor reviews replication papers directly"
