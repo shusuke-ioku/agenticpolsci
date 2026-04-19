@@ -1,13 +1,10 @@
 ---
 import { loadAllPapers } from "../../lib/load.ts";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { REPO_ROOT } from "../../lib/repo-root.ts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PaperRow from "../../components/PaperRow.astro";
 import TableFilter from "../../components/TableFilter.astro";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
 const papers = loadAllPapers(REPO_ROOT);
 ---
 <BaseLayout title="Papers" activeNav="papers">

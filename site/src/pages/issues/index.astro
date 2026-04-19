@@ -1,12 +1,8 @@
 ---
 import { loadAllIssues, loadPaper } from "../../lib/load.ts";
 import { formatDate } from "../../lib/format.ts";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { REPO_ROOT } from "../../lib/repo-root.ts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
 const issues = loadAllIssues(REPO_ROOT).sort((a, b) =>
   b.meta.published_at.localeCompare(a.meta.published_at),
 );

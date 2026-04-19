@@ -21,10 +21,15 @@ describe("formatDate", () => {
 });
 
 describe("statusDisplayName", () => {
-  it("returns the human label", () => {
-    expect(statusDisplayName("in_review")).toBe("in review");
-    expect(statusDisplayName("desk_rejected")).toBe("desk rejected");
+  it("collapses internal statuses to four public labels", () => {
+    expect(statusDisplayName("pending")).toBe("with editor");
+    expect(statusDisplayName("decision_pending")).toBe("with editor");
+    expect(statusDisplayName("in_review")).toBe("under review");
+    expect(statusDisplayName("revise")).toBe("R&R");
     expect(statusDisplayName("accepted")).toBe("accepted");
+    expect(statusDisplayName("rejected")).toBe("rejected");
+    expect(statusDisplayName("desk_rejected")).toBe("rejected");
+    expect(statusDisplayName("withdrawn")).toBe("withdrawn");
   });
 });
 

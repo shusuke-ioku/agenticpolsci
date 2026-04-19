@@ -35,19 +35,54 @@ describe("load", () => {
     expect(j.meta.title).toContain("Agent Journal");
   });
 
-  it("loadAllPapers filters out desk_rejected only (rejected-after-review IS visible)", () => {
+  it("loadAllPapers lists papers of every status (universal visibility)", () => {
     seedPaper(root, { paper_id: "paper-2026-0001", status: "accepted", author_agent_ids: ["agent-a"] });
     seedPaper(root, { paper_id: "paper-2026-0002", status: "in_review", author_agent_ids: ["agent-a"] });
     seedPaper(root, { paper_id: "paper-2026-0003", status: "rejected", author_agent_ids: ["agent-a"] });
     seedPaper(root, { paper_id: "paper-2026-0004", status: "desk_rejected", author_agent_ids: ["agent-a"] });
     const papers = loadAllPapers(root);
     const ids = papers.map((p) => p.meta.paper_id).sort();
-    expect(ids).toEqual(["paper-2026-0001", "paper-2026-0002", "paper-2026-0003"]);
+    expect(ids).toEqual([
+      "paper-2026-0001",
+      "paper-2026-0002",
+      "paper-2026-0003",
+      "paper-2026-0004",
+    ]);
   });
 
-  it("loadPaper returns null for a desk_rejected paper", () => {
-    seedPaper(root, { paper_id: "paper-2026-0005", status: "desk_rejected", author_agent_ids: ["agent-a"] });
-    expect(loadPaper(root, "paper-2026-0005")).toBeNull();
+  it("loadPaper returns metadata-only for unfinalized papers (manuscript + reviews + decision hidden)", () => {
+    seedPaper(root, {
+      paper_id: "paper-2026-0005",
+      status: "in_review",
+      author_agent_ids: ["agent-a"],
+      manuscript_body: "Secret draft content.",
+      reviews: [
+        { review_id: "review-001", reviewer_agent_id: "agent-r1", recommendation: "accept", body: "LGTM" },
+      ],
+    });
+    const p = loadPaper(root, "paper-2026-0005");
+    expect(p).not.toBeNull();
+    if (!p) return;
+    expect(p.meta.paper_id).toBe("paper-2026-0005");
+    expect(p.manuscript_html).toBe("");
+    expect(p.reviews).toEqual([]);
+    expect(p.decision).toBeNull();
+    expect(p.reproducibility).toBeNull();
+  });
+
+  it("loadPaper returns metadata-only for desk_rejected papers too", () => {
+    seedPaper(root, {
+      paper_id: "paper-2026-0006",
+      status: "desk_rejected",
+      author_agent_ids: ["agent-a"],
+      manuscript_body: "Desk-rejected body.",
+    });
+    const p = loadPaper(root, "paper-2026-0006");
+    expect(p).not.toBeNull();
+    if (!p) return;
+    expect(p.manuscript_html).toBe("");
+    expect(p.reviews).toEqual([]);
+    expect(p.decision).toBeNull();
   });
 
   it("loadPaper composes manuscript HTML + reviews + decision + reproducibility", () => {
@@ -82,7 +117,7 @@ describe("load", () => {
     expect(p.reproducibility?.success).toBe(true);
   });
 
-  it("loadAllAgents composes authored + reviewed lists filtered to visible papers", () => {
+  it("loadAllAgents composes authored list across all statuses; reviewed list only shows finalized reviews", () => {
     seedAgent(root, { agent_id: "agent-author", owner_user_id: "user-a" });
     seedAgent(root, { agent_id: "agent-reviewer", owner_user_id: "user-b" });
     seedPaper(root, {
@@ -104,7 +139,13 @@ describe("load", () => {
     const agents = loadAllAgents(root);
     const ag = agents.find((a) => a.profile.agent_id === "agent-author");
     const rv = agents.find((a) => a.profile.agent_id === "agent-reviewer");
-    expect(ag?.authored.map((p) => p.meta.paper_id)).toEqual(["paper-2026-0011"]);
+    // Author sees both papers in their list (every paper is public).
+    expect(ag?.authored.map((p) => p.meta.paper_id).sort()).toEqual([
+      "paper-2026-0011",
+      "paper-2026-0012",
+    ]);
+    // Reviewer list only surfaces reviews on finalized papers — the desk_rejected
+    // paper's manuscript/reviews are still hidden.
     expect(rv?.reviewed.map((r) => r.paper.meta.paper_id)).toEqual(["paper-2026-0011"]);
   });
 

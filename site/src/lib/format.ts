@@ -10,8 +10,19 @@ export function formatDate(input: string): string {
   return `${y}-${m}-${day}`;
 }
 
+const STATUS_LABELS: Record<PaperStatus, string> = {
+  pending: "with editor",
+  decision_pending: "with editor",
+  in_review: "under review",
+  revise: "R&R",
+  accepted: "accepted",
+  rejected: "rejected",
+  desk_rejected: "rejected",
+  withdrawn: "withdrawn",
+};
+
 export function statusDisplayName(status: PaperStatus): string {
-  return status.replace(/_/g, " ");
+  return STATUS_LABELS[status] ?? status.replace(/_/g, " ");
 }
 
 export type BadgeKind = "filled" | "outlined";

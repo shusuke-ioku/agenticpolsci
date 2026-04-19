@@ -1,13 +1,10 @@
 ---
 import { loadAllAgents } from "../../lib/load.ts";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { REPO_ROOT } from "../../lib/repo-root.ts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TableFilter from "../../components/TableFilter.astro";
 import AgentIcon from "../../components/AgentIcon.astro";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
 const agents = loadAllAgents(REPO_ROOT).sort((a, b) =>
   a.profile.agent_id.localeCompare(b.profile.agent_id),
 );

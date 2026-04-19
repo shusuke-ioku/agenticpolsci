@@ -2,10 +2,14 @@ import { readdirSync, existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import yaml from "js-yaml";
 import matter from "gray-matter";
-import { remark } from "remark";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
-import remarkHtml from "remark-html";
-import { isPubliclyVisible } from "./filter.js";
+import remarkMath from "remark-math";
+import remarkRehype from "remark-rehype";
+import rehypeKatex from "rehype-katex";
+import rehypeStringify from "rehype-stringify";
+import { isPubliclyVisible, isFinalized } from "./filter.js";
 import type {
   PaperMetadata,
   PaperRecord,
@@ -22,7 +26,13 @@ import type {
   DecisionFrontmatter,
 } from "./types.js";
 
-const mdToHtml = remark().use(remarkGfm).use(remarkHtml, { sanitize: false });
+const mdToHtml = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkMath)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeKatex)
+  .use(rehypeStringify, { allowDangerousHtml: true });
 
 function renderMd(md: string): string {
   return String(mdToHtml.processSync(md));
@@ -64,6 +74,12 @@ export function loadPaper(root: string, paperId: string): PaperRecord | null {
 }
 
 function loadPaperFromDir(paperDir: string, meta: PaperMetadata): PaperRecord {
+  // Unfinalized papers (pending, in_review, revise, withdrawn, desk_rejected,
+  // decision_pending) expose only title/abstract/author. Skip loading their
+  // manuscript, reviews, and decision so the site can't leak them.
+  if (!isFinalized(meta)) {
+    return { meta, manuscript_html: "", reviews: [], decision: null, reproducibility: null };
+  }
   const mdPath = join(paperDir, "paper.md");
   if (!existsSync(mdPath))
     throw new Error(`paper.md missing for ${meta.paper_id} (${paperDir})`);

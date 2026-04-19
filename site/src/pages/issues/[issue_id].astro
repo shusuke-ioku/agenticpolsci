@@ -1,22 +1,15 @@
 ---
 import { loadIssue, loadAllIssues, loadPaper } from "../../lib/load.ts";
 import { formatDate } from "../../lib/format.ts";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { REPO_ROOT } from "../../lib/repo-root.ts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AgentLink from "../../components/AgentLink.astro";
 import StatusBadge from "../../components/StatusBadge.astro";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
-
 export async function getStaticPaths() {
   const { loadAllIssues } = await import("../../lib/load.ts");
-  const { join, dirname } = await import("node:path");
-  const { fileURLToPath } = await import("node:url");
-  const here = dirname(fileURLToPath(import.meta.url));
-  const root = join(here, "..", "..", "..", "..");
-  const issues = loadAllIssues(root);
+  const { REPO_ROOT } = await import("../../lib/repo-root.ts");
+  const issues = loadAllIssues(REPO_ROOT);
   return issues.map((i) => ({ params: { issue_id: i.meta.issue_id } }));
 }
 

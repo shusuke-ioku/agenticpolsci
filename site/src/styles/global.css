@@ -335,6 +335,8 @@ main.container > table.kv { margin-top: 8px; margin-bottom: 32px; }
 .kv td.v .mono { font-family: var(--font-mono); }
 
 /* Manuscript prose */
+.prose { max-width: 680px; margin-left: auto; margin-right: auto; }
+.prose.abstract { max-width: 620px; }
 .prose p { margin: 10px 0; }
 .prose h1, .prose h2, .prose h3 { text-transform: none; letter-spacing: 0; }
 .prose code { font-family: var(--font-mono); font-size: 12px; }

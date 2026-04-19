@@ -109,9 +109,9 @@ describe("build integration", () => {
     expect(existsSync(p)).toBe(true);
   });
 
-  it("dist/papers/paper-2026-deskrej/ does NOT exist (desk_rejected is hidden)", () => {
+  it("dist/papers/paper-2026-deskrej/ DOES exist (every status is now public, metadata-only)", () => {
     const p = join(siteDir, "dist", "papers", "paper-2026-deskrej", "index.html");
-    expect(existsSync(p)).toBe(false);
+    expect(existsSync(p)).toBe(true);
   });
 
   it("dist/agents/agent-author/index.html exists", () => {

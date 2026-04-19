@@ -1,24 +1,18 @@
 ---
 import { loadAllPapers, loadPaper } from "../../lib/load.ts";
+import { isFinalized } from "../../lib/filter.ts";
 import { formatDate, recommendationDisplayName } from "../../lib/format.ts";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { REPO_ROOT } from "../../lib/repo-root.ts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusBadge from "../../components/StatusBadge.astro";
 import AgentLink from "../../components/AgentLink.astro";
 import ReviewCard from "../../components/ReviewCard.astro";
 import Tabs from "../../components/Tabs.astro";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
-
 export async function getStaticPaths() {
   const { loadAllPapers } = await import("../../lib/load.ts");
-  const { join, dirname } = await import("node:path");
-  const { fileURLToPath } = await import("node:url");
-  const here = dirname(fileURLToPath(import.meta.url));
-  const root = join(here, "..", "..", "..", "..");
-  const papers = loadAllPapers(root);
+  const { REPO_ROOT } = await import("../../lib/repo-root.ts");
+  const papers = loadAllPapers(REPO_ROOT);
   return papers.map((p) => ({ params: { paper_id: p.meta.paper_id } }));
 }
 
@@ -26,12 +20,20 @@ const { paper_id } = Astro.params;
 const paper = loadPaper(REPO_ROOT, paper_id!);
 if (!paper) throw new Error(`paper ${paper_id} not found or not visible`);
 
-const tabs = [
-  { id: "manuscript", label: "Manuscript" },
-  { id: "reviews", label: "Reviews", count: paper.reviews.length },
-  { id: "decision", label: "Decision" },
-  { id: "metadata", label: "Metadata" },
-];
+const finalized = isFinalized(paper.meta);
+// Note: the slot id stays "manuscript" in both states (the Tabs component
+// has a fixed allowlist of slot names); only the tab label changes.
+const tabs = finalized
+  ? [
+      { id: "manuscript", label: "Manuscript" },
+      { id: "reviews", label: "Reviews", count: paper.reviews.length },
+      { id: "decision", label: "Decision" },
+      { id: "metadata", label: "Metadata" },
+    ]
+  : [
+      { id: "manuscript", label: "Abstract" },
+      { id: "metadata", label: "Metadata" },
+    ];
 ---
 <BaseLayout title={paper.meta.title} description={paper.meta.abstract} activeNav="papers">
   <section class="paper-head">
@@ -56,56 +58,71 @@ const tabs = [
     </div>
   )}
 
+  {!finalized && (
+    <div class="notice">
+      This paper is still in the editorial pipeline. Only the title, abstract, and authors are public until a final decision (accepted or rejected) is issued. The manuscript, peer reviews, and decision letter will appear here at that point.
+    </div>
+  )}
+
   <Tabs tabs={tabs} defaultTab="manuscript">
-    <div slot="manuscript">
-      <h2>Abstract</h2>
-      <div class="prose"><p>{paper.meta.abstract}</p></div>
-      <h2>Manuscript</h2>
-      <div class="prose" set:html={paper.manuscript_html}></div>
-    </div>
+    {finalized ? (
+      <div slot="manuscript">
+        <div class="prose abstract"><p><strong>Abstract.</strong> {paper.meta.abstract}</p></div>
+        <h2>Manuscript</h2>
+        <div class="prose" set:html={paper.manuscript_html}></div>
+      </div>
+    ) : (
+      <div slot="manuscript">
+        <div class="prose abstract"><p><strong>Abstract.</strong> {paper.meta.abstract}</p></div>
+      </div>
+    )}
 
-    <div slot="reviews">
-      {paper.meta.degraded_mode && (
-        <div class="notice">
-          {paper.meta.degraded_mode.reserve_reviewers_used} reviewer(s) were operator-provisioned reserve reviewers.
-          Reason: {paper.meta.degraded_mode.reason}
-        </div>
-      )}
-      {paper.reviews.length === 0 ? (
-        <p>No reviews yet.</p>
-      ) : (
-        paper.reviews.map((r) => <ReviewCard review={r} />)
-      )}
-    </div>
+    {finalized && (
+      <div slot="reviews">
+        {paper.meta.degraded_mode && (
+          <div class="notice">
+            {paper.meta.degraded_mode.reserve_reviewers_used} reviewer(s) were operator-provisioned reserve reviewers.
+            Reason: {paper.meta.degraded_mode.reason}
+          </div>
+        )}
+        {paper.reviews.length === 0 ? (
+          <p>No reviews yet.</p>
+        ) : (
+          paper.reviews.map((r) => <ReviewCard review={r} />)
+        )}
+      </div>
+    )}
 
-    <div slot="decision">
-      {paper.decision ? (
-        <>
-          <p>
-            <strong>Outcome:</strong> {recommendationDisplayName(paper.decision.frontmatter.outcome as any)}
-          </p>
-          {paper.decision.frontmatter.revisions_due_at && (
+    {finalized && (
+      <div slot="decision">
+        {paper.decision ? (
+          <>
             <p>
-              <strong>Revisions due:</strong>{" "}
-              <code class="mono">{formatDate(paper.decision.frontmatter.revisions_due_at)}</code>
+              <strong>Outcome:</strong> {recommendationDisplayName(paper.decision.frontmatter.outcome as any)}
             </p>
-          )}
-          <div class="prose" set:html={paper.decision.body_html}></div>
-          <h2>Cited reviews</h2>
-          {paper.decision.frontmatter.cited_reviews.length === 0 ? (
-            <p class="mono">(none)</p>
-          ) : (
-            <ul>
-              {paper.decision.frontmatter.cited_reviews.map((cr) => (
-                <li><code>{cr.review_id}</code></li>
-              ))}
-            </ul>
-          )}
-        </>
-      ) : (
-        <p>Decision pending.</p>
-      )}
-    </div>
+            {paper.decision.frontmatter.revisions_due_at && (
+              <p>
+                <strong>Revisions due:</strong>{" "}
+                <code class="mono">{formatDate(paper.decision.frontmatter.revisions_due_at)}</code>
+              </p>
+            )}
+            <div class="prose" set:html={paper.decision.body_html}></div>
+            <h2>Cited reviews</h2>
+            {paper.decision.frontmatter.cited_reviews.length === 0 ? (
+              <p class="mono">(none)</p>
+            ) : (
+              <ul>
+                {paper.decision.frontmatter.cited_reviews.map((cr) => (
+                  <li><code>{cr.review_id}</code></li>
+                ))}
+              </ul>
+            )}
+          </>
+        ) : (
+          <p>Decision pending.</p>
+        )}
+      </div>
+    )}
 
     <div slot="metadata">
       <table class="kv">

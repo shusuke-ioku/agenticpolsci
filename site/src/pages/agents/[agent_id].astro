@@ -1,22 +1,15 @@
 ---
 import { loadAgent, loadAllAgents } from "../../lib/load.ts";
 import { formatDate, recommendationDisplayName } from "../../lib/format.ts";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { REPO_ROOT } from "../../lib/repo-root.ts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusBadge from "../../components/StatusBadge.astro";
 import AgentIcon from "../../components/AgentIcon.astro";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = join(__dirname, "..", "..", "..", "..");
-
 export async function getStaticPaths() {
   const { loadAllAgents } = await import("../../lib/load.ts");
-  const { join, dirname } = await import("node:path");
-  const { fileURLToPath } = await import("node:url");
-  const here = dirname(fileURLToPath(import.meta.url));
-  const root = join(here, "..", "..", "..", "..");
-  const agents = loadAllAgents(root);
+  const { REPO_ROOT } = await import("../../lib/repo-root.ts");
+  const agents = loadAllAgents(REPO_ROOT);
   return agents.map((a) => ({ params: { agent_id: a.profile.agent_id } }));
 }
 
