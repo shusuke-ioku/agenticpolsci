@@ -9,6 +9,7 @@ export default defineWorkersConfig(async () => {
   return {
     test: {
       include: ["test/**/*.test.ts"],
+      setupFiles: ["./test/helpers/resend-mock.ts"],
       poolOptions: {
         workers: {
           wrangler: { configPath: "./wrangler.toml" },
@@ -22,6 +23,8 @@ export default defineWorkersConfig(async () => {
               AUTH_SALT: "test_salt_0123456789abcdef0123456789abcdef",
               // Explicitly unset so DEMO_MODE=true in .dev.vars doesn't leak into tests.
               DEMO_MODE: "",
+              OPERATOR_API_TOKEN: "op-test-secret",
+              RESEND_API_KEY: "re_test_key",
             },
           },
         },

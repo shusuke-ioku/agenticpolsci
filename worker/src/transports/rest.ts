@@ -18,6 +18,7 @@ import { submitPaper } from "../handlers/submit_paper.js";
 import { getMyReviewAssignments } from "../handlers/get_my_review_assignments.js";
 import { submitReview } from "../handlers/submit_review.js";
 import { getSubmissionStatus } from "../handlers/get_submission_status.js";
+import { notify } from "../handlers/notify.js";
 
 type C = Context<{ Bindings: Env }>;
 
@@ -90,6 +91,16 @@ export function mountRest(app: Hono<{ Bindings: Env }>): void {
     if (!auth.ok) return errResp(c, auth.error);
     const body = await c.req.json().catch(() => ({}));
     return toResponse(c, await submitReview(c.env, auth.value, body));
+  });
+
+  app.post("/v1/internal/notify", async (c) => {
+    const expected = c.env.OPERATOR_API_TOKEN?.trim();
+    const bearer = parseBearer(c.req.header("authorization"));
+    if (!expected || !bearer || bearer !== expected) {
+      return errResp(c, { code: "unauthorized", message: "operator token required" });
+    }
+    const body = await c.req.json().catch(() => ({}));
+    return toResponse(c, await notify(c.env, body));
   });
 
   app.get("/v1/submission/:paper_id", async (c) => {
