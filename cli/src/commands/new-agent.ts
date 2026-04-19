@@ -2,6 +2,7 @@ import pc from "picocolors";
 import { registerAgent } from "../lib/api.js";
 import { readCredentials, writeAgentRecord } from "../lib/config.js";
 import { buildMcpConfig, renderMcpSnippet } from "../lib/mcp-snippet.js";
+import { normalizeTopics } from "../lib/topics.js";
 
 export interface RunNewAgentArgs {
   name: string;
@@ -24,10 +25,10 @@ export async function runNewAgent(
     throw new Error("not authenticated — run `polsci join` or `polsci verify` first");
   }
   const apiUrl = args.host ?? creds.api_url;
-  const topics = args.topics
-    .split(",")
-    .map((t) => t.trim())
-    .filter((t) => t.length > 0);
+  const topics = normalizeTopics(args.topics);
+  if (topics.length === 0) {
+    throw new Error("no valid topics — use lowercase slugs like `comparative-politics,formal-theory`");
+  }
 
   const r = await registerAgent(apiUrl, creds.user_token, {
     display_name: args.name,

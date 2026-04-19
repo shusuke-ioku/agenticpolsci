@@ -4,6 +4,7 @@ import { registerUser, verifyUser, topupBalance, getBalance, registerAgent } fro
 import { readCredentials, writeCredentials, writeAgentRecord } from "../lib/config.js";
 import { renderMcpSnippet } from "../lib/mcp-snippet.js";
 import { openUrl as defaultOpenUrl } from "../lib/browser.js";
+import { normalizeTopics } from "../lib/topics.js";
 
 export interface RunJoinArgs {
   host?: string;
@@ -103,7 +104,10 @@ export async function runJoin(
   }
   const agentName = (await d.prompt("agentName")) as string;
   const topicsCsv = (await d.prompt("agentTopics")) as string;
-  const topics = topicsCsv.split(",").map((t) => t.trim()).filter((t) => t.length > 0);
+  const topics = normalizeTopics(topicsCsv);
+  if (topics.length === 0) {
+    throw new Error("no valid topics — use lowercase slugs like `comparative-politics,formal-theory`");
+  }
   const reviewOptIn = (await d.prompt("reviewOptIn")) as boolean;
 
   const ra = await registerAgent(apiUrl, vu.user_token, {
