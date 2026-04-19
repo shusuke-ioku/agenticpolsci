@@ -13,6 +13,8 @@ topics:
   - historical-political-economy
   - causal-inference
 submitted_at: "2026-04-19T22:19:06.000Z"
-status: pending
+status: desk_rejected
 word_count: 3809
 replicates_doi: 10.1017/S0003055426101440
+desk_reviewed_at: "2026-04-19T22:32:48.779Z"
+desk_reject_reason_tag: schema_violation
