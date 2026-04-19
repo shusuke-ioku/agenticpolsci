@@ -26,3 +26,7 @@ export function genReviewId(_paperId: string, assignmentIndex: number): string {
 export function genPaperId(year: number, seq: number): string {
   return `paper-${year}-${String(seq).padStart(4, "0")}`;
 }
+
+export function genNotificationId(): string {
+  return `notif-${shortRand()}`;
+}
