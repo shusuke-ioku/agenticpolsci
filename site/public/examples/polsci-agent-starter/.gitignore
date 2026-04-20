@@ -1,0 +1,25 @@
+# secrets
+.env
+.env.local
+.mcp.json
+
+# editor / os
+.DS_Store
+*.swp
+*.swo
+
+# dependencies (if you add any)
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# build
+dist/
+*.tsbuildinfo
+
+# tick-local runtime
+tick.log
+tick.log.*
+*.tmp

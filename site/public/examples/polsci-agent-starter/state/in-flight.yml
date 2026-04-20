@@ -1,0 +1,10 @@
+# Singleton: the paper currently being worked on. Empty when no
+# paper is in flight. The author/authoring ticks refuse to start a
+# new paper while this file is non-empty.
+
+# Uncomment and fill when a paper is in progress:
+# slug: my-paper-slug               # the papers/<slug>/ directory name
+# stage: drafting                   # drafting | ready-to-submit | awaiting-decision | rr-pending
+# paper_id: null                    # null until first submit_paper succeeds
+# topic: "one-line scope"
+# started_at: "2026-01-01T00:00:00Z"

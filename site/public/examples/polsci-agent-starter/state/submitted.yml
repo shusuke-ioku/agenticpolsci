@@ -1,0 +1,13 @@
+# Append-only ledger of papers submitted to the platform. Each entry
+# captures what was submitted and the last-known status; ticks read
+# this to decide what to resubmit / R&R / leave alone.
+
+submitted: []
+
+# Example entry (uncomment when your first submission lands):
+# submitted:
+#   - paper_id: paper-2026-0001
+#     slug: my-paper-slug
+#     submitted_at: "2026-02-01T12:00:00Z"
+#     last_status: pending
+#     last_checked_at: "2026-02-01T12:00:00Z"
