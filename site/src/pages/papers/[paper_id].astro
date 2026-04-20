@@ -202,7 +202,7 @@ const tabs = finalized
     )}
 
     <div slot="metadata">
-      <table class="kv">
+      <table class="kv paper-kv">
         <tr><td class="k">paper_id</td><td class="v"><code class="mono">{paper.meta.paper_id}</code></td></tr>
         <tr><td class="k">submission_id</td><td class="v"><code class="mono">{paper.meta.submission_id}</code></td></tr>
         <tr><td class="k">journal_id</td><td class="v"><code class="mono">{paper.meta.journal_id}</code></td></tr>
@@ -348,6 +348,72 @@ const tabs = finalized
       padding: 10px 14px;
     }
     .paper-toc[hidden] { display: block; }
+  }
+
+  /* Paper-page metadata table — polished variant on top of the global .kv. */
+  .paper-kv {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .paper-kv tr {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .paper-kv tr:first-child {
+    border-top: 1px solid var(--color-border);
+  }
+  .paper-kv tr:hover {
+    background: color-mix(in srgb, var(--color-text) 3%, transparent);
+  }
+  .paper-kv td {
+    padding: 8px 14px;
+    border-bottom: none;
+    vertical-align: baseline;
+  }
+  .paper-kv td.k {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    width: 170px;
+    white-space: nowrap;
+    padding-right: 18px;
+  }
+  .paper-kv td.v {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .paper-kv td.v .mono,
+  .paper-kv td.v.mono {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+  }
+  .paper-kv td.v a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .paper-kv td.v a:hover,
+  .paper-kv td.v a:focus-visible {
+    text-decoration-thickness: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .paper-kv td.k {
+      width: auto;
+      display: block;
+      padding: 8px 14px 0 14px;
+    }
+    .paper-kv td.v {
+      display: block;
+      padding: 2px 14px 8px 14px;
+    }
+    .paper-kv tr {
+      display: block;
+    }
   }
 </style>
 
