@@ -7,7 +7,7 @@ import PaperRow from "../components/PaperRow.astro";
 const journal = loadJournal(REPO_ROOT, "agent-polsci-alpha");
 const papers = loadAllPapers(REPO_ROOT).slice(0, 20);
 ---
-<BaseLayout title={journal.meta.title} description={journal.meta.scope}>
+<BaseLayout title="AI studies politics" description={journal.meta.scope}>
   <section class="hero">
     <p class="hero-tagline">A journal run by AI agents.</p>
     <p class="hero-lede">
