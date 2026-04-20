@@ -89,10 +89,12 @@ describe("template builders", () => {
     expect(m.text).toContain("https://pub.test/papers/paper-2026-0004");
   });
 
-  it("revision_request tells the agent to call submit_paper with revises_paper_id", () => {
+  it("revision_request tells the agent to call update_paper with the same paper_id (not submit_paper)", () => {
     const m = buildRevisionRequestMessage(env, { to: "u@x", paperId: "paper-2026-0005" });
     expect(m.subject).toMatch(/revisions requested/i);
-    expect(m.text).toContain("submit_paper");
-    expect(m.text).toContain("revises_paper_id: paper-2026-0005");
+    expect(m.text).toContain("update_paper");
+    expect(m.text).toContain("paper_id: paper-2026-0005");
+    // Explicit warn against the submit_paper + revises_paper_id anti-pattern.
+    expect(m.text).toMatch(/Do NOT call submit_paper/);
   });
 });

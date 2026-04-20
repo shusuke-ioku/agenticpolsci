@@ -132,6 +132,99 @@ describe("submit_paper", () => {
     expect(res.ok).toBe(true);
   });
 
+  describe("R&R guard: submit_paper with revises_paper_id", () => {
+    const makePriorMeta = (status: string, authorAgentId: string): string => [
+      "paper_id: paper-2026-0042",
+      "submission_id: sub-original000",
+      "journal_id: agent-polsci-alpha",
+      "type: research",
+      `title: "Prior Paper"`,
+      "abstract: |",
+      `  ${"A".repeat(80)}`,
+      "author_agent_ids:",
+      `  - ${authorAgentId}`,
+      "coauthor_agent_ids: []",
+      "topics:",
+      "  - comparative-politics",
+      `submitted_at: "2026-04-10T10:00:00.000Z"`,
+      `status: ${status}`,
+      "word_count: 7000",
+      "",
+    ].join("\n");
+
+    it.each(["pending", "revise", "in_review", "decision_pending"])(
+      "rejects with conflict when revises_paper_id points at author's own paper in status=%s",
+      async (status) => {
+        const { user_id } = await seedUser({ balance_cents: 500 });
+        const { agent_id } = await seedAgent({ owner_user_id: user_id });
+        const mock = installGithubMock({
+          "papers/paper-2026-0042/metadata.yml": makePriorMeta(status, agent_id),
+        });
+        restore = mock.restore;
+
+        const res = await submitPaper(
+          env,
+          { kind: "agent", agent_id, owner_user_id: user_id },
+          { ...validInput, revises_paper_id: "paper-2026-0042" },
+        );
+        expect(res.ok).toBe(false);
+        if (res.ok) return;
+        expect(res.error.code).toBe("conflict");
+        expect(res.error.message).toContain("update_paper");
+        expect(res.error.message).toContain("paper-2026-0042");
+
+        // No fee debited, no files written, no ledger row created.
+        const bal = await env.DB
+          .prepare("SELECT balance_cents FROM balances WHERE user_id = ?")
+          .bind(user_id)
+          .first<{ balance_cents: number }>();
+        expect(bal?.balance_cents).toBe(500);
+        expect(mock.files.size).toBe(1); // only the prior metadata that we seeded
+        const led = await env.DB
+          .prepare("SELECT COUNT(*) as n FROM submissions_ledger")
+          .first<{ n: number }>();
+        expect(led?.n).toBe(0);
+      },
+    );
+
+    it.each(["accepted", "rejected", "desk_rejected", "withdrawn"])(
+      "allows submit_paper when revises_paper_id points at a terminal paper (status=%s)",
+      async (status) => {
+        const { user_id } = await seedUser({ balance_cents: 500 });
+        const { agent_id } = await seedAgent({ owner_user_id: user_id });
+        const mock = installGithubMock({
+          "papers/paper-2026-0042/metadata.yml": makePriorMeta(status, agent_id),
+        });
+        restore = mock.restore;
+
+        const res = await submitPaper(
+          env,
+          { kind: "agent", agent_id, owner_user_id: user_id },
+          { ...validInput, revises_paper_id: "paper-2026-0042" },
+        );
+        expect(res.ok).toBe(true);
+      },
+    );
+
+    it("allows submit_paper when revises_paper_id points at a different author's pending paper", async () => {
+      const { user_id: owner1 } = await seedUser({ balance_cents: 500 });
+      const { agent_id: otherAgent } = await seedAgent({ owner_user_id: owner1 });
+      const { user_id: owner2 } = await seedUser({ balance_cents: 500 });
+      const { agent_id: callingAgent } = await seedAgent({ owner_user_id: owner2 });
+      const mock = installGithubMock({
+        "papers/paper-2026-0042/metadata.yml": makePriorMeta("pending", otherAgent),
+      });
+      restore = mock.restore;
+
+      const res = await submitPaper(
+        env,
+        { kind: "agent", agent_id: callingAgent, owner_user_id: owner2 },
+        { ...validInput, revises_paper_id: "paper-2026-0042" },
+      );
+      expect(res.ok).toBe(true);
+    });
+  });
+
   it("assigns monotone seq per year on concurrent submits", async () => {
     const mock = installGithubMock();
     restore = mock.restore;

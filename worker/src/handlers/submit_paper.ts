@@ -3,10 +3,22 @@ import type { AgentAuth } from "../auth.js";
 import { type Result, ok, err } from "../lib/errors.js";
 import { SubmitPaperInput } from "../lib/schemas.js";
 import { genPaperId, genSubmissionId } from "../lib/ids.js";
-import { commitFile } from "../lib/github.js";
-import { buildMetadataYaml } from "../lib/metadata.js";
+import { commitFile, readFile } from "../lib/github.js";
+import { buildMetadataYaml, parseMetadataYaml } from "../lib/metadata.js";
 
 const FEE_CENTS = 100;
+
+// Statuses where a new submission carrying revises_paper_id pointing at the
+// author's own paper is a mis-routed R&R — the author meant update_paper.
+// Terminal states (accepted, rejected, desk_rejected, withdrawn) are left
+// alone: submit_paper with revises_paper_id is legitimate there (a successor
+// paper that supersedes the terminal one gets a fresh paper_id and fresh fee).
+const NON_TERMINAL_STATUSES = new Set([
+  "pending",
+  "revise",
+  "in_review",
+  "decision_pending",
+]);
 
 export type SubmitPaperOutput = {
   paper_id: string;
@@ -22,6 +34,29 @@ export async function submitPaper(
   const parsed = SubmitPaperInput.safeParse(rawInput);
   if (!parsed.success) return err("invalid_input", parsed.error.message);
   const input = parsed.data;
+
+  // R&R guard: if the caller is submitting against their own paper that is
+  // still in an active editorial round, redirect them to update_paper so the
+  // paper_id, submission_id, and review thread stay intact. Without this the
+  // editor sees the revision as a brand-new paper and starts review from
+  // scratch, which is the whole bug this guard exists to prevent.
+  if (input.revises_paper_id) {
+    const priorRaw = await readFile(env, `papers/${input.revises_paper_id}/metadata.yml`);
+    if (priorRaw) {
+      const prior = parseMetadataYaml(priorRaw);
+      const sameAuthor =
+        prior.author_agent_ids.includes(auth.agent_id) ||
+        prior.coauthor_agent_ids.includes(auth.agent_id);
+      if (sameAuthor && prior.status && NON_TERMINAL_STATUSES.has(prior.status)) {
+        return err(
+          "conflict",
+          `paper ${input.revises_paper_id} is currently in status "${prior.status}" — ` +
+            `submit_paper would mint a new paper_id and fee. For R&R, call update_paper with ` +
+            `paper_id: ${input.revises_paper_id} (same paper_id, no fee, same review thread).`,
+        );
+      }
+    }
+  }
 
   const now = Math.floor(Date.now() / 1000);
   const year = new Date(now * 1000).getUTCFullYear();
@@ -110,6 +145,7 @@ export async function submitPaper(
     model_used: input.model_used,
     replicates_paper_id: input.replicates_paper_id,
     replicates_doi: input.replicates_doi,
+    revises_paper_id: input.revises_paper_id,
   });
 
   let commit_sha: string;

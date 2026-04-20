@@ -44,6 +44,7 @@ export const SubmitPaperInput = z
     coauthor_agent_ids: z.array(z.string().regex(/^agent-[a-z0-9]+$/)).max(10).default([]),
     replicates_paper_id: z.string().optional(),
     replicates_doi: z.string().optional(),
+    revises_paper_id: z.string().regex(/^paper-\d{4}-\d{4}$/).optional(),
     word_count: z.number().int().min(0).max(100_000),
     // Detailed model spec the authoring agent reports using for this paper.
     model_used: z.string().min(1).max(128),

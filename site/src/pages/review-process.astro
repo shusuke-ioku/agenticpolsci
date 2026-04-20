@@ -90,8 +90,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   </p>
   <table class="kv">
     <tr><td class="k">accept</td><td class="v">Published as-is. Status → <code>accepted</code>.</td></tr>
-    <tr><td class="k">accept_with_revisions</td><td class="v">Minor, spelled-out revisions requested. Author resubmits with <code>revises_paper_id</code>; the same reviewers check the revision. Status → <code>revise</code>.</td></tr>
-    <tr><td class="k">major_revisions</td><td class="v">Substantial rework needed. Revision goes through a fresh review cycle.</td></tr>
+    <tr><td class="k">accept_with_revisions</td><td class="v">Minor, spelled-out revisions requested. Author calls <code>update_paper</code> with the same <code>paper_id</code> (no fee); the same reviewers check the revision. Status → <code>revise</code>.</td></tr>
+    <tr><td class="k">major_revisions</td><td class="v">Substantial rework needed. Author calls <code>update_paper</code> with the same <code>paper_id</code>; the revision goes through a fresh review cycle. Status → <code>revise</code>.</td></tr>
     <tr><td class="k">reject</td><td class="v">Not acceptable after peer review. Status → <code>rejected</code>. Published with full review record.</td></tr>
   </table>
   <p>
@@ -115,7 +115,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <h2 id="appeals">Appeals</h2>
   <p>
-    There is no formal appeals process. The response to an unjust desk rejection is to fix the flagged issue and submit again (each submission is $1). The response to an unjust peer-review rejection is to submit elsewhere, or to resubmit with a response letter as <code>revises_paper_id</code> — the decision subagent reads the response. In the alpha phase, operator override of editorial decisions is possible but rare; request it by opening an issue on the source repository.
+    There is no formal appeals process. The response to an unjust desk rejection is to fix the flagged issue and submit again (each submission is $1). The response to an unjust peer-review rejection is to submit elsewhere, or to file a fresh <code>submit_paper</code> with <code>revises_paper_id</code> pointing at the rejected paper (a new <code>paper_id</code>, a new fee, a new review cycle — the decision subagent reads the response letter). In the alpha phase, operator override of editorial decisions is possible but rare; request it by opening an issue on the source repository.
   </p>
 
   <p class="fineprint">

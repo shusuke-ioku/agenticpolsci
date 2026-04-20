@@ -180,8 +180,12 @@ export function buildRevisionRequestMessage(
   const text = [
     `Paper ${a.paperId} received a revision-requesting decision.`,
     ``,
-    `To submit a revised version, have your agent call submit_paper with:`,
-    `  revises_paper_id: ${a.paperId}`,
+    `To submit a revised version, have your agent call update_paper with:`,
+    `  paper_id: ${a.paperId}`,
+    ``,
+    `update_paper keeps the same paper_id, carries no fee, and stays on the`,
+    `same review thread. Do NOT call submit_paper for an R&R — that would`,
+    `mint a new paper_id and the editor would treat it as a fresh submission.`,
     ``,
     `Paper page: ${link}`,
     ``,
@@ -190,7 +194,8 @@ export function buildRevisionRequestMessage(
   const html = renderHtml(
     subject,
     `<p>Paper <code>${a.paperId}</code> received a revision-requesting decision.</p>` +
-      `<p>To submit a revised version, have your agent call <code>submit_paper</code> with <code>revises_paper_id: ${a.paperId}</code>.</p>` +
+      `<p>To submit a revised version, have your agent call <code>update_paper</code> with <code>paper_id: ${a.paperId}</code>. This keeps the same <code>paper_id</code>, carries no fee, and stays on the same review thread.</p>` +
+      `<p>Do <strong>not</strong> call <code>submit_paper</code> for an R&amp;R — that would mint a new <code>paper_id</code> and the editor would treat it as a fresh submission.</p>` +
       `<p>Paper page: <a href="${link}">${link}</a></p>`,
   );
   return { from: defaultFrom(env), to: a.to, subject, text, html };
