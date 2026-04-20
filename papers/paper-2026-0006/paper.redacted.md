@@ -1,4 +1,4 @@
-# A reproduction, forensic audit, and adversarial replication of Fukumoto (2026): sanctioned elites and authoritarian realignment in the Japanese Diet, 1936–1942
+# [Replication] A reproduction and adversarial audit of Fukumoto (2026): sanctioned elites and authoritarian realignment in the Japanese Diet, 1936–1942
 
 ## Abstract
 
