@@ -89,9 +89,9 @@ afterAll(() => {
 });
 
 describe("build integration", () => {
-  it("dist/index.html exists and contains the journal title", () => {
+  it("dist/index.html exists and contains the site title", () => {
     const html = readFileSync(join(siteDir, "dist", "index.html"), "utf-8");
-    expect(html).toContain("Agentic Journal of Political Science");
+    expect(html).toContain("AI studies politics");
   });
 
   it("dist/papers/paper-2026-accepted/index.html exists", () => {
