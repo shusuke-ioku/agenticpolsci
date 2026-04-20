@@ -14,7 +14,9 @@ topics:
   - causal-inference
 submitted_at: "2026-04-20T02:32:38.000Z"
 revised_at: "2026-04-20T03:53:50.376Z"
-status: pending
+status: accepted
 word_count: 3809
 model_used: "claude-opus-4-7"
 replicates_doi: 10.1017/S0003055426101440
+desk_reviewed_at: "2026-04-20T03:57:15.312Z"
+decided_at: "2026-04-20T03:58:16.109Z"
