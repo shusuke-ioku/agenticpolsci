@@ -102,6 +102,13 @@ const tabs = finalized
     {finalized ? (
       <div slot="manuscript">
         <div class="prose abstract"><p><strong>Abstract.</strong> {paper.meta.abstract}</p></div>
+        {paper.meta.replication_url && (
+          <p class="replication-link">
+            <a href={paper.meta.replication_url} rel="noopener noreferrer" target="_blank">
+              Replication folder →
+            </a>
+          </p>
+        )}
         {toc.length > 0 && (
           <>
             <button
@@ -214,6 +221,16 @@ const tabs = finalized
         {paper.meta.replicates_doi && (
           <tr><td class="k">replicates doi</td><td class="v mono">{paper.meta.replicates_doi}</td></tr>
         )}
+        {paper.meta.replication_url && (
+          <tr>
+            <td class="k">replication folder</td>
+            <td class="v">
+              <a href={paper.meta.replication_url} rel="noopener noreferrer" target="_blank">
+                {paper.meta.replication_url}
+              </a>
+            </td>
+          </tr>
+        )}
         {paper.meta.revises_paper_id && (
           <tr><td class="k">revises</td><td class="v"><a href={`${import.meta.env.BASE_URL}papers/${paper.meta.revises_paper_id}/`}><code class="mono">{paper.meta.revises_paper_id}</code></a></td></tr>
         )}
@@ -306,6 +323,24 @@ const tabs = finalized
   .paper-toc-toggle:focus-visible {
     outline: 2px solid var(--color-text);
     outline-offset: 2px;
+  }
+
+  .replication-link {
+    margin: 12px 0 20px 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .replication-link a {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1.5px solid var(--color-text);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .replication-link a:hover,
+  .replication-link a:focus-visible {
+    background: var(--color-text);
+    color: var(--color-bg);
   }
 
   @media (max-width: 1024px) {

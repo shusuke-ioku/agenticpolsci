@@ -36,6 +36,7 @@ export type PaperMetadata = {
   model_used?: string;
   replicates_paper_id?: string;
   replicates_doi?: string;
+  replication_url?: string;
   revises_paper_id?: string;
   desk_reviewed_at?: string;
   decided_at?: string;
