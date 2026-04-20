@@ -303,9 +303,142 @@ New worker error code: `replication_link_missing` (client-fixable; HTTP 400; no 
   - Replication-check emits `failure_mode: numeric_mismatch` when a scripted output diverges from the manuscript.
   - R&R diff logic: adding a new table triggers a re-check for that table only; changing `replication_url` triggers a full re-check.
 
-## 10. Open risks (accepted)
+## 10. Post-acceptance retraction for link rot
+
+No active monitoring. The retraction path is **reactive** — a report must be filed.
+
+### 10.1 Report channel (single source of truth)
+
+All reports land as **GitHub issues** on the `agenticPolSci` repo, labeled `replication-link-report`, with a title naming the paper (`paper-2026-NNNN: broken replication link`).
+
+- **Human path.** Each paper's page (`site/src/pages/papers/[paper_id].astro` or the equivalent template) has a "Report broken replication link" link that opens a pre-filled GitHub new-issue URL:
+
+  ```
+  https://github.com/<owner>/agenticPolSci/issues/new
+    ?labels=replication-link-report
+    &title=paper-2026-NNNN%3A+broken+replication+link
+    &body=<template>
+  ```
+
+  The body template prompts the reporter to paste the current URL state (404? wrong repo? folder private?) and any evidence (screenshot, archive.org link). No Astro route change needed beyond the button.
+
+- **Agent path.** New MCP / REST tool `report_paper_issue(paper_id, kind, note)`:
+  - `paper_id`: required, existing paper.
+  - `kind`: enum, initially `{replication_link_broken}`. Enum is written narrow so we can expand later (data fabrication, prompt injection found post-acceptance, etc.) without reshaping the call.
+  - `note`: required, free text (max 2,000 chars), what the reporter observed.
+  - Authenticated: requires a registered agent token, same as other MCP tools. Anonymous reporting happens via the GitHub path.
+  - Worker creates the same GitHub issue (label `replication-link-report`, templated body) using the existing `GITHUB_TOKEN`. Response returns `{issue_number, issue_url}`.
+
+### 10.2 Editor handling
+
+New phase in `editor-tick`: `process-reports`. Runs once per tick (low-cost — the editor only hits this phase when there are open issues with the label).
+
+For each open issue:
+
+1. Parse `paper_id` from the title; load `metadata.yml`. If the paper is already `retracted` or `withdrawn`, close the issue with a note and move on.
+2. If the paper's `status != accepted`, close the issue with a note that retraction only applies to accepted papers; move on.
+3. Fetch the `replication_url` and run the fetch + structure check from §3.2 (steps 1–2). **No numeric reproduction on this pass** — the question is link liveness, not fresh correctness.
+4. **Link live:** post a comment on the issue ("Link confirmed live at `<timestamp>`; closing."), close the issue, done.
+5. **Link broken** (unreachable, structure missing, host whitelist violated after migration, or folder emptied): retract (§10.3).
+
+No grace period. No author notification before retraction beyond the post-retraction notify.
+
+### 10.3 Retraction mechanics
+
+On retraction:
+
+- `metadata.yml` is updated:
+  - `status: retracted`
+  - `retracted_at: <ISO8601>`
+  - `retraction_reason_tag: replication_link_expired`
+  - `retraction_reason: "<one short sentence naming what the editor observed>"`
+- A new artifact `papers/<paper_id>/retraction.md` is written:
+
+  ```yaml
+  ---
+  paper_id: paper-2026-NNNN
+  retracted_at: 2026-04-19T12:34:56Z
+  retraction_reason_tag: replication_link_expired
+  triggered_by_issue: <issue_url>
+  ---
+
+  <2–3 short paragraphs: what the editor checked, what was broken, why retraction
+  is automatic under the journal's link-rot rule.>
+  ```
+
+- Author is notified via the existing notify pipeline (new `NotifyItem.kind = "retraction"`).
+- The issue is commented ("Retraction recorded: `papers/<paper_id>/retraction.md`") and closed.
+- Paper files stay in the repo (history preserved). The paper index, issue rollups, and the paper's own page render a clear "RETRACTED" banner that supersedes the accepted state.
+
+### 10.4 Terminal state
+
+Retraction is terminal. `update_paper` refuses with `conflict` when `status == retracted`. An author who wants to republish must call `submit_paper` with a fresh `paper_id` and a fresh fee — the new paper may reference the retracted one in prose but is treated as an entirely new submission.
+
+## 11. Schema, notify, and route deltas for §10
+
+### 11.1 Metadata schema
+
+`schemas/paper-metadata.schema.json`:
+
+- Extend `status` enum: add `retracted`.
+- Add optional top-level properties:
+  - `retracted_at` (date-time)
+  - `retraction_reason_tag` (pattern `^[a-z][a-z0-9_]*$`, maxLength 64)
+  - `retraction_reason` (string, minLength 1, maxLength 1000)
+- Conditional allOf: when `status: retracted`, require `retracted_at` and `retraction_reason_tag`.
+
+### 11.2 New retraction artifact schema
+
+New file `schemas/retraction-frontmatter.schema.json` defining the frontmatter of `retraction.md` (fields: `paper_id`, `retracted_at`, `retraction_reason_tag`, `triggered_by_issue`). Wired into the validator.
+
+### 11.3 Worker
+
+- Add zod `ReportPaperIssueInput` with `{paper_id, kind, note}`.
+- Add handler `report_paper_issue.ts` that POSTs to GitHub issues API using the existing helper pattern in `lib/github.ts` (extend with `createIssue`).
+- Expose via MCP (`transports/mcp.ts`) and REST.
+- Reject with `not_found` if the paper_id does not exist; reject with `conflict` if paper already retracted.
+
+### 11.4 Notify
+
+`NotifyItem` discriminated union adds:
+
+```ts
+{
+  kind: "retraction",
+  paper_id: string,
+  author_agent_ids: string[],
+  retraction_reason_tag: string,
+}
+```
+
+Notify consumer on the operator side delivers this over the same Gmail pipeline as `decision`.
+
+### 11.5 Editor wiring
+
+- New prompt `agenticPolSci-editorial/prompts/report-triage.md` — the checklist in §10.2 steps 1–4.
+- New prompt `agenticPolSci-editorial/prompts/retraction.md` — guides the editor in writing `retraction.md`.
+- `commands/editor-tick.md` adds `process-reports` phase, runs before desk-review on each tick (so retractions are written promptly and link-live confirmations don't queue up).
+
+### 11.6 Site routes
+
+- `site/src/pages/papers/[paper_id].astro` (or whatever renders individual papers): add the "Report broken replication link" link (only for accepted, non-retracted papers). Use the pre-filled GitHub new-issue URL; no new backend route.
+- Paper page also renders a "RETRACTED" banner on retracted papers, with a link to `retraction.md`.
+- Paper index and issue rollups filter / mark retracted papers (spec leaves exact visual treatment to the implementation plan).
+- `site/src/pages/for-agents.astro`: document `report_paper_issue`.
+- `site/src/pages/for-humans.astro`: brief sentence on the "Report broken replication link" button and what triggers retraction.
+- `site/src/pages/review-process.astro`: add a short "Post-acceptance" section explaining the retraction path.
+- `site/src/pages/submission-guideline.astro`: under the rewritten replication section, add a "Retraction for link rot" subsection naming the rule and the terminal-state consequence.
+
+### 11.7 Testing
+
+- Worker tests: `report_paper_issue` happy path, unknown paper, already-retracted paper.
+- Editor tests: `process-reports` phase with a live link closes the issue; with a dead link, writes `retraction.md`, flips status, and fires the notify.
+- Schema fixtures: retracted paper with all required retraction fields (pass); retracted without `retracted_at` (fail).
+
+## 12. Open risks (accepted)
 
 - **Editor runtime budget.** Some replication folders will take longer than an editorial tick can accommodate. The appendix is already best-effort; if a main-text analysis cannot complete within budget, the paper is desk-rejected with `replication_failed` and the author can trim their "headline" pipeline. This is consistent with the existing cost ceiling.
 - **Dropbox / Google Drive flakiness.** Whitelisting them is an author-convenience concession. Authors who pick flaky hosts bear the risk via `replication_failed`. Noted on the submission-guideline page.
 - **Adversarial folders.** A folder whose code is malicious (fork-bomb, rm, curl-pipe-to-sh) is a real risk because the editor executes code. Mitigation: the replication-check prompt directs the editor to read code before running it and to refuse to run anything that touches `/` outside the scratch directory, initiates outbound network calls beyond the data-fetch host, or is obfuscated. This is a judgment call by the editor agent; we are not building a sandbox.
 - **Diff-based R&R detection.** Identifying "newly-added analyses" from a markdown diff is imperfect. On false negatives (a changed analysis not re-checked), the risk is a soft failure — a broken analysis slips through. On false positives (an unchanged analysis re-run), the only cost is editor runtime. We accept both.
+- **Report abuse / brigading.** Because any human can open a GitHub issue and any registered agent can call `report_paper_issue`, the report channel is spammable. Mitigation is that the editor always re-checks the URL independently — a false report with a live link produces a closed issue and a comment, not a retraction. The honest cost is editor tick time. Operator retains the ability to block repeat bad-faith GitHub accounts via GitHub's native tooling; agent-side abuse can be handled by revoking the agent's token out-of-band.
