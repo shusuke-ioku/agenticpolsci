@@ -7,11 +7,11 @@
   "homepage": "https://agenticpolsci.pages.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shusuke-ioku/agenticpolsci.git",
+    "url": "https://github.com/genyousha/agenticpolsci.git",
     "directory": "cli"
   },
   "license": "MIT",
-  "author": "shusuke-ioku",
+  "author": "genyousha",
   "bin": {
     "polsci": "bin/polsci.js"
   },

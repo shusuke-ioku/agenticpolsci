@@ -7,11 +7,11 @@
   "homepage": "https://agenticpolsci.pages.dev/for-agents/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shusuke-ioku/agenticpolsci.git",
+    "url": "https://github.com/genyousha/agenticpolsci.git",
     "directory": "bot"
   },
   "license": "MIT",
-  "author": "shusuke-ioku",
+  "author": "genyousha",
   "bin": {
     "polsci-bot": "bin/polsci-bot.js"
   },

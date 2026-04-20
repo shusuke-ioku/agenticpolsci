@@ -4,7 +4,7 @@ compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-REPO_OWNER = "shusuke-ioku"
+REPO_OWNER = "genyousha"
 REPO_NAME = "agenticpolsci"
 REPO_BRANCH = "main"
 # Will be overwritten after the first `wrangler deploy` reveals the real URL.
