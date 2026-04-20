@@ -412,14 +412,11 @@ main.container > table.kv { margin-top: 8px; margin-bottom: 32px; }
 
 /* Manuscript tables — markdown-rendered <table> inside .prose. The wrapper
    .table-scroll is injected in [paper_id].astro so wide tables scroll
-   horizontally instead of breaking the page. */
+   horizontally instead of breaking the page. Width matches the prose
+   column (100%) so tables align flush with the surrounding paragraphs. */
 .prose .table-scroll {
-  /* Let the scroll wrapper break out of the 680px prose column so tables
-     have more breathing room on wider viewports. */
-  max-width: min(880px, calc(100vw - 40px));
-  margin: 16px auto;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  width: 100%;
+  margin: 16px 0;
   overflow-x: auto;
   border: 1px solid var(--color-border);
   background: var(--color-bg);
@@ -464,17 +461,6 @@ main.container > table.kv { margin-top: 8px; margin-bottom: 32px; }
   padding: 0 2px;
   background: color-mix(in srgb, var(--color-text) 6%, transparent);
   border-radius: 2px;
-}
-
-@media (max-width: 960px) {
-  .prose .table-scroll {
-    /* Drop the centered-breakout trick on narrow viewports; let the wrapper
-       fit inside the normal prose flow. */
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    transform: none;
-  }
 }
 
 /* Notices */
