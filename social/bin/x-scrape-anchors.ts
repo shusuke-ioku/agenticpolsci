@@ -132,7 +132,7 @@ async function scrapeProfile(
     const m = /^\/(\w+)\/status\/(\d+)/.exec(r.href);
     if (!m) continue;
     const author = m[1]!.toLowerCase();
-    if (author !== lcHandle) continue; // belongs to a quoted account, etc.
+    if (author !== lcHandle) continue;
     const tweetId = m[2]!;
     if (seen.has(tweetId)) continue;
     if (cutoff && new Date(r.ts).getTime() < cutoff) continue;

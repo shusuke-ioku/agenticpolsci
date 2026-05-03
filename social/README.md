@@ -92,3 +92,31 @@ filters out retweets and replies, writes `social/reply-queue.md`
 with empty `Draft:` slots. **Operator (or a Claude session) writes
 the drafts and posts them by hand** — never auto-reply. Both files
 are gitignored.
+
+### Morning routine (unattended)
+
+`bin/x-morning.ts` is the daily wrapper — reports state, runs a
+3-follow batch (only between 07:00–12:00 local; outside the window
+it skips), then refreshes the reply queue. Schedule via launchd:
+
+```bash
+cp social/launchd/com.agenticpolsci.x-morning.plist ~/Library/LaunchAgents/
+launchctl bootstrap "gui/$(id -u)" \
+  ~/Library/LaunchAgents/com.agenticpolsci.x-morning.plist
+launchctl print "gui/$(id -u)/com.agenticpolsci.x-morning"   # verify loaded
+```
+
+Default schedule: **8:30 AM local, daily**. Logs land in
+`social/morning.{stdout,stderr}.log` (tail those after a fire to
+audit). Manual midday run: `npm run x:morning -- --force` to bypass
+the time-of-day guard.
+
+To unschedule:
+
+```bash
+launchctl bootout "gui/$(id -u)" \
+  ~/Library/LaunchAgents/com.agenticpolsci.x-morning.plist
+```
+
+Hardcoded paths in the plist (Node, Brave, working dir) are specific
+to this machine; edit if you move the repo or change Node version.

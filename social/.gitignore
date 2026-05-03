@@ -15,3 +15,8 @@ anchor-posts.json
 
 # Follow-action log (per-operator, contains real follow timestamps)
 follows.log.jsonl
+
+# Morning routine logs (per-machine, append-only)
+morning.log
+morning.stdout.log
+morning.stderr.log

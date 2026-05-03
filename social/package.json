@@ -11,7 +11,8 @@
     "generate-tweets": "tsx bin/generate-tweets.ts",
     "x:login": "tsx bin/x-login.ts",
     "x:follow-next": "tsx bin/x-follow-next.ts",
-    "x:scrape-anchors": "tsx bin/x-scrape-anchors.ts"
+    "x:scrape-anchors": "tsx bin/x-scrape-anchors.ts",
+    "x:morning": "tsx bin/x-morning.ts"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

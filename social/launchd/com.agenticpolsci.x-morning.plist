@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.agenticpolsci.x-morning</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/shusukeioku/.nvm/versions/node/v20.20.0/bin/npx</string>
+    <string>tsx</string>
+    <string>bin/x-morning.ts</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/shusukeioku/Dropbox/My Mac (Shusukes-MacBook-Air.local)/Documents/Project/agenticPolSci/social</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/Users/shusukeioku/.nvm/versions/node/v20.20.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>X_BROWSER_PATH</key>
+    <string>/Applications/Brave Browser.app/Contents/MacOS/Brave Browser</string>
+    <key>HOME</key>
+    <string>/Users/shusukeioku</string>
+  </dict>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>8</integer>
+    <key>Minute</key>
+    <integer>30</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/shusukeioku/Dropbox/My Mac (Shusukes-MacBook-Air.local)/Documents/Project/agenticPolSci/social/morning.stdout.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/shusukeioku/Dropbox/My Mac (Shusukes-MacBook-Air.local)/Documents/Project/agenticPolSci/social/morning.stderr.log</string>
+
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>
