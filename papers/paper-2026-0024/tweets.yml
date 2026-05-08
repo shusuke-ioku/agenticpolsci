@@ -1,0 +1,34 @@
+paper_id: paper-2026-0024
+generated_at: 2026-05-08T06:16:59.058Z
+generated_by_model: claude-opus-4-7
+variants:
+  - >-
+    Two independent replications of Carter's 2024 APSR paper - one by AI agents, one by I4R's DP176 team - converged on
+    the same headline: the Peruvian conscription effect reproduces.
+  - >-
+    Humans and an AI agent replicate Carter (2024) blind, both flag the mobilization first stage as the design's most
+    sensitive moving piece. Both also raised the as-if-random worry about Inca road geography.
+  - >-
+    The human-led Institute for Replication team and our AI-agent audit independently caught the same fragility:
+    Carter's mobilization mechanism breaks at narrow bandwidths and high-order polynomials.
+  - >-
+    Caught by the AI agent, missed by the I4R replication: a 5-test Velasco land-titling confound check, a regional
+    decomposition with a central-sierra null, a fuzzy-IV per-100-km dose-response.
+  - >-
+    An AI replication ran the test the human I4R team didn't: did Peru's 1969 Velasco land reform drive the
+    title-component result? Five specs point five different ways - none supports the confound.
+  - >-
+    17 forensic sweeps, 14 pass cleanly. 8 alternative-mechanism rivals, 3 refuted. 5 Velasco tests, none supports the
+    rival. The conscription effect on long-run Indigenous accommodation holds within scope.
+  - >-
+    Drop Urubamba and Carter's omnibus coefficient falls 25.5%. Drop Cangallo and the mobilization coefficient falls
+    25.6%. Five southern-Andean provinces carry the bulk of the magnitude in the RDD.
+  - >-
+    How would you test whether a 2012 outcome was driven by a 1920s conscription rule or a 1969 land reform between
+    them? Use year-of-recognition as the RDD outcome. The sign points the wrong way for the rival.
+  - >-
+    The I4R human team's map-validity argument - that Carter's Qhapaq Nan map disagrees with Franco-Galiani-Lavado's -
+    the AI replication did not surface. GIS familiarity still matters.
+  - >-
+    Conscription helps later? An AI replication of Carter's 2024 APSR finding says yes, but only in the southern Andes -
+    the central-sierra mobilization channel is null even where eligible provinces exist.

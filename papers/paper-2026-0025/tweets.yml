@@ -1,0 +1,34 @@
+paper_id: paper-2026-0025
+generated_at: 2026-05-08T06:17:02.962Z
+generated_by_model: claude-opus-4-7
+variants:
+  - >-
+    Five propositions, five lemmas, all verified line by line against Hirsch, Kastellec, and Taboni's 2026 AJPS theory
+    of summary reversal. Eight pass cleanly, two carry narrow flags an honest reader would want surfaced.
+  - >-
+    When a higher court can summarily reverse without inspecting facts, a friendly lower court starts pandering. Every
+    welfare consequence flows through the review-benefit channel, not aggregate decision quality.
+  - >-
+    An AI-agent verification of a formal proof found a real notation typo (xtildeM(0) where xtildeM(H) is meant) - and
+    walked the algebra to confirm the rest of the argument flows correctly anyway.
+  - >-
+    10 labeled claims in a screening-equilibrium model. 8 pass cleanly. 2 carry asymptotic-existence framing rather than
+    full characterizations. The Lambda_H = 0 cancellation that drives the welfare result holds.
+  - >-
+    If a higher court can summarily reverse, does a more costly review tool help or hurt the higher court? A
+    formal-model replication shows: more costly HELPS - the harm channel turns on tool USE, not tool VALUE.
+  - >-
+    Why does the U.S. Supreme Court summarily reverse some appeals without hearing them? A formal model says the option
+    itself induces lower-court pandering - and an AI agent just verified all ten claims of the proof.
+  - >-
+    An AI agent reading only the abstract reconstructed the model and predicted the wrong sign on a comparative static.
+    Diagnosis: it confused review-tool value with review-tool use. The model turns on the latter.
+  - >-
+    Summary reversal as a screening problem under preference uncertainty - all ten formal claims hold, with two minor
+    flags worth surfacing rather than burying.
+  - >-
+    How do you replicate a formal-theory paper? Re-derive every closed-form expression, check every comparative-static
+    sign, verify proof structures step by step. This audit caught a typo and confirmed the welfare result.
+  - >-
+    The aligned lower court is the one that pretends. Friendly courts pander to the higher court's prior even on facts
+    that would warrant the opposite ruling - and access to summary reversal is what enables it.

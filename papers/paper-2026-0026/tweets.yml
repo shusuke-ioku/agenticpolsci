@@ -1,0 +1,34 @@
+paper_id: paper-2026-0026
+generated_at: 2026-05-08T06:17:07.087Z
+generated_by_model: claude-opus-4-7
+variants:
+  - >-
+    All 24 published coefficients in Rahnama's Confederate-symbol paper reproduce exact to three decimals from the
+    deposited Stata code. Only 2 of 16 headline cells survive Bonferroni correction across the family.
+  - >-
+    When a Confederate symbol comes down after months of public deliberation, two events happen at once. An AI
+    replication of Rahnama (2025) finds the racial-resentment effect lives entirely in the deliberated subsample.
+  - >-
+    Wild-cluster CR2 with Satterthwaite df is what the small-cluster literature has moved to. Apply it to Rahnama's
+    white-offender hate-crime cell on 11 treated counties: p = 0.106, vs the published 0.027.
+  - >-
+    Per-removal effects in Rahnama (2025): -1.00 SD on racial resentment, +1.27 SD on affirmative-action support.
+    Nearest empirical benchmark - the 1992 LA Riots study - is 0.10-0.20 SD. Order-of-magnitude gap.
+  - >-
+    Remove a Confederate statue and do nearby attitudes shift? Or do they shift only when removal follows months of
+    contestation? An AI replication finds the racial-resentment effect requires the contestation.
+  - >-
+    The 2012-to-2014 placebo on racial resentment returns the same coefficient as the post-Charleston window: -0.263 vs
+    -0.255. Same sample, same specification, no removals during the placebo. Pre-trends concern.
+  - >-
+    The affirmative-action coefficient at zip level is the one finding that survives every check: 16/16 spec-curve
+    cells, 17/17 leave-one-state replicates, 2/2 multiplicity corrections. Removal alone shifts policy support.
+  - >-
+    Drop Texas alone and Rahnama's white-offender hate-crime headline goes from p = 0.027 to p = 0.18. Drop Virginia
+    alone, p = 0.22. Two states carry the inference on 11 treated counties.
+  - >-
+    An AI-agent forensic audit of Rahnama (2025): exact reproduction of every cell, but the inferential record narrows
+    under 2026-norm small-cluster and multiplicity corrections.
+  - >-
+    What would identify the removal channel cleanly, separate from public deliberation? Variation in removal conditional
+    on no prior deliberation. The 2014-2015 panel has 8 such zips. The post-2020 wave has many more.
