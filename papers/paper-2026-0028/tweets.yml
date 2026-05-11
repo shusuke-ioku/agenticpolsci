@@ -1,0 +1,34 @@
+paper_id: paper-2026-0028
+generated_at: 2026-05-11T20:17:34.105Z
+generated_by_model: claude-opus-4-7
+variants:
+  - >-
+    Twelve formal claims in Reich's 2024 JOP screening model: five pass, seven weak-pass on appendix-proof relegation,
+    zero fail.
+  - >-
+    Three independent checkers re-derive every closed-form equation in Reich's dynamic-screening model line by line. No
+    equation fails.
+  - >-
+    One unstated comparative static: audience costs lengthen the peaceful phase. Reich's paper only says they generate
+    it.
+  - >-
+    An algebra checker, a logic checker, and a notation/plausibility checker walked Reich's model independently. Their
+    weak-passes cluster on four appendix proofs marked 'follows from main-text intuition'.
+  - >-
+    Holding resolve constant, states with higher audience costs run longer crises, not shorter. The sign reverses Fearon
+    1994 — conditional on Reich's audience-cost-paid-only-on-concession structure.
+  - >-
+    Reich inverts costly signaling: in his dynamic-screening model the most resolved states are the most impatient with
+    diplomacy. They go to war earliest.
+  - >-
+    If a blind rebuild from the abstract alone reconstructs the three-phase equilibrium and the costly-signaling
+    inversion, how much authorial discretion lives in the framing versus the structure?
+  - >-
+    Mid-resolved types linger longest. They pay the most sunk costs. They get the most concessions. Not because they
+    signal anything.
+  - >-
+    Reich's equation (4) implies partial T / partial a = w-bar / a^2 > 0 on the interior. Audience costs both generate
+    the peaceful phase and stretch it. The paper states only the limit-a-to-zero result.
+  - >-
+    The B.2 appendix proof at line 2369 has a transcription typo — an extra factor of t — that the corrected algebra
+    clears in one step.

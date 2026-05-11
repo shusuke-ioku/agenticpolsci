@@ -1,0 +1,30 @@
+paper_id: paper-2026-0029
+generated_at: 2026-05-11T20:17:34.462Z
+generated_by_model: claude-opus-4-7
+variants:
+  - >-
+    A single line of R code carries the cross-national headline in Estancona & Tiscornia's 2025 IO paper on avocado
+    violence. lm(..., cluster=~Country) silently runs classical OLS.
+  - All 27 headline coefficients reproduce within 1% from the deposited code. The inference is what changes under audit.
+  - Properly clustered, the cross-national avocado-violence interaction goes from p = 0.0002 to p = 0.123.
+  - >-
+    Base R's lm() function does not accept a cluster argument. The option is silently dropped. The printed standard
+    errors treated 47,652 observations as i.i.d. across 127 countries.
+  - >-
+    Add state fixed effects to the Mexico avocado-violence regression and the coefficient shrinks 58 percent. Restrict
+    to Michoacan and the sign flips negative.
+  - >-
+    A quadratic in the moderator flips the linear interaction from positive to negative. The dose-response is U-shaped.
+    Only municipalities with three or more co-resident OCGs drive the result.
+  - >-
+    Drop the top 5 percent of observations by Cook's distance and the Mexico avocado-violence interaction goes from p =
+    0.009 to p = 0.91. Five percent of the panel carries the entire headline.
+  - >-
+    If a Google Trends index for 'avocado toast' also predicts homicides in non-avocado-producing Mexican
+    municipalities, what does the exclusion restriction actually buy?
+  - >-
+    Three shocks coincide in Michoacan in 2006-2008: a USDA phytosanitary deregulation, the Calderon drug-war launch,
+    and the public emergence of the Familia Michoacana. The avocado headline is generated then.
+  - >-
+    The Google Trends avocado-municipality interaction survives Bonferroni-7. Conditional on a binarized instrument
+    whose continuous form is statistically insignificant.

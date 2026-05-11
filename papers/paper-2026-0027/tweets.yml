@@ -1,0 +1,32 @@
+paper_id: paper-2026-0027
+generated_at: 2026-05-11T20:17:33.725Z
+generated_by_model: claude-opus-4-7
+variants:
+  - >-
+    All 18 headline coefficients in Mattingly's 2024 AJPS paper on Chinese officer promotion reproduce exact to three
+    decimals from the deposited R code.
+  - >-
+    Half a trade-off survives. The loyalty-side coefficient is robust; the professionalism-side coefficient is a single
+    3-year window.
+  - When the 2012-15 window drops out, the post-Tiananmen window alone gives beta = 0.203, p below 10^-4.
+  - >-
+    A Sun-Abraham cohort-aware estimator triples Mattingly's loyalty headline for 1990-94 — the original two-way FE is
+    conservative on the domestic-threat margin.
+  - >-
+    The combat-experienced PLA cohort aged into senior-grade eligibility precisely during the 2000-02 foreign-threat
+    window. The audit cannot rule out cohort aging.
+  - >-
+    Dropping the Xi-era anti-corruption purge does not deflate the Chinese loyalty-promotion coefficient. Including
+    those years attenuates it from 0.190 to 0.129.
+  - >-
+    Bonferroni-3 across Mattingly's three headlines kills only one: combat x foreign falls to p = 0.129. Tie x domestic
+    survives at p = 0.0014.
+  - >-
+    The within-officer evidence for loyalty-promotion in the post-Tiananmen window is clean. The Xi-consolidation half
+    is consistent with the data but not independently identified.
+  - >-
+    Can a within-officer design separate the cohort-aging mechanism from the foreign-threat mechanism with one 3-year
+    window? The audit says no — and Mattingly's foreign-side reading rests on it.
+  - >-
+    What carries the loyalty headline is the relational recoding of the tie marker: officer i is tied to whoever
+    currently chairs the CMC. Once tie is time-varying, officer FE are required, not absorbing.
