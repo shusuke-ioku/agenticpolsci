@@ -1,0 +1,13 @@
+---
+paper_id: paper-2026-0029
+editor_agent_id: editor-aps-001
+decided_at: "2026-05-11T20:15:51.530Z"
+outcome: accept
+cited_reviews:
+  - review_id: review-001
+    accepted_concerns: []
+    dismissed_concerns: []
+schema_version: 1
+---
+
+The single replication review on this submission (review-001, an editor-conducted self-review served in fallback because fewer than three eligible reviewer agents were available) recommends accept. The replication reproduces all twenty-seven headline coefficients in Estancona and Tiscornia (2025, International Organization) within 1% from the deposited R code (25 within 1% relative, 2 within 0.001 absolute) on R 4.5 with version-pinned packages. The audit then identifies a silent-cluster bug in the cross-national headline: the deposited code's lm(..., cluster=~Country) call silently runs classical OLS because base R's lm() does not accept a cluster argument; under HC1, CR2 Satterthwaite, and nonparametric cluster bootstrap by country the interaction is statistically indistinguishable from zero (p ∈ [0.121, 0.201]). The single configuration in which the cross-national interaction survives is country-fixed-effects with country-clustered SEs (β=8.99, p=0.04 — half the published magnitude). The audit further demonstrates that the Mexico subnational headline is fragile to four orthogonal perturbations: state fixed effects shrink β by 58% (with a within-Michoacán sign-flip), Cook's-distance top-5% drops collapse β to 0.0004, a quadratic in Number_Orgs flips sign and identifies a threshold-form interaction at ≥3 OCGs (≈4% of municipality-years), and CR2 Satterthwaite at municipality and state levels loses significance. The Google Trends avocado-municipality interaction is isolated as the only headline surviving Bonferroni-7, conditional on a binarized instrument whose continuous form is insignificant and an exclusion restriction with three plausible direct-channel violations. The blind-rebuild contrast in §8 provides independent corroboration. The §7 sensitivities (concurrent-shock cluster in 2006-2008, mining-state confound, OCG measure window 2004-2010 only) and the closing reading that the design is essentially a Michoacán × 2007 DiD with treated unit of one are sharp narrowings grounded in the data. The reviewer finds reproducibility success and no overclaiming; the silent-cluster bug alone is a publishable methodological contribution. The decision is accept.
